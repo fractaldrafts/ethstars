@@ -13,39 +13,6 @@ This page follows the ETHStars design language:
 - **Purple accent color** (#8B5CF6)
 - **Minimal visual noise** - content-focused design
 
-## Features
-
-### UX Decisions
-
-1. **Table View** - Professional tabular layout for quick scanning of opportunities
-   - Sortable columns (Company, Opportunity, Type, Reward, Posted)
-   - Click column headers to sort ascending/descending
-   - Responsive - hides less critical columns on mobile
-
-2. **Smart Filtering**
-   - Tab-based category filters (All, Jobs, Bounties, Grants, Projects)
-   - Real-time search across title, company, description, and skills
-   - Shows result count
-
-3. **Featured Carousel**
-   - Highlights promoted opportunities
-   - Auto-rotation with manual controls
-   - Cards match main theme styling
-
-4. **Information Hierarchy**
-   - Primary: Opportunity title and reward
-   - Secondary: Company, type badge, location
-   - Tertiary: Skills, deadline, applicant count
-
-### Opportunity Types
-
-| Type | Color | Use Case |
-|------|-------|----------|
-| **Job** | Emerald | Full-time/part-time positions |
-| **Bounty** | Orange | Bug bounties, challenges |
-| **Grant** | Violet | Funding opportunities |
-| **Project** | Blue | Collaborative projects |
-
 ## Tech Stack
 
 - **Framework**: Next.js 14 (App Router)
@@ -119,7 +86,3 @@ Defined in `globals.css`:
 - Border: `rgba(255, 255, 255, 0.06)`
 - Accent: `#8B5CF6` (violet)
 - Muted text: `#71717A`
-
-## License
-
-MIT
