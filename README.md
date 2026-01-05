@@ -1,6 +1,4 @@
-# ETHStars Opportunities
-
-A professional job board and bounty platform for the Ethereum ecosystem, designed as a sub-product of ETHStars with matching theme and styling.
+# ETHStars
 
 ![ETHStars Opportunities](https://ethstars.xyz)
 
