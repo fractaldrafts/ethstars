@@ -1,0 +1,12 @@
+[build.environment]
+  NETLIFY_USE_BLOBS = "0"
+[build]
+  command = "npm run build"
+
+[functions]
+  node_bundler = "esbuild"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+

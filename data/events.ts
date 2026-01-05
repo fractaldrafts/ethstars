@@ -1,0 +1,2112 @@
+export interface Event {
+  id: string
+  title: string
+  organizer: string
+  organizerLogo?: string
+  description: string
+  date: string // ISO date string
+  time?: string // e.g., "10:00 AM - 5:00 PM"
+  location: string
+  locationType: 'online' | 'in-person' | 'hybrid'
+  eventUrl?: string
+  registrationUrl?: string
+  tags: string[]
+  featured?: boolean
+  image?: string
+}
+
+export const events: Event[] = [
+  {
+    id: '1',
+    title: 'ETHSafari',
+    organizer: 'ETH',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/ETHSafari.png',
+    description: 'ETHSafari in Kenya. Regional Grassroots event.',
+    date: '2026-09-01',
+    location: 'Kenya',
+    locationType: 'in-person',
+    eventUrl: 'https://ethsafari.xyz/',
+    tags: [
+      'Conference',
+      'Hackathon',
+      'Regional Grassroots'
+    ],
+    featured: true,
+
+  },
+  {
+    id: '2',
+    title: 'ETHRome Hackathon',
+    organizer: 'ETH',
+    description: 'ETHRome Hackathon in Rome, Italy. Regional Grassroots event.',
+    date: '2025-10-17',
+    location: 'Rome, Italy',
+    locationType: 'in-person',
+    eventUrl: 'https://www.ethrome.org/',
+    tags: [
+      'Hackathon',
+      'Regional Grassroots'
+    ],
+  },
+  {
+    id: '3',
+    title: 'ETHGlobal New York',
+    organizer: 'ETHGlobal',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/ETHGlobal%20New%20York.png',
+    description: 'ETHGlobal New York in NYC, USA. ETHGlobal event.',
+    date: '2025-08-15',
+    location: 'NYC, USA',
+    locationType: 'in-person',
+    eventUrl: 'https://ethglobal.com/events/newyork2025',
+    tags: [
+      'Hackathon',
+      'ETHGlobal'
+    ],
+  },
+  {
+    id: '4',
+    title: 'DappCon Berlin',
+    organizer: 'DappCon',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/DappCon.png',
+    description: 'DappCon Berlin in Berlin, Germany. dApp event.',
+    date: '2026-06-16',
+    location: 'Berlin, Germany',
+    locationType: 'in-person',
+    eventUrl: 'https://dappcon.io',
+    tags: [
+      'Conference',
+      'dApp'
+    ],
+    featured: true,
+
+  },
+  {
+    id: '5',
+    title: 'Code Africa Conference',
+    organizer: 'Code',
+    description: 'Code Africa Conference in Nairobi, Kenya. AI event.',
+    date: '2025-05-19',
+    location: 'Nairobi, Kenya',
+    locationType: 'in-person',
+    eventUrl: 'https://www.codeafrica.io/',
+    tags: [
+      'Conference',
+      'Hackathon',
+      'AI'
+    ],
+  },
+  {
+    id: '6',
+    title: 'ETH Huangshan',
+    organizer: 'ETH',
+    description: 'ETH Huangshan in Huangshan, China. Regional Grassroots event.',
+    date: '2025-07-07',
+    location: 'Huangshan, China',
+    locationType: 'in-person',
+    eventUrl: 'https://lu.ma/ks2qdrcj',
+    tags: [
+      'Conference',
+      'Hackathon',
+      'Regional Grassroots'
+    ],
+  },
+  {
+    id: '7',
+    title: 'FarCon',
+    organizer: 'FarCon',
+    description: 'FarCon in NYC, USA.  event.',
+    date: '2025-05-01',
+    location: 'NYC, USA',
+    locationType: 'in-person',
+    eventUrl: 'https://farcon.nyc/',
+    tags: [
+      'Hackathon',
+      'Conference'
+    ],
+  },
+  {
+    id: '8',
+    title: 'Consensus2025',
+    organizer: 'Consensus',
+    description: 'Consensus2025 in Toronto, Canada.  event.',
+    date: '2025-05-14',
+    location: 'Toronto, Canada',
+    locationType: 'in-person',
+    eventUrl: 'https://consensus2025.coindesk.com/',
+    tags: [
+      'Conference'
+    ],
+  },
+  {
+    id: '9',
+    title: 'CHES 2025',
+    organizer: 'CHES',
+    description: 'CHES 2025 in Kuala Lumpur, Malaysia. Privacy and Cryptography, Academia event.',
+    date: '2025-09-14',
+    location: 'Kuala Lumpur, Malaysia',
+    locationType: 'in-person',
+    eventUrl: 'https://ches.iacr.org/2025/',
+    tags: [
+      'Conference',
+      'Privacy and Cryptography',
+      'Academia'
+    ],
+  },
+  {
+    id: '10',
+    title: 'Ethereum Argentina Hackathon',
+    organizer: 'Ethereum',
+    description: 'Ethereum Argentina Hackathon in Buenos Aires, Argentina. Regional Grassroots event.',
+    date: '2025-11-17',
+    location: 'Buenos Aires, Argentina',
+    locationType: 'in-person',
+    eventUrl: 'https://taikai.network/ethargentina/hackathons/tierra-de-buidlers-2025/overview',
+    tags: [
+      'Hackathon',
+      'Regional Grassroots'
+    ],
+  },
+  {
+    id: '11',
+    title: 'ETHCluj',
+    organizer: 'ETH',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/ETHCluj.png',
+    description: 'ETHCluj in Cluj-Napoca, Romania. Regional Grassroots event.',
+    date: '2025-06-26',
+    location: 'Cluj-Napoca, Romania',
+    locationType: 'in-person',
+    eventUrl: 'https://www.ethcluj.org/',
+    tags: [
+      'Conference',
+      'Regional Grassroots'
+    ],
+  },
+  {
+    id: '12',
+    title: 'ETHConf',
+    organizer: 'ETH',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/ETHConf.png',
+    description: 'ETHConf in New York City, USA. ETHGlobal event.',
+    date: '2026-06-08',
+    location: 'New York City, USA',
+    locationType: 'in-person',
+    eventUrl: 'https://ethconf.com',
+    tags: [
+      'Conference',
+      'ETHGlobal'
+    ],
+    featured: true,
+
+  },
+  {
+    id: '13',
+    title: 'Digital Assets Forum',
+    organizer: 'Digital',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/Digital%20Assets%20Forum.png',
+    description: 'Digital Assets Forum in London, UK. Institutional event.',
+    date: '2026-02-05',
+    location: 'London, UK',
+    locationType: 'in-person',
+    eventUrl: 'https://eblockchainconvention.com/digital-assets-forum/',
+    tags: [
+      'Conference',
+      'Institutional'
+    ],
+  },
+  {
+    id: '14',
+    title: 'Pragma Mumbai',
+    organizer: 'Pragma',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/Pragma%20Mumbai.png',
+    description: 'Pragma Mumbai in Mumbai, India. ETHGlobal event.',
+    date: '2026-11-05',
+    location: 'Mumbai, India',
+    locationType: 'in-person',
+    eventUrl: 'https://ethglobal.com/events/pragma-mumbai',
+    tags: [
+      'Conference',
+      'ETHGlobal'
+    ],
+  },
+  {
+    id: '15',
+    title: 'PKC 2025',
+    organizer: 'PKC',
+    description: 'PKC 2025 in Røros, Norway. Privacy and Cryptography, Academia event.',
+    date: '2025-05-12',
+    location: 'Røros, Norway',
+    locationType: 'in-person',
+    eventUrl: 'https://pkc.iacr.org/2025/',
+    tags: [
+      'Conference',
+      'Privacy and Cryptography',
+      'Academia'
+    ],
+  },
+  {
+    id: '16',
+    title: 'Paris Blockchain Week',
+    organizer: 'Paris',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/Paris%20Blockchain%20Week.png',
+    description: 'Paris Blockchain Week in Paris, France. General Blockchain Week event.',
+    date: '2026-04-15',
+    location: 'Paris, France',
+    locationType: 'in-person',
+    eventUrl: 'https://www.parisblockchainweek.com/',
+    tags: [
+      'Conference',
+      'General Blockchain Week'
+    ],
+  },
+  {
+    id: '17',
+    title: 'ETHCC',
+    organizer: 'ETH',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/ETHCC.png',
+    description: 'ETHCC in Cannes, France. Regional Grassroots event.',
+    date: '2026-03-30',
+    location: 'Cannes, France',
+    locationType: 'in-person',
+    eventUrl: 'https://ethcc.io',
+    tags: [
+      'Conference',
+      'Regional Grassroots'
+    ],
+    featured: true,
+
+  },
+  {
+    id: '18',
+    title: 'ETHDam',
+    organizer: 'ETH',
+    description: 'ETHDam in Amsterdam, Netherlands. Regional Grassroots event.',
+    date: '2025-05-09',
+    location: 'Amsterdam, Netherlands',
+    locationType: 'in-person',
+    eventUrl: 'https://www.ethdam.com/',
+    tags: [
+      'Conference',
+      'Hackathon',
+      'Regional Grassroots'
+    ],
+  },
+  {
+    id: '19',
+    title: 'ETH Boston',
+    organizer: 'ETH',
+    description: 'ETH Boston in Boston, USA. Regional Grassroots event.',
+    date: '2025-09-13',
+    location: 'Boston, USA',
+    locationType: 'in-person',
+    eventUrl: 'https://www.ethboston.xyz/',
+    tags: [
+      'Conference',
+      'Hackathon',
+      'Regional Grassroots'
+    ],
+  },
+  {
+    id: '20',
+    title: 'ETHGlobal New York',
+    organizer: 'ETHGlobal',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/ETHGlobal%20New%20York.png',
+    description: 'ETHGlobal New York in New York City, USA. ETHGlobal event.',
+    date: '2026-06-12',
+    location: 'New York City, USA',
+    locationType: 'in-person',
+    eventUrl: 'https://ethglobal.com/events/newyork2026',
+    tags: [
+      'Hackathon',
+      'ETHGlobal'
+    ],
+  },
+  {
+    id: '21',
+    title: 'Encode London 2025',
+    organizer: 'Encode',
+    description: 'Encode London 2025 in London, UK. AI event.',
+    date: '2025-10-24',
+    location: 'London, UK',
+    locationType: 'in-person',
+    eventUrl: 'https://lu.ma/Encode-London-25',
+    tags: [
+      'Conference',
+      'Hackathon',
+      'AI'
+    ],
+  },
+  {
+    id: '22',
+    title: 'ETHGlobal Mumbai',
+    organizer: 'ETHGlobal',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/ETHGlobal%20Mumbai.png',
+    description: 'ETHGlobal Mumbai in Mumbai, India. ETHGlobal event.',
+    date: '2026-11-06',
+    location: 'Mumbai, India',
+    locationType: 'in-person',
+    eventUrl: 'https://ethglobal.com/events/mumbai',
+    tags: [
+      'Hackathon',
+      'ETHGlobal'
+    ],
+    featured: true,
+
+  },
+  {
+    id: '23',
+    title: 'Pragma Prague',
+    organizer: 'Pragma',
+    description: 'Pragma Prague in Prague, Czechia. ETHGlobal event.',
+    date: '2025-05-29',
+    location: 'Prague, Czechia',
+    locationType: 'in-person',
+    eventUrl: 'https://ethglobal.com/events/pragma-prague',
+    tags: [
+      'Conference',
+      'ETHGlobal'
+    ],
+  },
+  {
+    id: '24',
+    title: 'Pragma New York',
+    organizer: 'Pragma',
+    description: 'Pragma New York in NYC, USA. ETHGlobal event.',
+    date: '2025-08-14',
+    location: 'NYC, USA',
+    locationType: 'in-person',
+    eventUrl: 'https://ethglobal.com/events/pragma-newyork2025',
+    tags: [
+      'Conference',
+      'ETHGlobal'
+    ],
+  },
+  {
+    id: '25',
+    title: 'Invisible Garden',
+    organizer: 'Invisible',
+    description: 'Invisible Garden in Buenos Aires, Argentina.  event.',
+    date: '2025-10-27',
+    location: 'Buenos Aires, Argentina',
+    locationType: 'in-person',
+    eventUrl: 'https://invisible.garden/',
+    tags: [
+      'Popup Village/City'
+    ],
+  },
+  {
+    id: '26',
+    title: 'Pragma Cannes',
+    organizer: 'Pragma',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/Pragma%20Cannes.png',
+    description: 'Pragma Cannes in Cannes, France. ETHGlobal event.',
+    date: '2026-04-02',
+    location: 'Cannes, France',
+    locationType: 'in-person',
+    eventUrl: 'https://ethglobal.com/events/pragma-cannes2026',
+    tags: [
+      'Conference',
+      'ETHGlobal'
+    ],
+  },
+  {
+    id: '27',
+    title: 'ETHVietnam 2025',
+    organizer: 'ETH',
+    description: 'ETHVietnam 2025 in HCMC, Vietnam. Regional Grassroots event.',
+    date: '2025-08-09',
+    location: 'HCMC, Vietnam',
+    locationType: 'in-person',
+    eventUrl: 'https://www.eth-vietnam.com/',
+    tags: [
+      'Conference',
+      'Hackathon',
+      'Regional Grassroots'
+    ],
+  },
+  {
+    id: '28',
+    title: 'Protocol Berg v2',
+    organizer: 'Protocol',
+    description: 'Protocol Berg v2 in Berlin, Germany. Regional Grassroots event.',
+    date: '2025-06-12',
+    location: 'Berlin, Germany',
+    locationType: 'in-person',
+    eventUrl: 'https://protocol.berlin/',
+    tags: [
+      'Conference',
+      'Regional Grassroots'
+    ],
+  },
+  {
+    id: '29',
+    title: 'COSCUP 2025',
+    organizer: 'COSCUP',
+    description: 'COSCUP 2025 in Taiwan. Open Source event.',
+    date: '2025-08-09',
+    location: 'Taiwan',
+    locationType: 'in-person',
+    eventUrl: 'https://coscup.org/2025/en/',
+    tags: [
+      'Conference',
+      'Open Source'
+    ],
+  },
+  {
+    id: '30',
+    title: 'ETHSofia',
+    organizer: 'ETH',
+    description: 'ETHSofia in Sofia, Bulgaria. Regional Grassroots event.',
+    date: '2025-09-23',
+    location: 'Sofia, Bulgaria',
+    locationType: 'in-person',
+    eventUrl: 'https://www.ethsofia.com/',
+    tags: [
+      'Conference',
+      'Hackathon',
+      'Regional Grassroots'
+    ],
+  },
+  {
+    id: '31',
+    title: 'web3ssh (Web 3.0 Summer School and Hackathon)',
+    organizer: 'web3ssh',
+    description: 'web3ssh (Web 3.0 Summer School and Hackathon) in Chittoor, India.  event.',
+    date: '2025-06-29',
+    location: 'Chittoor, India',
+    locationType: 'in-person',
+    eventUrl: 'https://web3ssh.dev/',
+    tags: [
+      'Workshop',
+      'Hackathon'
+    ],
+  },
+  {
+    id: '32',
+    title: 'Black Hat USA 2025',
+    organizer: 'Black',
+    description: 'Black Hat USA 2025 in Las Vegas, USA. Security event.',
+    date: '2025-08-02',
+    location: 'Las Vegas, USA',
+    locationType: 'in-person',
+    eventUrl: 'https://www.blackhat.com/us-25/',
+    tags: [
+      'Conference',
+      'Security'
+    ],
+  },
+  {
+    id: '33',
+    title: 'CYBERSEC 2025',
+    organizer: 'CYBERSEC',
+    description: 'CYBERSEC 2025 in Taiwan. Security event.',
+    date: '2025-04-15',
+    location: 'Taiwan',
+    locationType: 'in-person',
+    eventUrl: 'https://cybersec.ithome.com.tw/2025/',
+    tags: [
+      'Conference',
+      'Security'
+    ],
+  },
+  {
+    id: '34',
+    title: 'Pragma New Delhi',
+    organizer: 'Pragma',
+    description: 'Pragma New Delhi in New Delhi, India. ETHGlobal event.',
+    date: '2025-09-25',
+    location: 'New Delhi, India',
+    locationType: 'in-person',
+    eventUrl: 'https://ethglobal.com/events/pragma-newdelhi',
+    tags: [
+      'Conference',
+      'ETHGlobal'
+    ],
+  },
+  {
+    id: '35',
+    title: 'FOSDEM 2025',
+    organizer: 'FOSDEM',
+    description: 'FOSDEM 2025 in Brussels, Belgium. Open Source event.',
+    date: '2025-02-01',
+    location: 'Brussels, Belgium',
+    locationType: 'in-person',
+    eventUrl: 'https://fosdem.org/2025/schedule/',
+    tags: [
+      'Conference',
+      'Open Source'
+    ],
+  },
+  {
+    id: '36',
+    title: 'ConfConf 2025',
+    organizer: 'ConfConf',
+    description: 'ConfConf 2025 in Sofia, Bulgaria. Open Source event.',
+    date: '2025-07-05',
+    location: 'Sofia, Bulgaria',
+    locationType: 'in-person',
+    eventUrl: 'https://confconf.org/',
+    tags: [
+      'Conference',
+      'Open Source'
+    ],
+  },
+  {
+    id: '37',
+    title: 'Edge Esmeralda',
+    organizer: 'Edge',
+    description: 'Edge Esmeralda in Healdsburg, USA.  event.',
+    date: '2025-05-24',
+    location: 'Healdsburg, USA',
+    locationType: 'in-person',
+    eventUrl: 'https://www.edgeesmeralda.com/',
+    tags: [
+      'Popup Village/City'
+    ],
+  },
+  {
+    id: '38',
+    title: 'Web3 Lagos Conference',
+    organizer: 'Web3',
+    description: 'Web3 Lagos Conference in Lagos, Nigeria.  event.',
+    date: '2025-08-28',
+    location: 'Lagos, Nigeria',
+    locationType: 'hybrid',
+    eventUrl: 'https://event.web3bridge.com/',
+    tags: [
+      'Conference',
+      'Hackathon'
+    ],
+  },
+  {
+    id: '39',
+    title: 'ETHIndia Villa',
+    organizer: 'ETH',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/ETHIndia%20Villa.png',
+    description: 'ETHIndia Villa in Bengaluru, India. Regional Grassroots event.',
+    date: '2025-11-30',
+    location: 'Bengaluru, India',
+    locationType: 'in-person',
+    eventUrl: 'https://ethindia-villa.devfolio.co/overview',
+    tags: [
+      'Hackathon',
+      'Regional Grassroots'
+    ],
+    featured: true,
+
+  },
+  {
+    id: '40',
+    title: 'CanSecWest2025',
+    organizer: 'CanSecWest2025',
+    description: 'CanSecWest2025 in Vancouver, Canada. Security event.',
+    date: '2025-04-20',
+    location: 'Vancouver, Canada',
+    locationType: 'in-person',
+    eventUrl: 'https://www.secwest.net/',
+    tags: [
+      'Conference',
+      'Security'
+    ],
+  },
+  {
+    id: '41',
+    title: 'SBC (The Science of Blockchain Conference 2025)',
+    organizer: 'SBC',
+    description: 'SBC (The Science of Blockchain Conference 2025) in Berkeley, USA. Academia event.',
+    date: '2025-08-04',
+    location: 'Berkeley, USA',
+    locationType: 'hybrid',
+    eventUrl: 'https://www.sbc-conference.com/2025/',
+    tags: [
+      'Conference',
+      'Academia'
+    ],
+  },
+  {
+    id: '42',
+    title: 'ProtoLayers Conference',
+    organizer: 'ProtoLayers',
+    description: 'ProtoLayers Conference in Prague, Czechia.  event.',
+    date: '2025-05-31',
+    location: 'Prague, Czechia',
+    locationType: 'in-person',
+    eventUrl: 'https://lu.ma/wt1a6o9m',
+    tags: [
+      'Conference'
+    ],
+  },
+  {
+    id: '43',
+    title: 'ZuBerlin',
+    organizer: 'ZuBerlin',
+    description: 'ZuBerlin in Berlin, Germany.  event.',
+    date: '2025-06-14',
+    location: 'Berlin, Germany',
+    locationType: 'in-person',
+    eventUrl: 'https://zuberlin.city/',
+    tags: [
+      'Popup Village/City'
+    ],
+  },
+  {
+    id: '44',
+    title: 'ETHWarsaw',
+    organizer: 'ETH',
+    description: 'ETHWarsaw in Warsaw, Poland. Regional Grassroots event.',
+    date: '2025-09-04',
+    location: 'Warsaw, Poland',
+    locationType: 'in-person',
+    eventUrl: 'https://www.ethwarsaw.dev/',
+    tags: [
+      'Conference',
+      'Hackathon',
+      'Regional Grassroots'
+    ],
+  },
+  {
+    id: '45',
+    title: 'ETHCon Argentina',
+    organizer: 'ETH',
+    description: 'ETHCon Argentina in Buenos Aires, Argentina. Regional Grassroots event.',
+    date: '2025-11-18',
+    location: 'Buenos Aires, Argentina',
+    locationType: 'in-person',
+    eventUrl: 'https://ethcon.ar',
+    tags: [
+      'Conference',
+      'Regional Grassroots'
+    ],
+  },
+  {
+    id: '46',
+    title: 'Token 2049 Dubai',
+    organizer: 'Token',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/Token%202049%20Dubai.png',
+    description: 'Token 2049 Dubai in Dubai, UAE. Institutional event.',
+    date: '2026-04-29',
+    location: 'Dubai, UAE',
+    locationType: 'in-person',
+    eventUrl: 'https://www.token2049.com/dubai',
+    tags: [
+      'Conference',
+      'Institutional'
+    ],
+  },
+  {
+    id: '47',
+    title: 'Devcon India',
+    organizer: 'Devcon',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/Devcon%20India.png',
+    description: 'Devcon India in Mumbai, India. General Blockchain Week event.',
+    date: '2026-11-03',
+    location: 'Mumbai, India',
+    locationType: 'in-person',
+    eventUrl: 'https://devcon.org/en/',
+    tags: [
+      'Conference',
+      'Hackathon',
+      'General Blockchain Week'
+    ],
+    featured: true,
+
+  },
+  {
+    id: '48',
+    title: 'Open Source Community Africa (OSCA) 2025',
+    organizer: 'Open',
+    description: 'Open Source Community Africa (OSCA) 2025 in Lagos, Nigeria. Open Source event.',
+    date: '2025-08-14',
+    location: 'Lagos, Nigeria',
+    locationType: 'in-person',
+    eventUrl: 'https://oscafrica.org/',
+    tags: [
+      'Conference',
+      'Open Source'
+    ],
+  },
+  {
+    id: '49',
+    title: 'ZK Hack Berlin',
+    organizer: 'ZK',
+    description: 'ZK Hack Berlin in Berlin, Germany. Privacy and Cryptography event.',
+    date: '2025-06-20',
+    location: 'Berlin, Germany',
+    locationType: 'in-person',
+    eventUrl: 'https://www.zkberlin.com/',
+    tags: [
+      'Hackathon',
+      'Privacy and Cryptography'
+    ],
+  },
+  {
+    id: '50',
+    title: 'Eurocrypt 2026',
+    organizer: 'Eurocrypt',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/Eurocrypt%202026.png',
+    description: 'Eurocrypt 2026 in Rome, Italy. Privacy and Cryptography, Academia event.',
+    date: '2026-05-10',
+    location: 'Rome, Italy',
+    locationType: 'in-person',
+    eventUrl: 'https://eurocrypt.iacr.org/2026/',
+    tags: [
+      'Conference',
+      'Privacy and Cryptography',
+      'Academia'
+    ],
+  },
+  {
+    id: '51',
+    title: 'ETHKyiv',
+    organizer: 'ETH',
+    description: 'ETHKyiv in Kyiv, Ukraine. Regional Grassroots event.',
+    date: '2025-06-13',
+    location: 'Kyiv, Ukraine',
+    locationType: 'in-person',
+    eventUrl: 'https://ethkyiv.com/',
+    tags: [
+      'Hackathon',
+      'Regional Grassroots'
+    ],
+  },
+  {
+    id: '53',
+    title: 'ETHMilan',
+    organizer: 'ETH',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/ETHMilan.png',
+    description: 'ETHMilan in Milan, Italy. Regional Grassroots event.',
+    date: '2025-06-24',
+    location: 'Milan, Italy',
+    locationType: 'in-person',
+    eventUrl: 'https://www.ethmilan.xyz/',
+    tags: [
+      'Conference',
+      'Regional Grassroots'
+    ],
+  },
+  {
+    id: '54',
+    title: 'Edge Patagonia',
+    organizer: 'Edge',
+    description: 'Edge Patagonia in San Martín de los Andes, Argentina.  event.',
+    date: '2025-10-18',
+    location: 'San Martín de los Andes, Argentina',
+    locationType: 'in-person',
+    eventUrl: 'https://www.edgecity.live/patagonia',
+    tags: [
+      'Popup Village/City'
+    ],
+  },
+  {
+    id: '55',
+    title: 'Progcrypto Online Study Group',
+    organizer: 'Progcrypto',
+    description: 'Progcrypto Online Study Group. Privacy and Cryptography event.',
+    date: '2025-06-24',
+    location: 'TBD',
+    locationType: 'online',
+    eventUrl: 'https://www.meetup.com/ethmalaysia/events/308531424/?eventOrigin=group_events_list',
+    tags: [
+      'Workshop',
+      'Privacy and Cryptography'
+    ],
+  },
+  {
+    id: '56',
+    title: 'Frontiers 2025',
+    organizer: 'Frontiers',
+    description: 'Frontiers 2025 in San Francisco, USA.  event.',
+    date: '2025-08-06',
+    location: 'San Francisco, USA',
+    locationType: 'hybrid',
+    eventUrl: 'https://frontiers.paradigm.xyz/',
+    tags: [
+      'Conference',
+      'Hackathon'
+    ],
+  },
+  {
+    id: '57',
+    title: 'ETHTokyo',
+    organizer: 'ETH',
+    description: 'ETHTokyo in Tokyo, Japan. Regional Grassroots event.',
+    date: '2025-09-12',
+    location: 'Tokyo, Japan',
+    locationType: 'in-person',
+    eventUrl: 'https://ethtokyo.org/',
+    tags: [
+      'Conference',
+      'Hackathon',
+      'Regional Grassroots'
+    ],
+  },
+  {
+    id: '58',
+    title: 'DeFi Security Summit',
+    organizer: 'DeFi',
+    description: 'DeFi Security Summit in Buenos Aires, Argentina. Security event.',
+    date: '2025-11-17',
+    location: 'Buenos Aires, Argentina',
+    locationType: 'in-person',
+    eventUrl: 'https://defisecuritysummit.org/',
+    tags: [
+      'Conference',
+      'Security'
+    ],
+  },
+  {
+    id: '59',
+    title: 'Pragma Cannes',
+    organizer: 'Pragma',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/Pragma%20Cannes.png',
+    description: 'Pragma Cannes in Cannes, France. ETHGlobal event.',
+    date: '2025-07-03',
+    location: 'Cannes, France',
+    locationType: 'in-person',
+    eventUrl: 'https://ethglobal.com/events/pragma-cannes',
+    tags: [
+      'Conference',
+      'ETHGlobal'
+    ],
+  },
+  {
+    id: '60',
+    title: 'ETHGlobal Happy Hour Denver',
+    organizer: 'ETHGlobal',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/ETHGlobal%20Happy%20Hour%20Denver.png',
+    description: 'ETHGlobal Happy Hour Denver in Denver, USA. ETHGlobal event.',
+    date: '2026-02-19',
+    location: 'Denver, USA',
+    locationType: 'in-person',
+    eventUrl: 'https://luma.com/ethglobal-happy-hour-denver-2026',
+    tags: [
+      'Meetup',
+      'ETHGlobal'
+    ],
+  },
+  {
+    id: '61',
+    title: 'ETH Lisbon',
+    organizer: 'ETH',
+    description: 'ETH Lisbon in Lisbon, Portugal. Regional Grassroots event.',
+    date: '2025-05-09',
+    location: 'Lisbon, Portugal',
+    locationType: 'in-person',
+    eventUrl: 'https://ethlisbon.org/',
+    tags: [
+      'Conference',
+      'Hackathon',
+      'Regional Grassroots'
+    ],
+  },
+  {
+    id: '62',
+    title: 'ETHPrague',
+    organizer: 'ETH',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/ETHPrague.png',
+    description: 'ETHPrague in Prague, Czechia. Regional Grassroots event.',
+    date: '2025-05-27',
+    location: 'Prague, Czechia',
+    locationType: 'in-person',
+    eventUrl: 'https://ethprague.com/',
+    tags: [
+      'Conference',
+      'Regional Grassroots'
+    ],
+  },
+  {
+    id: '63',
+    title: 'Australian Crypto Conference',
+    organizer: 'Australian',
+    description: 'Australian Crypto Conference in Sydney, Australia.  event.',
+    date: '2025-11-22',
+    location: 'Sydney, Australia',
+    locationType: 'in-person',
+    eventUrl: 'https://auscryptocon.com/',
+    tags: [
+      'Conference'
+    ],
+  },
+  {
+    id: '64',
+    title: 'ETH Latam',
+    organizer: 'ETH',
+    description: 'ETH Latam in São Paulo, Brasil. Regional Grassroots event.',
+    date: '2025-11-06',
+    location: 'São Paulo, Brasil',
+    locationType: 'in-person',
+    eventUrl: 'https://ethlatam.org/en',
+    tags: [
+      'Conference',
+      'Hackathon',
+      'Regional Grassroots'
+    ],
+  },
+  {
+    id: '65',
+    title: 'NFC Summit',
+    organizer: 'NFC',
+    description: 'NFC Summit in Lisbon, Portugal. NFT event.',
+    date: '2025-06-04',
+    location: 'Lisbon, Portugal',
+    locationType: 'in-person',
+    eventUrl: 'https://www.nfcsummit.com/',
+    tags: [
+      'Conference',
+      'NFT'
+    ],
+  },
+  {
+    id: '66',
+    title: 'TOKEN2049 Singapore',
+    organizer: 'TOKEN2049',
+    description: 'TOKEN2049 Singapore in Singapore.  event.',
+    date: '2025-10-01',
+    location: 'Singapore',
+    locationType: 'in-person',
+    eventUrl: 'https://www.asia.token2049.com/',
+    tags: [
+      'Conference'
+    ],
+  },
+  {
+    id: '67',
+    title: 'BUIDL Europe',
+    organizer: 'BUIDL',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/BUIDL%20Europe.png',
+    description: 'BUIDL Europe in Lisbon, Portugal. Regional Grassroots event.',
+    date: '2026-01-07',
+    location: 'Lisbon, Portugal',
+    locationType: 'in-person',
+    eventUrl: 'https://www.buidleurope.com/',
+    tags: [
+      'Conference',
+      'Regional Grassroots'
+    ],
+  },
+  {
+    id: '68',
+    title: 'ETH Seoul',
+    organizer: 'ETH',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/ETH%20Seoul.png',
+    description: 'ETH Seoul in Seoul, Korea. Regional Grassroots event.',
+    date: '2026-04-01',
+    location: 'Seoul, Korea',
+    locationType: 'in-person',
+    eventUrl: 'https://www.ethseoul.org/',
+    tags: [
+      'Conference',
+      'Regional Grassroots'
+    ],
+  },
+  {
+    id: '69',
+    title: 'The Science of Blockchain Conference',
+    organizer: 'The',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/The%20Science%20of%20Blockchain%20Conference.png',
+    description: 'The Science of Blockchain Conference in Stanford, USA. Academia event.',
+    date: '2026-07-27',
+    location: 'Stanford, USA',
+    locationType: 'in-person',
+    eventUrl: 'https://www.sbc-conference.com/2026/',
+    tags: [
+      'Conference',
+      'Academia'
+    ],
+  },
+  {
+    id: '70',
+    title: 'Stablecon EMEA',
+    organizer: 'Stablecon',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/Stablecon%20EMEA.png',
+    description: 'Stablecon EMEA in Amsterdam, Netherlands. RWA event.',
+    date: '2026-05-19',
+    location: 'Amsterdam, Netherlands',
+    locationType: 'in-person',
+    eventUrl: 'https://stablecon.com/emea/',
+    tags: [
+      'Conference',
+      'RWA'
+    ],
+  },
+  {
+    id: '71',
+    title: 'DevConnect',
+    organizer: 'DevConnect',
+    description: 'DevConnect in Buenos Aires, Argentina.  event.',
+    date: '2025-11-17',
+    location: 'Buenos Aires, Argentina',
+    locationType: 'in-person',
+    eventUrl: 'https://devconnect.org/',
+    tags: [
+      'Blockchain Week'
+    ],
+  },
+  {
+    id: '72',
+    title: 'ETH Brasil',
+    organizer: 'ETH',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/Ethereum%20Brasil.png',
+    description: 'ETH Brasil in São Paulo, Brazil. Regional Grassroots event.',
+    date: '2026-10-28',
+    location: 'São Paulo, Brazil',
+    locationType: 'in-person',
+    eventUrl: 'https://linktr.ee/ethereum.br',
+    tags: [
+      'Conference',
+      'Regional Grassroots'
+    ],
+  },
+  {
+    id: '73',
+    title: 'Pragma Lisbon',
+    organizer: 'Pragma',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/Pragma%20Lisbon.png',
+    description: 'Pragma Lisbon in Lisbon, Portugal. ETHGlobal event.',
+    date: '2026-07-23',
+    location: 'Lisbon, Portugal',
+    locationType: 'in-person',
+    eventUrl: 'https://ethglobal.com/events/pragma-lisbon2026',
+    tags: [
+      'Conference',
+      'ETHGlobal'
+    ],
+  },
+  {
+    id: '74',
+    title: 'SuperAI',
+    organizer: 'SuperAI',
+    description: 'SuperAI in Singapore. AI event.',
+    date: '2025-06-18',
+    location: 'Singapore',
+    locationType: 'in-person',
+    eventUrl: 'https://www.superai.com/agenda',
+    tags: [
+      'Conference',
+      'AI'
+    ],
+  },
+  {
+    id: '75',
+    title: 'ETH Cinco de Mayo',
+    organizer: 'ETH',
+    description: 'ETH Cinco de Mayo in Mexico City, Mexico. Regional Grassroots event.',
+    date: '2025-05-01',
+    location: 'Mexico City, Mexico',
+    locationType: 'in-person',
+    eventUrl: 'https://ethcdm.com/',
+    tags: [
+      'Conference',
+      'Hackathon',
+      'Regional Grassroots'
+    ],
+  },
+  {
+    id: '76',
+    title: 'Crypto Assets Conference',
+    organizer: 'Crypto',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/Crypto%20Assets%20Conference.png',
+    description: 'Crypto Assets Conference in Frankfurt, Germany. Institutional, Academia event.',
+    date: '2026-03-25',
+    location: 'Frankfurt, Germany',
+    locationType: 'in-person',
+    eventUrl: 'https://crypto-assets-conference.de/',
+    tags: [
+      'Conference',
+      'Institutional',
+      'Academia'
+    ],
+  },
+  {
+    id: '77',
+    title: 'Encryption Day',
+    organizer: 'Encryption',
+    description: 'Encryption Day in Cannes, France. Privacy and Cryptography event.',
+    date: '2025-07-03',
+    location: 'Cannes, France',
+    locationType: 'in-person',
+    eventUrl: 'https://lu.ma/0wrkyxwu',
+    tags: [
+      'Meetup',
+      'Privacy and Cryptography'
+    ],
+  },
+  {
+    id: '78',
+    title: 'Uzumaki 2025',
+    organizer: 'Uzumaki',
+    description: 'Uzumaki 2025 in Tokyo, Japan.  event.',
+    date: '2025-01-01',
+    location: 'Tokyo, Japan',
+    locationType: 'in-person',
+    eventUrl: 'https://uzumaki.house/',
+    tags: [
+      'Research & Hacker House'
+    ],
+  },
+  {
+    id: '79',
+    title: 'Digital Euro Conference 2026',
+    organizer: 'Digital',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/Digital%20Euro%20Conference%202026.png',
+    description: 'Digital Euro Conference 2026 in Frankfurt, Germany. RWA event.',
+    date: '2026-03-26',
+    location: 'Frankfurt, Germany',
+    locationType: 'in-person',
+    eventUrl: 'https://digital-euro-conference.de',
+    tags: [
+      'Conference',
+      'RWA'
+    ],
+  },
+  {
+    id: '80',
+    title: 'ctrl/shift 2026',
+    organizer: 'ctrl/shift',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/ctrl%20shift%202026.png',
+    description: 'ctrl/shift 2026 in Naples, Italy. Regional Grassroots event.',
+    date: '2026-06-08',
+    location: 'Naples, Italy',
+    locationType: 'in-person',
+    eventUrl: 'https://www.ctrlshift.events/',
+    tags: [
+      'Conference',
+      'Hackathon',
+      'Regional Grassroots'
+    ],
+  },
+  {
+    id: '81',
+    title: 'EthAccra',
+    organizer: 'EthAccra',
+    description: 'EthAccra in Accra, Ghana. Regional Grassroots event.',
+    date: '2025-09-03',
+    location: 'Accra, Ghana',
+    locationType: 'in-person',
+    eventUrl: 'https://ethaccra.xyz/',
+    tags: [
+      'Hackathon',
+      'Regional Grassroots'
+    ],
+  },
+  {
+    id: '82',
+    title: 'ETHGlobal Lisbon',
+    organizer: 'ETHGlobal',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/ETHGlobal%20Lisbon.png',
+    description: 'ETHGlobal Lisbon in Lisbon, Portugal. ETHGlobal event.',
+    date: '2026-07-24',
+    location: 'Lisbon, Portugal',
+    locationType: 'in-person',
+    eventUrl: 'https://ethglobal.com/events/lisbon2026',
+    tags: [
+      'Hackathon',
+      'ETHGlobal'
+    ],
+  },
+  {
+    id: '83',
+    title: 'Zuitzerland',
+    organizer: 'Zuitzerland',
+    description: 'Zuitzerland in Zürich, Switzerland.  event.',
+    date: '2025-05-01',
+    location: 'Zürich, Switzerland',
+    locationType: 'in-person',
+    eventUrl: 'https://zuitzerland.ch/',
+    tags: [
+      'Popup Village/City'
+    ],
+  },
+  {
+    id: '84',
+    title: 'ETHGlobal Tokyo',
+    organizer: 'ETHGlobal',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/ETHGlobal%20Tokyo.png',
+    description: 'ETHGlobal Tokyo in Tokyo, Japan. ETHGlobal event.',
+    date: '2026-09-25',
+    location: 'Tokyo, Japan',
+    locationType: 'in-person',
+    eventUrl: 'https://ethglobal.com/events/tokyo2026',
+    tags: [
+      'Hackathon',
+      'ETHGlobal'
+    ],
+  },
+  {
+    id: '85',
+    title: 'ProdFest-Web3JosConference',
+    organizer: 'ProdFest-Web3JosConference',
+    description: 'ProdFest-Web3JosConference in Jos, Nigeria.  event.',
+    date: '2025-08-19',
+    location: 'Jos, Nigeria',
+    locationType: 'in-person',
+    eventUrl: 'https://prodfest.blockfuselabs.com/',
+    tags: [
+      'Conference',
+      'Hackathon'
+    ],
+  },
+  {
+    id: '86',
+    title: 'Crypto 2025',
+    organizer: 'Crypto',
+    description: 'Crypto 2025 in Santa Barbara, USA. Academia, Privacy and Cryptography event.',
+    date: '2025-08-17',
+    location: 'Santa Barbara, USA',
+    locationType: 'in-person',
+    eventUrl: 'https://crypto.iacr.org/2025/',
+    tags: [
+      'Conference',
+      'Academia',
+      'Privacy and Cryptography'
+    ],
+  },
+  {
+    id: '87',
+    title: 'Consensus Hong Kong',
+    organizer: 'Consensus',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/Consensus%20Hong%20Kong.png',
+    description: 'Consensus Hong Kong in Hong Kong SAR. Institutional event.',
+    date: '2026-02-10',
+    location: 'Hong Kong SAR',
+    locationType: 'in-person',
+    eventUrl: 'https://consensus-hongkong.coindesk.com/',
+    tags: [
+      'Conference',
+      'Institutional'
+    ],
+  },
+  {
+    id: '88',
+    title: 'ETH Beijing',
+    organizer: 'ETH',
+    description: 'ETH Beijing in Beijing, China. Regional Grassroots event.',
+    date: '2025-05-16',
+    location: 'Beijing, China',
+    locationType: 'in-person',
+    eventUrl: 'https://www.ethbeijing.xyz/',
+    tags: [
+      'Hackathon',
+      'Conference',
+      'Regional Grassroots'
+    ],
+  },
+  {
+    id: '89',
+    title: 'ETHMilan',
+    organizer: 'ETH',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/ETHMilan.png',
+    description: 'ETHMilan in Milan, Italy. Regional Grassroots event.',
+    date: '2026-05-21',
+    location: 'Milan, Italy',
+    locationType: 'in-person',
+    eventUrl: 'https://www.ethmilan.xyz',
+    tags: [
+      'Conference',
+      'Regional Grassroots'
+    ],
+  },
+  {
+    id: '90',
+    title: 'ETHDenver',
+    organizer: 'ETH',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/ETHDenver.png',
+    description: 'ETHDenver in Denver, USA. Regional Grassroots event.',
+    date: '2026-02-17',
+    location: 'Denver, USA',
+    locationType: 'in-person',
+    eventUrl: 'https://ethdenver.com',
+    tags: [
+      'Conference',
+      'Regional Grassroots'
+    ],
+    featured: true,
+
+  },
+  {
+    id: '91',
+    title: 'ETHGlobal New Delhi',
+    organizer: 'ETHGlobal',
+    description: 'ETHGlobal New Delhi in New Delhi, India. ETHGlobal event.',
+    date: '2025-09-26',
+    location: 'New Delhi, India',
+    locationType: 'in-person',
+    eventUrl: 'https://ethglobal.com/events/newdelhi',
+    tags: [
+      'Hackathon',
+      'ETHGlobal'
+    ],
+  },
+  {
+    id: '92',
+    title: 'ZuAfrique',
+    organizer: 'ZuAfrique',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/ZuAfrique.png',
+    description: 'ZuAfrique in Kilifi, Kenya. Regional Grassroots event.',
+    date: '2026-04-12',
+    location: 'Kilifi, Kenya',
+    locationType: 'in-person',
+    eventUrl: 'https://zuafrique.com/',
+    tags: [
+      'Popup Village/City',
+      'Regional Grassroots'
+    ],
+  },
+  {
+    id: '93',
+    title: 'ProgCryptoSG Meetup #5',
+    organizer: 'ProgCryptoSG',
+    description: 'ProgCryptoSG Meetup #5 in Singapore. Privacy and Cryptography event.',
+    date: '2025-05-29',
+    location: 'Singapore',
+    locationType: 'in-person',
+    eventUrl: 'https://lu.ma/1y7yp4gu',
+    tags: [
+      'Meetup',
+      'Privacy and Cryptography'
+    ],
+  },
+  {
+    id: '94',
+    title: 'Latincrypt 2025',
+    organizer: 'Latincrypt',
+    description: 'Latincrypt 2025 in Medellín, Colombia. Academia, Privacy and Cryptography event.',
+    date: '2025-10-01',
+    location: 'Medellín, Colombia',
+    locationType: 'in-person',
+    eventUrl: 'https://ciencias.medellin.unal.edu.co/eventos/latincrypt/',
+    tags: [
+      'Conference',
+      'Academia',
+      'Privacy and Cryptography'
+    ],
+  },
+  {
+    id: '95',
+    title: 'Privacy for Financial Services Workshop',
+    organizer: 'Privacy',
+    description: 'Privacy for Financial Services Workshop in NYC, USA. Privacy and Cryptography event.',
+    date: '2025-06-23',
+    location: 'NYC, USA',
+    locationType: 'in-person',
+    eventUrl: 'https://www.lfdecentralizedtrust.org/privacy-workshop-2025',
+    tags: [
+      'Workshop',
+      'Privacy and Cryptography'
+    ],
+  },
+  {
+    id: '96',
+    title: 'ETHBratislava',
+    organizer: 'ETH',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/ETHBratislava.png',
+    description: 'ETHBratislava in Bratislava, Slovakia. Regional Grassroots event.',
+    date: '2025-05-23',
+    location: 'Bratislava, Slovakia',
+    locationType: 'in-person',
+    eventUrl: 'https://ethbratislava.com/',
+    tags: [
+      'Conference',
+      'Hackathon',
+      'Regional Grassroots'
+    ],
+  },
+  {
+    id: '97',
+    title: 'zkVM HackerHouse',
+    organizer: 'zkVM',
+    description: 'zkVM HackerHouse in Suzhou, China. Privacy and Cryptography event.',
+    date: '2025-04-14',
+    location: 'Suzhou, China',
+    locationType: 'in-person',
+    eventUrl: 'https://coset.io/hackerhouse/suzhou-zkvm/',
+    tags: [
+      'Research & Hacker House',
+      'Privacy and Cryptography'
+    ],
+  },
+  {
+    id: '98',
+    title: 'NFT NYC',
+    organizer: 'NFT',
+    description: 'NFT NYC in NYC, USA. NFT event.',
+    date: '2025-06-25',
+    location: 'NYC, USA',
+    locationType: 'in-person',
+    eventUrl: 'https://www.nft.nyc/',
+    tags: [
+      'Conference',
+      'NFT'
+    ],
+  },
+  {
+    id: '99',
+    title: 'ETHOnline 2025',
+    organizer: 'ETH',
+    description: 'ETHOnline 2025. ETHGlobal event.',
+    date: '2025-10-10',
+    location: 'TBD',
+    locationType: 'online',
+    eventUrl: 'https://ethglobal.com/events/ethonline2025',
+    tags: [
+      'Hackathon',
+      'ETHGlobal'
+    ],
+  },
+  {
+    id: '100',
+    title: 'The Latest in DeFi Research (TLDR) Conference',
+    organizer: 'The',
+    description: 'The Latest in DeFi Research (TLDR) Conference in NYC, USA. Academia event.',
+    date: '2025-05-12',
+    location: 'NYC, USA',
+    locationType: 'in-person',
+    eventUrl: 'https://www.thelatestindefi.org/conference',
+    tags: [
+      'Conference',
+      'Academia'
+    ],
+  },
+  {
+    id: '101',
+    title: 'Ethsafari',
+    organizer: 'Ethsafari',
+    description: 'Ethsafari in Nairobi, Kenya. Regional Grassroots event.',
+    date: '2025-09-07',
+    location: 'Nairobi, Kenya',
+    locationType: 'hybrid',
+    eventUrl: 'https://ethsafari.xyz/',
+    tags: [
+      'Conference',
+      'Hackathon',
+      'Regional Grassroots'
+    ],
+  },
+  {
+    id: '102',
+    title: 'ETHMumbai',
+    organizer: 'ETH',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/ETHMumbai.png',
+    description: 'ETHMumbai in Mumbai, India. Regional Grassroots event.',
+    date: '2026-03-12',
+    location: 'Mumbai, India',
+    locationType: 'in-person',
+    eventUrl: 'https://www.ethmumbai.in',
+    tags: [
+      'Conference',
+      'Hackathon',
+      'Regional Grassroots'
+    ],
+  },
+  {
+    id: '103',
+    title: 'The Mu @Expo 2025: Global Ethereum Movement',
+    organizer: 'The',
+    description: 'The Mu @Expo 2025: Global Ethereum Movement in Osaka, Japan.  event.',
+    date: '2025-05-12',
+    location: 'Osaka, Japan',
+    locationType: 'in-person',
+    eventUrl: 'https://lu.ma/k3mjhh5r',
+    tags: [
+      'Popup Village/City'
+    ],
+  },
+  {
+    id: '104',
+    title: 'muHangZhou',
+    organizer: 'muHangZhou',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/muHangZhou.png',
+    description: 'muHangZhou in Hangzhou, China. Regional Grassroots event.',
+    date: '2026-04-26',
+    location: 'Hangzhou, China',
+    locationType: 'in-person',
+    eventUrl: 'https://the-mu.xyz/',
+    tags: [
+      'Popup Village/City',
+      'Regional Grassroots'
+    ],
+  },
+  {
+    id: '105',
+    title: 'ETHDublin 2025',
+    organizer: 'ETH',
+    description: 'ETHDublin 2025 in Dublin, Ireland. Regional Grassroots event.',
+    date: '2025-05-23',
+    location: 'Dublin, Ireland',
+    locationType: 'in-person',
+    eventUrl: 'https://www.ethdublin.io/',
+    tags: [
+      'Conference',
+      'Hackathon',
+      'Regional Grassroots'
+    ],
+  },
+  {
+    id: '106',
+    title: 'Pop-X Hong Kong 2025',
+    organizer: 'Pop-X',
+    description: 'Pop-X Hong Kong 2025 in Hong Kong SAR.  event.',
+    date: '2025-04-06',
+    location: 'Hong Kong SAR',
+    locationType: 'in-person',
+    eventUrl: 'https://lu.ma/xwumx49a?tk=B5euqB',
+    tags: [
+      'Popup Village/City'
+    ],
+  },
+  {
+    id: '107',
+    title: 'Farcon Rome',
+    organizer: 'Farcon',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/Farcon%20Rome.png',
+    description: 'Farcon Rome in Rome, Italy. Regional Grassroots, Open Source event.',
+    date: '2026-05-04',
+    location: 'Rome, Italy',
+    locationType: 'in-person',
+    eventUrl: 'https://www.farcon.eu/',
+    tags: [
+      'Conference',
+      'Regional Grassroots',
+      'Open Source'
+    ],
+  },
+  {
+    id: '108',
+    title: 'NapulETH',
+    organizer: 'ETH',
+    description: 'NapulETH in Naples, Italy. Regional Grassroots event.',
+    date: '2025-07-17',
+    location: 'Naples, Italy',
+    locationType: 'in-person',
+    eventUrl: 'https://www.napuleth.org/',
+    tags: [
+      'Conference',
+      'Regional Grassroots'
+    ],
+  },
+  {
+    id: '109',
+    title: 'ETHGlobal Cannes',
+    organizer: 'ETHGlobal',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/ETHGlobal%20Cannes.png',
+    description: 'ETHGlobal Cannes in Cannes, France. ETHGlobal event.',
+    date: '2026-04-03',
+    location: 'Cannes, France',
+    locationType: 'in-person',
+    eventUrl: 'https://ethglobal.com/events/cannes2026',
+    tags: [
+      'Hackathon',
+      'ETHGlobal'
+    ],
+    featured: true,
+
+  },
+  {
+    id: '110',
+    title: 'Asiacrypt 2025',
+    organizer: 'Asiacrypt',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/Asiacrypt%202025.png',
+    description: 'Asiacrypt 2025 in Melbourne, Australia. Academia, Privacy and Cryptography event.',
+    date: '2025-12-08',
+    location: 'Melbourne, Australia',
+    locationType: 'in-person',
+    eventUrl: 'https://asiacrypt.iacr.org/2025/',
+    tags: [
+      'Conference',
+      'Academia',
+      'Privacy and Cryptography'
+    ],
+  },
+  {
+    id: '111',
+    title: 'Black Hat Middle East & Africa 2025',
+    organizer: 'Black',
+    description: 'Black Hat Middle East & Africa 2025 in Malham, Saudi Arabia. Security event.',
+    date: '2025-12-02',
+    location: 'Malham, Saudi Arabia',
+    locationType: 'in-person',
+    eventUrl: 'https://blackhatmea.com/',
+    tags: [
+      'Conference',
+      'Security'
+    ],
+  },
+  {
+    id: '112',
+    title: 'ETH Floripa',
+    organizer: 'ETH',
+    description: 'ETH Floripa in Florianópolis, Brazil. Regional Grassroots event.',
+    date: '2025-11-11',
+    location: 'Florianópolis, Brazil',
+    locationType: 'in-person',
+    eventUrl: 'https://www.ethfloripa.com/',
+    tags: [
+      'Popup Village/City',
+      'Regional Grassroots'
+    ],
+  },
+  {
+    id: '113',
+    title: 'Consensus Miami',
+    organizer: 'Consensus',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/Consensus%20Miami.png',
+    description: 'Consensus Miami in Miami, USA. Institutional event.',
+    date: '2026-05-05',
+    location: 'Miami, USA',
+    locationType: 'in-person',
+    eventUrl: 'https://consensus.coindesk.com/',
+    tags: [
+      'Conference',
+      'Institutional'
+    ],
+  },
+  {
+    id: '114',
+    title: 'FOSSASIA Summit 2025',
+    organizer: 'FOSSASIA',
+    description: 'FOSSASIA Summit 2025 in Bangkok, Thailand. Open Source event.',
+    date: '2025-03-13',
+    location: 'Bangkok, Thailand',
+    locationType: 'hybrid',
+    eventUrl: 'https://eventyay.com/e/4c0e0c27',
+    tags: [
+      'Conference',
+      'Open Source'
+    ],
+  },
+  {
+    id: '115',
+    title: 'HackMoney 2026',
+    organizer: 'HackMoney',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/HackMoney%202026.png',
+    description: 'HackMoney 2026 in Online. ETHGlobal event.',
+    date: '2026-01-30',
+    location: 'Online',
+    locationType: 'online',
+    eventUrl: 'https://ethglobal.com/events/hackmoney2026',
+    tags: [
+      'Hackathon',
+      'ETHGlobal'
+    ],
+  },
+  {
+    id: '116',
+    title: 'ETHGlobal Cannes',
+    organizer: 'ETHGlobal',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/ETHGlobal%20Cannes.png',
+    description: 'ETHGlobal Cannes in Cannes, France. ETHGlobal event.',
+    date: '2025-07-04',
+    location: 'Cannes, France',
+    locationType: 'in-person',
+    eventUrl: 'https://ethglobal.com/events/cannes',
+    tags: [
+      'Hackathon',
+      'ETHGlobal'
+    ],
+  },
+  {
+    id: '117',
+    title: 'ETHPrague',
+    organizer: 'ETH',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/ETHPrague.png',
+    description: 'ETHPrague in Prague, Czechia. Regional Grassroots event.',
+    date: '2026-05-08',
+    location: 'Prague, Czechia',
+    locationType: 'in-person',
+    eventUrl: 'https://ethprague.com',
+    tags: [
+      'Conference',
+      'Hackathon',
+      'Regional Grassroots'
+    ],
+    featured: true,
+
+  },
+  {
+    id: '118',
+    title: 'DEF CON 33',
+    organizer: 'DEF',
+    description: 'DEF CON 33 in Las Vegas, USA. Security event.',
+    date: '2025-08-07',
+    location: 'Las Vegas, USA',
+    locationType: 'in-person',
+    eventUrl: 'https://www.defcon.org/',
+    tags: [
+      'Conference',
+      'Security'
+    ],
+  },
+  {
+    id: '119',
+    title: 'ETHGlobal Buenos Aires',
+    organizer: 'ETHGlobal',
+    description: 'ETHGlobal Buenos Aires in Buenos Aires, Argentina. ETHGlobal event.',
+    date: '2025-11-21',
+    location: 'Buenos Aires, Argentina',
+    locationType: 'in-person',
+    eventUrl: 'https://ethglobal.com/events/buenosaires',
+    tags: [
+      'Hackathon',
+      'ETHGlobal'
+    ],
+  },
+  {
+    id: '120',
+    title: 'sozu haus mallorca',
+    organizer: 'sozu',
+    description: 'sozu haus mallorca in Mallorca, Spain.  event.',
+    date: '2025-06-22',
+    location: 'Mallorca, Spain',
+    locationType: 'in-person',
+    eventUrl: 'https://lu.ma/vyji07hq',
+    tags: [
+      'Research & Hacker House'
+    ],
+  },
+  {
+    id: '121',
+    title: 'DappCon',
+    organizer: 'DappCon',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/DappCon.png',
+    description: 'DappCon in Berlin, Germany. dApp event.',
+    date: '2025-06-16',
+    location: 'Berlin, Germany',
+    locationType: 'in-person',
+    eventUrl: 'https://dappcon.io/',
+    tags: [
+      'Conference',
+      'dApp'
+    ],
+  },
+  {
+    id: '122',
+    title: 'Edge City Bhutan',
+    organizer: 'Edge',
+    description: 'Edge City Bhutan in Thimphu, Bhutan.  event.',
+    date: '2025-09-14',
+    location: 'Thimphu, Bhutan',
+    locationType: 'in-person',
+    eventUrl: 'https://www.edgecity.live/bhutan2025',
+    tags: [
+      'Popup Village/City'
+    ],
+  },
+  {
+    id: '123',
+    title: 'ETHCluj',
+    organizer: 'ETH',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/ETHCluj.png',
+    description: 'ETHCluj in Cluj-Napoca, Romania. Regional Grassroots event.',
+    date: '2026-05-13',
+    location: 'Cluj-Napoca, Romania',
+    locationType: 'in-person',
+    eventUrl: 'https://www.ethcluj.org/',
+    tags: [
+      'Conference',
+      'Regional Grassroots'
+    ],
+    featured: true,
+
+  },
+  {
+    id: '124',
+    title: 'EthCC',
+    organizer: 'EthCC',
+    description: 'EthCC in Cannes, France. Regional Grassroots event.',
+    date: '2025-06-30',
+    location: 'Cannes, France',
+    locationType: 'in-person',
+    eventUrl: 'https://ethcc.io/',
+    tags: [
+      'Conference',
+      'Regional Grassroots'
+    ],
+  },
+  {
+    id: '125',
+    title: 'HITCON',
+    organizer: 'HITCON',
+    description: 'HITCON in Taiwan. Security event.',
+    date: '2025-08-15',
+    location: 'Taiwan',
+    locationType: 'in-person',
+    eventUrl: 'https://hitcon.org/2025/',
+    tags: [
+      'Conference',
+      'Security'
+    ],
+  },
+  {
+    id: '126',
+    title: 'ETHGlobal Prague',
+    organizer: 'ETHGlobal',
+    description: 'ETHGlobal Prague in Prague, Czechia. ETHGlobal event.',
+    date: '2025-05-30',
+    location: 'Prague, Czechia',
+    locationType: 'in-person',
+    eventUrl: 'https://ethglobal.com/events/prague',
+    tags: [
+      'Hackathon',
+      'ETHGlobal'
+    ],
+  },
+  {
+    id: '127',
+    title: 'Permissionless IV',
+    organizer: 'Permissionless',
+    description: 'Permissionless IV in NYC, USA.  event.',
+    date: '2025-06-24',
+    location: 'NYC, USA',
+    locationType: 'in-person',
+    eventUrl: 'https://blockworks.co/event/permissionless-iv',
+    tags: [
+      'Conference'
+    ],
+  },
+  {
+    id: '128',
+    title: 'ETH Hangzhou',
+    organizer: 'ETH',
+    description: 'ETH Hangzhou in Hangzhou, China. Regional Grassroots event.',
+    date: '2025-03-29',
+    location: 'Hangzhou, China',
+    locationType: 'in-person',
+    eventUrl: 'https://www.ethhangzhou.xyz/',
+    tags: [
+      'Conference',
+      'Hackathon',
+      'Regional Grassroots'
+    ],
+  },
+  {
+    id: '129',
+    title: 'European Blockchain Convention',
+    organizer: 'European',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/European%20Blockchain%20Convention.png',
+    description: 'European Blockchain Convention in Barcelona, Spain. Institutional event.',
+    date: '2026-09-16',
+    location: 'Barcelona, Spain',
+    locationType: 'in-person',
+    eventUrl: 'https://eblockchainconvention.com/european-blockchain-convention-12/',
+    tags: [
+      'Conference',
+      'Institutional'
+    ],
+  },
+  {
+    id: '130',
+    title: 'Pragma Tokyo',
+    organizer: 'Pragma',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/Pragma%20Tokyo.png',
+    description: 'Pragma Tokyo in Tokyo, Japan. ETHGlobal event.',
+    date: '2026-09-24',
+    location: 'Tokyo, Japan',
+    locationType: 'in-person',
+    eventUrl: 'https://ethglobal.com/events/pragma-tokyo2026',
+    tags: [
+      'Conference',
+      'ETHGlobal'
+    ],
+  },
+  {
+    id: '131',
+    title: 'ZuKas',
+    organizer: 'ZuKas',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/ZuKas.png',
+    description: 'ZuKas in Kaş, Turkey. Regional Grassroots event.',
+    date: '2026-04-10',
+    location: 'Kaş, Turkey',
+    locationType: 'in-person',
+    eventUrl: 'https://www.zukas.city/',
+    tags: [
+      'Popup Village/City',
+      'Regional Grassroots'
+    ],
+  },
+  {
+    id: '133',
+    title: 'ETHKyiv',
+    organizer: 'ETH',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/ETHKyiv.png',
+    description: 'ETHKyiv in Kyiv, Ukraine. Regional Grassroots event.',
+    date: '2026-06-01',
+    location: 'Kyiv, Ukraine',
+    locationType: 'in-person',
+    eventUrl: 'https://ethkyiv.com/',
+    tags: [
+      'Conference',
+      'Hackathon',
+      'Regional Grassroots'
+    ],
+  },
+  {
+    id: '134',
+    title: 'Black Hat MEA 2026',
+    organizer: 'Black',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/Black%20Hat%20MEA%202026.png',
+    description: 'Black Hat MEA 2026 in Malham, Saudi Arabia. Security event.',
+    date: '2026-12-01',
+    location: 'Malham, Saudi Arabia',
+    locationType: 'in-person',
+    eventUrl: 'https://blackhatmea.com/',
+    tags: [
+      'Conference',
+      'Security'
+    ],
+  },
+  {
+    id: '136',
+    title: 'Edge Esmeralda',
+    organizer: 'Edge',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/Edge%20Esmeralda.png',
+    description: 'Edge Esmeralda in Healdsburg, USA. Regional Grassroots event.',
+    date: '2026-05-30',
+    location: 'Healdsburg, USA',
+    locationType: 'in-person',
+    eventUrl: 'https://www.edgeesmeralda.com/',
+    tags: [
+      'Popup Village/City',
+      'Regional Grassroots'
+    ],
+  },
+  {
+    id: '137',
+    title: 'ETHSydney Year-End Celebration',
+    organizer: 'ETH',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/ETHSydney%20Year-End%20Celebration.png',
+    description: 'ETHSydney Year-End Celebration in Sydney, Australia. Regional Grassroots event.',
+    date: '2025-12-17',
+    location: 'Sydney, Australia',
+    locationType: 'in-person',
+    eventUrl: 'https://luma.com/3xzehvw1',
+    tags: [
+      'Meetup',
+      'Regional Grassroots'
+    ],
+  },
+  {
+    id: '138',
+    title: 'ETHBratislava',
+    organizer: 'ETH',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/ETHBratislava.png',
+    description: 'ETHBratislava in Bratislava, Slovakia. Regional Grassroots event.',
+    date: '2026-09-11',
+    location: 'Bratislava, Slovakia',
+    locationType: 'in-person',
+    eventUrl: 'http://www.ethbratislava.com/',
+    tags: [
+      'Conference',
+      'Hackathon',
+      'Regional Grassroots'
+    ],
+  },
+  {
+    id: '139',
+    title: 'Web3Lagos Conference',
+    organizer: 'Web3Lagos',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/Web3Lagos%20Conference.png',
+    description: 'Web3Lagos Conference in Lagos, Nigeria. Regional Grassroots event.',
+    date: '2026-08-27',
+    location: 'Lagos, Nigeria',
+    locationType: 'in-person',
+    eventUrl: 'https://event.web3bridge.com/',
+    tags: [
+      'Conference',
+      'Hackathon',
+      'Regional Grassroots'
+    ],
+  },
+  {
+    id: '140',
+    title: 'Ethereum Zurich',
+    organizer: 'Ethereum',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/Ethereum%20Zurich.png',
+    description: 'Ethereum Zurich in Zürich, Switzerland. Regional Grassroots event.',
+    date: '2026-04-10',
+    location: 'Zürich, Switzerland',
+    locationType: 'in-person',
+    eventUrl: 'https://ethereumzuri.ch/',
+    tags: [
+      'Conference',
+      'Regional Grassroots'
+    ],
+  },
+  {
+    id: '141',
+    title: 'Common S3nse',
+    organizer: 'Common',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/Common%20S3nse.png',
+    description: 'Common S3nse in Amsterdam, The Netherlands. Privacy and Cryptography event.',
+    date: '2026-06-12',
+    location: 'Amsterdam, The Netherlands',
+    locationType: 'hybrid',
+    eventUrl: 'https://commons3nse.cryptocanal.org/',
+    tags: [
+      'Conference',
+      'Hackathon',
+      'Privacy and Cryptography'
+    ],
+  },
+  {
+    id: '142',
+    title: 'Cypherpunk Week',
+    organizer: 'Cypherpunk',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/Cypherpunk%20Week.png',
+    description: 'Cypherpunk Week in Amsterdam, The Netherlands. Privacy and Cryptography event.',
+    date: '2026-06-08',
+    location: 'Amsterdam, The Netherlands',
+    locationType: 'hybrid',
+    eventUrl: 'https://cypherpunkweek.com/',
+    tags: [
+      'Blockchain Week',
+      'Privacy and Cryptography'
+    ],
+  },
+  {
+    id: '143',
+    title: 'Aleph March \'26',
+    organizer: 'Aleph',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/Aleph%20March%20\'26.png',
+    description: 'Aleph March \'26 in Buenos Aires, Argentina. Regional Grassroots, AI event.',
+    date: '2026-03-09',
+    location: 'Buenos Aires, Argentina',
+    locationType: 'in-person',
+    eventUrl: 'https://aleph.crecimiento.build',
+    tags: [
+      'Popup Village/City',
+      'Regional Grassroots',
+      'AI'
+    ],
+  },
+  {
+    id: '144',
+    title: 'ETHChiangmai',
+    organizer: 'ETH',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/ETHChiangmai.png',
+    description: 'ETHChiangmai in Chiang Mai, Thailand. Privacy and Cryptography event.',
+    date: '2025-12-08',
+    location: 'Chiang Mai, Thailand',
+    locationType: 'in-person',
+    eventUrl: 'https://ethchiangmai.com/',
+    tags: [
+      'Popup Village/City',
+      'Privacy and Cryptography'
+    ],
+  },
+  {
+    id: '145',
+    title: 'Ethereum Cypherpunk Congress #3',
+    organizer: 'Ethereum',
+    organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/Ethereum%20Cypherpunk%20Congress%203.png',
+    description: 'Ethereum Cypherpunk Congress #3 in Mumbai, India. Privacy and Cryptography event.',
+    date: '2026-11-02',
+    location: 'Mumbai, India',
+    locationType: 'in-person',
+    eventUrl: 'https://luma.com/spsnos9t?lm_api_id=evt-yG8wi8Jjw5ec6de&lm_medium=blast&lm_source=event',
+    tags: [
+      'Conference',
+      'Privacy and Cryptography'
+    ],
+  }
+]
+
+export const featuredEvents = events.filter(event => event.featured)
