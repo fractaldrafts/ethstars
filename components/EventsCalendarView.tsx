@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useMemo, useEffect } from 'react'
-import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, MapPin, Globe, ArrowUpRight, Clock } from 'lucide-react'
+import { ChevronLeft, ChevronRight, ChevronDown, Calendar as CalendarIcon, MapPin, Globe, ArrowUpRight, Clock } from 'lucide-react'
 import { type Event } from '@/data/events'
 
 interface EventsCalendarViewProps {
@@ -276,7 +276,7 @@ export default function EventsCalendarView({ events, onEventClick }: EventsCalen
         <div className="flex items-center gap-2 sm:gap-4">
           <button
             onClick={() => navigateMonth('prev')}
-            className="p-2 rounded bg-[rgba(245,245,245,0.08)] hover:bg-zinc-700 text-zinc-400 hover:text-white transition-colors"
+            className="p-2 rounded-full bg-[rgba(245,245,245,0.08)] hover:bg-zinc-700 text-zinc-400 hover:text-white transition-colors"
             aria-label="Previous month"
           >
             <ChevronLeft className="w-4 h-4" />
@@ -284,29 +284,35 @@ export default function EventsCalendarView({ events, onEventClick }: EventsCalen
           
           {/* Month/Year Picker */}
           <div className="flex items-center gap-2">
-            <select
-              value={currentMonth}
-              onChange={(e) => handleMonthYearChange(Number(e.target.value), currentYear)}
-              className="bg-[rgba(245,245,245,0.08)] border border-[rgba(245,245,245,0.08)] rounded px-2 py-1.5 text-sm text-white focus:border-zinc-700 focus:outline-none cursor-pointer"
-            >
-              {months.map((month, index) => (
-                <option key={month} value={index}>{month}</option>
-              ))}
-            </select>
-            <select
-              value={currentYear}
-              onChange={(e) => handleMonthYearChange(currentMonth, Number(e.target.value))}
-              className="bg-[rgba(245,245,245,0.08)] border border-[rgba(245,245,245,0.08)] rounded px-2 py-1.5 text-sm text-white focus:border-zinc-700 focus:outline-none cursor-pointer"
-            >
-              {availableYears.map(year => (
-                <option key={year} value={year}>{year}</option>
-              ))}
-            </select>
+            <div className="relative">
+              <select
+                value={currentMonth}
+                onChange={(e) => handleMonthYearChange(Number(e.target.value), currentYear)}
+                className="bg-[rgba(245,245,245,0.08)] border border-[rgba(245,245,245,0.08)] rounded-full pl-3 pr-8 py-1.5 text-sm text-white focus:border-zinc-700 focus:outline-none cursor-pointer appearance-none"
+              >
+                {months.map((month, index) => (
+                  <option key={month} value={index}>{month}</option>
+                ))}
+              </select>
+              <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-500 pointer-events-none" />
+            </div>
+            <div className="relative">
+              <select
+                value={currentYear}
+                onChange={(e) => handleMonthYearChange(currentMonth, Number(e.target.value))}
+                className="bg-[rgba(245,245,245,0.08)] border border-[rgba(245,245,245,0.08)] rounded-full pl-3 pr-8 py-1.5 text-sm text-white focus:border-zinc-700 focus:outline-none cursor-pointer appearance-none"
+              >
+                {availableYears.map(year => (
+                  <option key={year} value={year}>{year}</option>
+                ))}
+              </select>
+              <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-500 pointer-events-none" />
+            </div>
           </div>
 
           <button
             onClick={() => navigateMonth('next')}
-            className="p-2 rounded bg-[rgba(245,245,245,0.08)] hover:bg-zinc-700 text-zinc-400 hover:text-white transition-colors"
+            className="p-2 rounded-full bg-[rgba(245,245,245,0.08)] hover:bg-zinc-700 text-zinc-400 hover:text-white transition-colors"
             aria-label="Next month"
           >
             <ChevronRight className="w-4 h-4" />
@@ -315,14 +321,14 @@ export default function EventsCalendarView({ events, onEventClick }: EventsCalen
         <div className="flex items-center gap-2">
           <button
             onClick={goToNextEvent}
-            className="px-3 py-1.5 text-sm text-zinc-400 hover:text-white bg-[rgba(245,245,245,0.08)] hover:bg-zinc-700 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-3 py-1.5 text-sm text-zinc-400 hover:text-white bg-[rgba(245,245,245,0.08)] hover:bg-zinc-700 rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={futureEvents.length === 0}
           >
             Next Event
           </button>
           <button
             onClick={goToToday}
-            className="px-3 py-1.5 text-sm text-zinc-400 hover:text-white bg-[rgba(245,245,245,0.08)] hover:bg-zinc-700 rounded transition-colors"
+            className="px-3 py-1.5 text-sm text-zinc-400 hover:text-white bg-[rgba(245,245,245,0.08)] hover:bg-zinc-700 rounded-full transition-colors"
           >
             Today
           </button>

@@ -311,7 +311,7 @@ export default function CommunityEventsSection({ community }: { community: Commu
                     setSortField('date')
                     setSortDirection('asc')
                   }}
-                  className={`px-3 py-1.5 text-sm font-medium transition-colors rounded-md border ${
+                  className={`px-3 py-1.5 text-sm font-medium transition-colors rounded-full border ${
                     isSelected
                       ? 'bg-[rgba(245,245,245,0.08)] text-white border-transparent'
                       : 'text-zinc-500 hover:text-white hover:bg-[rgba(245,245,245,0.04)] border-transparent'
@@ -332,7 +332,7 @@ export default function CommunityEventsSection({ community }: { community: Commu
                 placeholder="Search events..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-[rgba(245,245,245,0.08)] border border-[rgba(245,245,245,0.08)] rounded-md pl-9 pr-8 py-2 text-sm text-white placeholder-zinc-600 focus:border-zinc-700 transition-colors"
+                className="w-full bg-[rgba(245,245,245,0.08)] border border-[rgba(245,245,245,0.08)] rounded-full pl-9 pr-8 py-2 text-sm text-white placeholder-zinc-600 focus:border-zinc-700 transition-colors"
               />
               {searchQuery && (
                 <button
@@ -345,10 +345,10 @@ export default function CommunityEventsSection({ community }: { community: Commu
             </div>
             
             {/* View Mode Toggle */}
-            <div className="flex items-center gap-1 p-1 bg-[rgba(245,245,245,0.08)] rounded-md border border-[rgba(245,245,245,0.08)]">
+            <div className="flex items-center gap-1 p-1 bg-[rgba(245,245,245,0.08)] rounded-full border border-[rgba(245,245,245,0.08)]">
               <button
                 onClick={() => setViewMode('table')}
-                className={`flex items-center justify-center gap-1.5 px-2.5 py-1.5 text-sm font-medium rounded transition-colors ${
+                className={`flex items-center justify-center gap-1.5 px-2.5 py-1.5 text-sm font-medium rounded-full transition-colors ${
                   viewMode === 'table'
                     ? 'bg-[rgba(245,245,245,0.08)] text-white'
                     : 'text-zinc-500 hover:text-white'
@@ -359,7 +359,7 @@ export default function CommunityEventsSection({ community }: { community: Commu
               </button>
               <button
                 onClick={() => setViewMode('calendar')}
-                className={`flex items-center justify-center gap-1.5 px-2.5 py-1.5 text-sm font-medium rounded transition-colors ${
+                className={`flex items-center justify-center gap-1.5 px-2.5 py-1.5 text-sm font-medium rounded-full transition-colors ${
                   viewMode === 'calendar'
                     ? 'bg-[rgba(245,245,245,0.08)] text-white'
                     : 'text-zinc-500 hover:text-white'

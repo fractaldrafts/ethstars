@@ -85,7 +85,7 @@ export default function CommunitiesMobileMapView({ communities }: CommunitiesMob
       let closestDistance = Infinity
       const maxDistance = 1500 // Maximum distance in km to consider (adjust based on zoom level)
 
-      communities.forEach((community) => {
+      for (const community of communities) {
         const distance = calculateDistance(
           cameraPosition.lat,
           cameraPosition.lng,
@@ -100,7 +100,7 @@ export default function CommunitiesMobileMapView({ communities }: CommunitiesMob
           closestDistance = distance
           closestCommunity = community
         }
-      })
+      }
 
       // Auto-select the closest community
       if (closestCommunity && closestCommunity.id !== selectedCommunity?.id) {
