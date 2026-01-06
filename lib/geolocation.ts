@@ -12,6 +12,20 @@ export interface IPLocation {
 }
 
 /**
+ * Normalize country names to official abbreviations where applicable
+ */
+function normalizeCountryName(countryName: string): string {
+  const countryMappings: Record<string, string> = {
+    'United States': 'USA',
+    'United States of America': 'USA',
+    'United Kingdom': 'UK',
+    'United Arab Emirates': 'UAE',
+  }
+  
+  return countryMappings[countryName] || countryName
+}
+
+/**
  * Get user location from IP address using ipapi.co (free tier)
  * Falls back to ip-api.com if first fails
  */
@@ -28,7 +42,7 @@ export async function getUserLocationFromIP(): Promise<IPLocation | null> {
       const data = await response.json()
       if (data.latitude && data.longitude && data.country_name) {
         return {
-          country: data.country_name,
+          country: normalizeCountryName(data.country_name),
           countryCode: data.country_code || data.country_code_iso3,
           city: data.city,
           latitude: data.latitude,
@@ -53,7 +67,7 @@ export async function getUserLocationFromIP(): Promise<IPLocation | null> {
       const data = await response.json()
       if (data.status === 'success' && data.lat && data.lon && data.country) {
         return {
-          country: data.country,
+          country: normalizeCountryName(data.country),
           countryCode: data.countryCode,
           city: data.city,
           latitude: data.lat,
@@ -75,11 +89,14 @@ export async function getUserLocationFromIP(): Promise<IPLocation | null> {
  * Returns a default center if country not found
  */
 export function getCountryCenter(countryName: string): { lat: number; lng: number; zoom: number } {
+  // Normalize country name to abbreviation first
+  const normalizedName = normalizeCountryName(countryName)
+  
   // Approximate centers for major countries (can be expanded)
   const countryCenters: Record<string, { lat: number; lng: number; zoom: number }> = {
-    'United States': { lat: 39.8283, lng: -98.5795, zoom: 4 },
+    'USA': { lat: 39.8283, lng: -98.5795, zoom: 4 },
     'Canada': { lat: 56.1304, lng: -106.3468, zoom: 4 },
-    'United Kingdom': { lat: 54.7024, lng: -3.2766, zoom: 6 },
+    'UK': { lat: 54.7024, lng: -3.2766, zoom: 6 },
     'Germany': { lat: 51.1657, lng: 10.4515, zoom: 6 },
     'France': { lat: 46.2276, lng: 2.2137, zoom: 6 },
     'Italy': { lat: 41.8719, lng: 12.5674, zoom: 6 },
@@ -102,19 +119,19 @@ export function getCountryCenter(countryName: string): { lat: number; lng: numbe
     'Nigeria': { lat: 9.0820, lng: 8.6753, zoom: 6 },
     'Egypt': { lat: 26.0975, lng: 30.0444, zoom: 6 },
     'Israel': { lat: 31.0461, lng: 34.8516, zoom: 7 },
-    'United Arab Emirates': { lat: 23.4241, lng: 53.8478, zoom: 7 },
+    'UAE': { lat: 23.4241, lng: 53.8478, zoom: 7 },
     'Turkey': { lat: 38.9637, lng: 35.2433, zoom: 6 },
     'Russia': { lat: 61.5240, lng: 105.3188, zoom: 3 },
   }
 
   // Try exact match first
-  if (countryCenters[countryName]) {
-    return countryCenters[countryName]
+  if (countryCenters[normalizedName]) {
+    return countryCenters[normalizedName]
   }
 
   // Try case-insensitive match
   const normalizedCountry = Object.keys(countryCenters).find(
-    key => key.toLowerCase() === countryName.toLowerCase()
+    key => key.toLowerCase() === normalizedName.toLowerCase()
   )
   if (normalizedCountry) {
     return countryCenters[normalizedCountry]

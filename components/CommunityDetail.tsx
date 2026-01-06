@@ -108,35 +108,28 @@ export default function CommunityDetail({ community, onClose }: CommunityDetailP
             <p className="text-zinc-300 text-sm leading-relaxed">{community.description}</p>
           </div>
 
-          {/* Badges */}
-          <div className="flex flex-wrap gap-2">
+          {/* Badges + Focus Areas */}
+          <div className="flex flex-nowrap gap-1.5 overflow-x-auto -mx-4 px-4 scrollbar-hide">
             {isBeginnerFriendly(community) && (
-              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+              <span className="inline-flex items-center gap-1 px-2 py-1 rounded text-[12px] font-medium flex-shrink-0 whitespace-nowrap bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
                 <Sparkles className="w-3 h-3" />
                 Beginner-friendly
               </span>
             )}
-            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded text-xs font-medium bg-[rgba(245,245,245,0.08)] text-zinc-300 border border-[rgba(245,245,245,0.12)]">
+            <span className="inline-flex items-center gap-1 px-2 py-1 rounded text-[12px] font-medium flex-shrink-0 whitespace-nowrap bg-[rgba(245,245,245,0.04)] text-zinc-500">
               {community.meetingFormat === 'online' && <Video className="w-3 h-3" />}
               {community.meetingFormat === 'in-person' && <Users2 className="w-3 h-3" />}
               {community.meetingFormat === 'hybrid' && <Globe className="w-3 h-3" />}
               {getMeetingFormatText(community.meetingFormat)}
             </span>
-          </div>
-
-          {/* Focus Areas */}
-          <div>
-            <h4 className="text-xs font-medium text-zinc-500 mb-2">Focus Areas</h4>
-            <div className="flex flex-wrap gap-2">
-              {community.focusAreas.map((focus) => (
-                <span
-                  key={focus}
-                  className="px-2.5 py-1 text-xs text-zinc-300 bg-[rgba(245,245,245,0.08)] border border-[rgba(245,245,245,0.12)] rounded"
-                >
-                  {focus}
-                </span>
-              ))}
-            </div>
+            {community.focusAreas.map((focus) => (
+              <span
+                key={focus}
+                className="px-2 py-1 rounded text-[12px] font-medium flex-shrink-0 whitespace-nowrap bg-[rgba(245,245,245,0.04)] text-zinc-500"
+              >
+                {focus}
+              </span>
+            ))}
           </div>
 
           {/* Social Links */}
@@ -149,10 +142,11 @@ export default function CommunityDetail({ community, onClose }: CommunityDetailP
                     href={community.twitter}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[rgba(245,245,245,0.06)] text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
+                    className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 rounded-full bg-[rgba(245,245,245,0.06)] text-zinc-400 hover:text-white hover:bg-zinc-800 border border-[rgba(245,245,245,0.14)] transition-colors text-xs font-medium"
                     aria-label="X (Twitter)"
                   >
                     <IconBrandX className="w-5 h-5" />
+                    <span className="truncate">X / Twitter</span>
                   </a>
                 )}
                 {community.discord && (
@@ -160,10 +154,11 @@ export default function CommunityDetail({ community, onClose }: CommunityDetailP
                     href={community.discord}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[rgba(245,245,245,0.06)] text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
+                    className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 rounded-full bg-[rgba(245,245,245,0.06)] text-zinc-400 hover:text-white hover:bg-zinc-800 border border-[rgba(245,245,245,0.14)] transition-colors text-xs font-medium"
                     aria-label="Discord"
                   >
                     <IconBrandDiscord className="w-5 h-5" />
+                    <span className="truncate">Discord</span>
                   </a>
                 )}
                 {community.telegram && (
@@ -171,10 +166,11 @@ export default function CommunityDetail({ community, onClose }: CommunityDetailP
                     href={community.telegram}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[rgba(245,245,245,0.06)] text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
+                    className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 rounded-full bg-[rgba(245,245,245,0.06)] text-zinc-400 hover:text-white hover:bg-zinc-800 border border-[rgba(245,245,245,0.14)] transition-colors text-xs font-medium"
                     aria-label="Telegram"
                   >
                     <IconBrandTelegram className="w-5 h-5" />
+                    <span className="truncate">Telegram</span>
                   </a>
                 )}
                 {community.website && (
@@ -182,10 +178,11 @@ export default function CommunityDetail({ community, onClose }: CommunityDetailP
                     href={community.website}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[rgba(245,245,245,0.06)] text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
+                    className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 rounded-full bg-[rgba(245,245,245,0.06)] text-zinc-400 hover:text-white hover:bg-zinc-800 border border-[rgba(245,245,245,0.14)] transition-colors text-xs font-medium"
                     aria-label="Website"
                   >
                     <IconGlobe className="w-5 h-5" />
+                    <span className="truncate">Website</span>
                   </a>
                 )}
               </div>
@@ -198,13 +195,6 @@ export default function CommunityDetail({ community, onClose }: CommunityDetailP
               <h4 className="text-xs font-medium text-zinc-500 mb-3">Upcoming Events</h4>
               <div className="space-y-2">
                 {upcomingEvents.map((event) => {
-                  const locationTypeConfig = {
-                    'online': { bg: 'bg-blue-500/10', border: 'border-blue-500/30', text: 'text-blue-400' },
-                    'in-person': { bg: 'bg-emerald-500/10', border: 'border-emerald-500/30', text: 'text-emerald-400' },
-                    'hybrid': { bg: 'bg-purple-500/10', border: 'border-purple-500/30', text: 'text-purple-400' },
-                  }
-                  const config = locationTypeConfig[event.locationType]
-                  
                   return (
                     <a
                       key={event.id}
@@ -215,25 +205,36 @@ export default function CommunityDetail({ community, onClose }: CommunityDetailP
                     >
                       <div className="flex items-start justify-between gap-2">
                         <div className="flex-1 min-w-0">
-                          <h5 className="text-sm font-medium text-white mb-1 group-hover:text-red-400 transition-colors line-clamp-1">
-                            {event.title}
-                          </h5>
-                          <div className="flex items-center gap-2 text-xs text-zinc-400 mb-1.5">
+                          <div className="flex items-center gap-2 mb-1">
+                            <h5 className="text-sm font-medium text-white group-hover:text-red-400 transition-colors line-clamp-1">
+                              {event.title}
+                            </h5>
+                            <span
+                              className={`text-[10px] font-medium border px-1.5 py-0.5 rounded transition-colors
+                                ${
+                                  event.locationType === 'online'
+                                    ? 'border-zinc-700 text-zinc-400 group-hover:bg-blue-500/10 group-hover:border-blue-500/30 group-hover:text-blue-400'
+                                    : event.locationType === 'in-person'
+                                    ? 'border-zinc-700 text-zinc-400 group-hover:bg-emerald-500/10 group-hover:border-emerald-500/30 group-hover:text-emerald-400'
+                                    : 'border-zinc-700 text-zinc-400 group-hover:bg-purple-500/10 group-hover:border-purple-500/30 group-hover:text-purple-400'
+                                }
+                              `}
+                            >
+                              {event.locationType === 'online'
+                                ? 'Online'
+                                : event.locationType === 'in-person'
+                                ? 'In-Person'
+                                : 'Hybrid'}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2 text-xs text-zinc-400">
                             <Calendar className="w-3 h-3 flex-shrink-0" />
                             <span>{formatDate(event.date)}</span>
-                            {event.location && (
+                            {event.location && event.locationType !== 'online' && (
                               <>
                                 <span className="text-zinc-600">•</span>
                                 <span className="truncate">{event.location}</span>
                               </>
-                            )}
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <span className={`text-[10px] font-medium border px-1.5 py-0.5 rounded ${config.bg} ${config.border} ${config.text}`}>
-                              {event.locationType === 'online' ? 'Online' : event.locationType === 'in-person' ? 'In-Person' : 'Hybrid'}
-                            </span>
-                            {event.organizer && (
-                              <span className="text-[10px] text-zinc-500 truncate">{event.organizer}</span>
                             )}
                           </div>
                         </div>

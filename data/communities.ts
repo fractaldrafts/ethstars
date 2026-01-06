@@ -268,7 +268,7 @@ export const communities: Community[] = [
     banner: 'https://picsum.photos/1200/400?random=101',
     location: {
       city: 'New York',
-      country: 'United States',
+      country: 'USA',
       coordinates: { lat: 40.7128, lng: -74.0060 }
     },
     focusAreas: ['Technical', 'Developer', 'DeFi', 'DAO'],
@@ -351,7 +351,7 @@ export const communities: Community[] = [
     banner: 'https://picsum.photos/1200/400?random=104',
     location: {
       city: 'London',
-      country: 'United Kingdom',
+      country: 'UK',
       coordinates: { lat: 51.5074, lng: -0.1278 }
     },
     focusAreas: ['Technical', 'Developer', 'Infrastructure'],
@@ -405,7 +405,7 @@ export const communities: Community[] = [
     banner: 'https://picsum.photos/1200/400?random=106',
     location: {
       city: 'San Francisco',
-      country: 'United States',
+      country: 'USA',
       coordinates: { lat: 37.7749, lng: -122.4194 }
     },
     focusAreas: ['Technical', 'Entrepreneur', 'DeFi', 'Infrastructure'],
@@ -658,7 +658,7 @@ export const communities: Community[] = [
     logo: 'https://avatars.githubusercontent.com/u/108554348?s=200&v=4',
     location: {
       city: 'Austin',
-      country: 'United States',
+      country: 'USA',
       coordinates: { lat: 30.2672, lng: -97.7431 }
     },
     focusAreas: ['Beginner-friendly', 'Education', 'Technical', 'DAO'],
@@ -682,7 +682,7 @@ export const communities: Community[] = [
     logo: 'https://avatars.githubusercontent.com/u/69736773?s=200&v=4',
     location: {
       city: 'Dubai',
-      country: 'United Arab Emirates',
+      country: 'UAE',
       coordinates: { lat: 25.2048, lng: 55.2708 }
     },
     focusAreas: ['DeFi', 'Infrastructure', 'Entrepreneur', 'Technical'],

@@ -315,6 +315,21 @@ input:focus {
 }
 
 
+/* Tooltip Banner */
+.globe-pin-tooltip-banner {
+  width: 100%;
+  aspect-ratio: 3 / 1;
+  overflow: hidden;
+  background: rgba(245, 245, 245, 0.08);
+}
+
+.globe-pin-tooltip-banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
 /* Tooltip Header */
 .globe-pin-tooltip-header {
   display: flex;
@@ -476,6 +491,18 @@ input:focus {
   background: rgba(245, 245, 245, 0.1);
   border-color: rgba(248, 250, 252, 0.15);
   color: #d4d4d8;
+}
+
+.globe-pin-tooltip-tag-beginner {
+  background: rgba(16, 185, 129, 0.1);
+  border-color: rgba(16, 185, 129, 0.3);
+  color: #10b981;
+}
+
+.globe-pin-tooltip-tag-beginner:hover {
+  background: rgba(16, 185, 129, 0.15);
+  border-color: rgba(16, 185, 129, 0.4);
+  color: #34d399;
 }
 
 /* Screen reader only */

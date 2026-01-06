@@ -423,7 +423,7 @@ export default function OpportunityTable({ baseOpportunities, selectOpportunityI
                 <button
                   key={filter.type}
                   onClick={() => setSelectedType(filter.type)}
-                  className={`px-3 py-1.5 text-sm font-medium transition-colors rounded-md border ${
+                  className={`px-3 py-1.5 text-sm font-medium transition-colors rounded-full border ${
                     isSelected
                       ? isAll
                         ? 'bg-[rgba(245,245,245,0.08)] text-white border-transparent'
@@ -446,7 +446,7 @@ export default function OpportunityTable({ baseOpportunities, selectOpportunityI
                 placeholder="Search..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-[rgba(245,245,245,0.08)] border border-[rgba(245,245,245,0.08)] rounded-md pl-9 pr-8 py-2 text-sm text-white placeholder-zinc-600 focus:border-zinc-700 transition-colors"
+                className="w-full bg-[rgba(245,245,245,0.08)] border border-[rgba(245,245,245,0.08)] rounded-full pl-9 pr-8 py-2 text-sm text-white placeholder-zinc-600 focus:border-zinc-700 transition-colors"
               />
               {searchQuery && (
                 <button
@@ -459,10 +459,10 @@ export default function OpportunityTable({ baseOpportunities, selectOpportunityI
             </div>
             <div className="flex items-center gap-2">
               {/* View Mode Toggle - Desktop Only */}
-              <div className="hidden md:flex items-center gap-1 p-1 bg-[rgba(245,245,245,0.08)] rounded-md border border-[rgba(245,245,245,0.08)]">
+              <div className="hidden md:flex items-center gap-1 p-1 bg-[rgba(245,245,245,0.08)] rounded-full border border-[rgba(245,245,245,0.08)]">
                 <button
                   onClick={() => setViewMode('table')}
-                  className={`flex items-center justify-center gap-1.5 px-2.5 py-1.5 text-sm font-medium rounded transition-colors ${
+                  className={`flex items-center justify-center gap-1.5 px-2.5 py-1.5 text-sm font-medium rounded-full transition-colors ${
                     viewMode === 'table'
                       ? 'bg-[rgba(245,245,245,0.08)] text-white'
                       : 'text-zinc-500 hover:text-white'
@@ -473,7 +473,7 @@ export default function OpportunityTable({ baseOpportunities, selectOpportunityI
                 </button>
                 <button
                   onClick={() => setViewMode('two-column')}
-                  className={`flex items-center justify-center gap-1.5 px-2.5 py-1.5 text-sm font-medium rounded transition-colors ${
+                  className={`flex items-center justify-center gap-1.5 px-2.5 py-1.5 text-sm font-medium rounded-full transition-colors ${
                     viewMode === 'two-column'
                       ? 'bg-[rgba(245,245,245,0.08)] text-white'
                       : 'text-zinc-500 hover:text-white'
@@ -485,7 +485,7 @@ export default function OpportunityTable({ baseOpportunities, selectOpportunityI
               </div>
               <button
                 onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
-                className={`flex items-center gap-1.5 px-3 py-2 text-sm font-medium rounded-md border transition-colors ${
+                className={`flex items-center gap-1.5 px-3 py-2 text-sm font-medium rounded-full border transition-colors ${
                   showAdvancedFilters || hasActiveFilters
                     ? 'bg-[rgba(245,245,245,0.08)] border-zinc-700 text-white'
                     : 'border-[rgba(245,245,245,0.08)] text-zinc-500 hover:text-white hover:border-zinc-700'
@@ -508,72 +508,87 @@ export default function OpportunityTable({ baseOpportunities, selectOpportunityI
               {/* Work Type */}
               <div>
                 <label className="block text-xs font-medium text-zinc-500 mb-1.5">Work Type</label>
-                <select
-                  value={workType}
-                  onChange={(e) => setWorkType(e.target.value as typeof workTypeOptions[number])}
-                  className="w-full bg-[rgba(245,245,245,0.08)] border border-[rgba(245,245,245,0.08)] rounded-md px-3 py-2 text-sm text-white focus:border-zinc-700"
-                >
-                  {workTypeOptions.map(option => (
-                    <option key={option} value={option}>{option}</option>
-                  ))}
-                </select>
+                <div className="relative">
+                  <select
+                    value={workType}
+                    onChange={(e) => setWorkType(e.target.value as typeof workTypeOptions[number])}
+                    className="w-full bg-[rgba(245,245,245,0.08)] border border-[rgba(245,245,245,0.08)] rounded-full pl-3 pr-10 py-2 text-sm text-white focus:border-zinc-700 appearance-none"
+                  >
+                    {workTypeOptions.map(option => (
+                      <option key={option} value={option}>{option}</option>
+                    ))}
+                  </select>
+                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 pointer-events-none" />
+                </div>
               </div>
 
               {/* Experience Level */}
               <div>
                 <label className="block text-xs font-medium text-zinc-500 mb-1.5">Experience</label>
-                <select
-                  value={experienceLevel}
-                  onChange={(e) => setExperienceLevel(e.target.value as ExperienceLevel | 'all')}
-                  className="w-full bg-[rgba(245,245,245,0.08)] border border-[rgba(245,245,245,0.08)] rounded-md px-3 py-2 text-sm text-white focus:border-zinc-700"
-                >
-                  {experienceLevels.map(level => (
-                    <option key={level.value} value={level.value}>{level.label}</option>
-                  ))}
-                </select>
+                <div className="relative">
+                  <select
+                    value={experienceLevel}
+                    onChange={(e) => setExperienceLevel(e.target.value as ExperienceLevel | 'all')}
+                    className="w-full bg-[rgba(245,245,245,0.08)] border border-[rgba(245,245,245,0.08)] rounded-full pl-3 pr-10 py-2 text-sm text-white focus:border-zinc-700 appearance-none"
+                  >
+                    {experienceLevels.map(level => (
+                      <option key={level.value} value={level.value}>{level.label}</option>
+                    ))}
+                  </select>
+                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 pointer-events-none" />
+                </div>
               </div>
 
               {/* Location */}
               <div>
                 <label className="block text-xs font-medium text-zinc-500 mb-1.5">Location</label>
-                <select
-                  value={selectedLocation}
-                  onChange={(e) => setSelectedLocation(e.target.value)}
-                  className="w-full bg-[rgba(245,245,245,0.08)] border border-[rgba(245,245,245,0.08)] rounded-md px-3 py-2 text-sm text-white focus:border-zinc-700"
-                >
-                  <option value="all">Any location</option>
-                  {allLocations.map(loc => (
-                    <option key={loc} value={loc}>{loc}</option>
-                  ))}
-                </select>
+                <div className="relative">
+                  <select
+                    value={selectedLocation}
+                    onChange={(e) => setSelectedLocation(e.target.value)}
+                    className="w-full bg-[rgba(245,245,245,0.08)] border border-[rgba(245,245,245,0.08)] rounded-full pl-3 pr-10 py-2 text-sm text-white focus:border-zinc-700 appearance-none"
+                  >
+                    <option value="all">Any location</option>
+                    {allLocations.map(loc => (
+                      <option key={loc} value={loc}>{loc}</option>
+                    ))}
+                  </select>
+                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 pointer-events-none" />
+                </div>
               </div>
 
               {/* Compensation */}
               <div>
                 <label className="block text-xs font-medium text-zinc-500 mb-1.5">Compensation</label>
-                <select
-                  value={compensation}
-                  onChange={(e) => setCompensation(e.target.value)}
-                  className="w-full bg-[rgba(245,245,245,0.08)] border border-[rgba(245,245,245,0.08)] rounded-md px-3 py-2 text-sm text-white focus:border-zinc-700"
-                >
-                  {compensationRanges.map(range => (
-                    <option key={range.value} value={range.value}>{range.label}</option>
-                  ))}
-                </select>
+                <div className="relative">
+                  <select
+                    value={compensation}
+                    onChange={(e) => setCompensation(e.target.value)}
+                    className="w-full bg-[rgba(245,245,245,0.08)] border border-[rgba(245,245,245,0.08)] rounded-full pl-3 pr-10 py-2 text-sm text-white focus:border-zinc-700 appearance-none"
+                  >
+                    {compensationRanges.map(range => (
+                      <option key={range.value} value={range.value}>{range.label}</option>
+                    ))}
+                  </select>
+                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 pointer-events-none" />
+                </div>
               </div>
 
               {/* Date Posted */}
               <div>
                 <label className="block text-xs font-medium text-zinc-500 mb-1.5">Date Posted</label>
-                <select
-                  value={datePosted}
-                  onChange={(e) => setDatePosted(e.target.value)}
-                  className="w-full bg-[rgba(245,245,245,0.08)] border border-[rgba(245,245,245,0.08)] rounded-md px-3 py-2 text-sm text-white focus:border-zinc-700"
-                >
-                  {datePostedOptions.map(option => (
-                    <option key={option.value} value={option.value}>{option.label}</option>
-                  ))}
-                </select>
+                <div className="relative">
+                  <select
+                    value={datePosted}
+                    onChange={(e) => setDatePosted(e.target.value)}
+                    className="w-full bg-[rgba(245,245,245,0.08)] border border-[rgba(245,245,245,0.08)] rounded-full pl-3 pr-10 py-2 text-sm text-white focus:border-zinc-700 appearance-none"
+                  >
+                    {datePostedOptions.map(option => (
+                      <option key={option.value} value={option.value}>{option.label}</option>
+                    ))}
+                  </select>
+                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 pointer-events-none" />
+                </div>
               </div>
             </div>
 

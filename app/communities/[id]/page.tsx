@@ -6,6 +6,7 @@ import { ArrowLeft } from 'lucide-react'
 import { getActivityLevelConfig } from '@/data/communities'
 import { IconBrandX, IconBrandDiscord, IconBrandTelegram } from '@tabler/icons-react'
 import CommunityEventsSection from '@/components/CommunityEventsSection'
+import RelatedCommunitiesSection from '@/components/RelatedCommunitiesSection'
 
 interface CommunityPageProps {
   params: {
@@ -90,7 +91,7 @@ export default function CommunityPage({ params }: CommunityPageProps) {
                     <h1 className="text-2xl font-semibold text-white">
                       {community.name}
                     </h1>
-                    <span className="inline-block rounded-full bg-[rgba(245,245,245,0.06)] px-3 py-1 text-[11px] font-semibold tracking-wide text-zinc-200 uppercase">{community.memberCount.toLocaleString()} members</span>
+                    <span className="inline-flex items-center whitespace-nowrap rounded-full bg-[rgba(245,245,245,0.06)] px-3 py-1 text-[11px] font-semibold tracking-wide text-zinc-200 uppercase w-fit">{community.memberCount.toLocaleString()} MEMBERS</span>
                   </div>
                 </div>
 
@@ -174,6 +175,9 @@ export default function CommunityPage({ params }: CommunityPageProps) {
 
           {/* Events Section */}
           <CommunityEventsSection community={community} />
+
+          {/* Related Communities Section */}
+          <RelatedCommunitiesSection community={community} />
         </div>
       </div>
 

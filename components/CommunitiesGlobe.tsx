@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useMemo } from 'react'
 import Globe from 'react-globe.gl'
 import { type Community } from '@/data/communities'
-import { isBeginnerFriendly, getActivityLevelConfig, getActivityStatus } from '@/data/communities'
+import { isBeginnerFriendly, getActivityLevelConfig, getActivityStatus, getNextEventDate } from '@/data/communities'
 
 interface CommunitiesGlobeProps {
   communities: Community[]
@@ -11,6 +11,8 @@ interface CommunitiesGlobeProps {
   onCommunitySelect: (community: Community) => void
   hoveredCommunityId?: string | null
   onCommunityHover?: (communityId: string | null) => void
+  focusPoint?: { lat: number; lng: number; altitude?: number } | null
+  onCameraChange?: (cameraPosition: { lat: number; lng: number; altitude: number }) => void
 }
 
 // Activity level colors for markers
@@ -35,9 +37,12 @@ export default function CommunitiesGlobe({
   onCommunitySelect,
   hoveredCommunityId,
   onCommunityHover,
+  focusPoint,
+  onCameraChange,
 }: CommunitiesGlobeProps) {
   const globeEl = useRef<any>()
   const [globeReady, setGlobeReady] = useState(false)
+  const isProgrammaticCameraMoveRef = useRef(false)
 
   // Prepare HTML-based pins that sit on top of the globe surface.
   // These render as circular avatars with a soft pulsing halo, inspired by the
@@ -74,7 +79,9 @@ export default function CommunitiesGlobe({
   useEffect(() => {
     if (globeEl.current && !globeReady) {
       // Set initial camera position
-      globeEl.current.camera().position.z = 300
+      // Start slightly zoomed out so that focusing a community feels
+      // like a gentle zoom-in rather than a jump cut.
+      globeEl.current.camera().position.z = 350
       globeEl.current.controls().enableZoom = true
       globeEl.current.controls().enableRotate = true
       globeEl.current.controls().autoRotate = false
@@ -107,55 +114,126 @@ export default function CommunitiesGlobe({
   useEffect(() => {
     if (selectedCommunity && globeEl.current && globeReady) {
       const { lat, lng } = selectedCommunity.location.coordinates
-      
-      // Convert lat/lng to 3D coordinates on sphere surface
-      const phi = (90 - lat) * (Math.PI / 180)
-      const theta = (lng + 180) * (Math.PI / 180)
-      
-      // Position camera to look at the point from a distance
-      const distance = 300
-      const x = -distance * Math.sin(phi) * Math.cos(theta)
-      const y = distance * Math.cos(phi)
-      const z = distance * Math.sin(phi) * Math.sin(theta)
-      
-      // Smoothly animate camera to focus on the point
-      const camera = globeEl.current.camera()
-      const controls = globeEl.current.controls()
-      
-      // Animate camera position
-      const startPos = {
-        x: camera.position.x,
-        y: camera.position.y,
-        z: camera.position.z,
-      }
-      const endPos = { x, y, z }
-      const duration = 1000 // 1 second
-      const startTime = Date.now()
-      
-      const animate = () => {
-        const elapsed = Date.now() - startTime
-        const progress = Math.min(elapsed / duration, 1)
-        
-        // Easing function for smooth animation
-        const ease = (t: number) => t * (2 - t) // ease-out
-        
-        const easedProgress = ease(progress)
-        
-        camera.position.x = startPos.x + (endPos.x - startPos.x) * easedProgress
-        camera.position.y = startPos.y + (endPos.y - startPos.y) * easedProgress
-        camera.position.z = startPos.z + (endPos.z - startPos.z) * easedProgress
-        
-        camera.lookAt(0, 0, 0)
-        controls.update()
-        
-        if (progress < 1) {
-          requestAnimationFrame(animate)
-        }
-      }
-      
-      animate()
+
+      isProgrammaticCameraMoveRef.current = true
+      // Use react-globe.gl's built-in camera helper so the library
+      // handles orientation and projection correctly.
+      // Altitude controls zoom level: slightly closer than default
+      // so cities are easy to distinguish without over-zooming.
+      globeEl.current.pointOfView(
+        {
+          lat,
+          lng,
+          altitude: 1.2,
+        },
+        1000 // ms animation duration
+      )
+      // Reset flag after animation completes
+      setTimeout(() => {
+        isProgrammaticCameraMoveRef.current = false
+      }, 1100)
     }
   }, [selectedCommunity, globeReady])
+
+  // External focus point (e.g., "locate me" or country selection)
+  useEffect(() => {
+    if (!focusPoint || !globeReady || !globeEl.current) return
+
+    // If a specific community is selected, let that effect control the camera
+    if (selectedCommunity) return
+
+    isProgrammaticCameraMoveRef.current = true
+    globeEl.current.pointOfView(
+      {
+        lat: focusPoint.lat,
+        lng: focusPoint.lng,
+        altitude: focusPoint.altitude ?? 1.6,
+      },
+      1000
+    )
+    // Reset flag after animation completes
+    setTimeout(() => {
+      isProgrammaticCameraMoveRef.current = false
+    }, 1100)
+  }, [focusPoint, globeReady, selectedCommunity])
+
+  // Listen to camera changes to detect user interaction with the globe
+  useEffect(() => {
+    if (!globeReady || !globeEl.current || !onCameraChange) return
+
+    const controls = globeEl.current.controls()
+    if (!controls) return
+
+    let animationFrameId: number | null = null
+    let lastCameraPosition: { lat: number; lng: number; altitude: number } | null = null
+
+    const checkCameraChange = () => {
+      // Only check camera position if it's not a programmatic move
+      if (isProgrammaticCameraMoveRef.current) {
+        animationFrameId = requestAnimationFrame(checkCameraChange)
+        return
+      }
+
+      try {
+        const camera = globeEl.current.camera()
+        const currentPOV = globeEl.current.pointOfView()
+        
+        if (currentPOV) {
+          const currentPos = {
+            lat: currentPOV.lat,
+            lng: currentPOV.lng,
+            altitude: currentPOV.altitude || 1.2,
+          }
+
+          // Only trigger callback if position changed significantly
+          if (!lastCameraPosition || 
+              Math.abs(currentPos.lat - lastCameraPosition.lat) > 0.5 ||
+              Math.abs(currentPos.lng - lastCameraPosition.lng) > 0.5 ||
+              Math.abs(currentPos.altitude - lastCameraPosition.altitude) > 0.1) {
+            lastCameraPosition = currentPos
+            onCameraChange(currentPos)
+          }
+        }
+      } catch (error) {
+        // Ignore errors during camera position checks
+      }
+
+      animationFrameId = requestAnimationFrame(checkCameraChange)
+    }
+
+    // Start checking for camera changes
+    animationFrameId = requestAnimationFrame(checkCameraChange)
+
+    // Also listen to control changes (drag, rotate, zoom)
+    const handleControlChange = () => {
+      if (!isProgrammaticCameraMoveRef.current && onCameraChange) {
+        setTimeout(() => {
+          try {
+            const currentPOV = globeEl.current.pointOfView()
+            if (currentPOV) {
+              onCameraChange({
+                lat: currentPOV.lat,
+                lng: currentPOV.lng,
+                altitude: currentPOV.altitude || 1.2,
+              })
+            }
+          } catch (error) {
+            // Ignore errors
+          }
+        }, 100) // Small debounce
+      }
+    }
+
+    // Listen to control change events
+    controls.addEventListener('change', handleControlChange)
+
+    return () => {
+      if (animationFrameId !== null) {
+        cancelAnimationFrame(animationFrameId)
+      }
+      controls.removeEventListener('change', handleControlChange)
+    }
+  }, [globeReady, onCameraChange])
 
   return (
     <div className="relative w-full h-full bg-[rgba(245,245,245,0.04)] border border-[rgba(245,245,245,0.08)] rounded-lg overflow-hidden flex items-center justify-center">
@@ -196,7 +274,9 @@ export default function CommunitiesGlobe({
 
           const activityConfig = getActivityLevelConfig(community.activityLevel)
           const activityStatus = getActivityStatus(community.activityLevel, community.eventFrequency)
+          const nextEventDate = getNextEventDate(community)
           const topFocusAreas = community.focusAreas.slice(0, 3)
+          const isBeginner = isBeginnerFriendly(community)
           
           el.innerHTML = `
             <div class="globe-pin-halo" style="
@@ -212,6 +292,11 @@ export default function CommunitiesGlobe({
             </div>
             <div class="globe-pin-tooltip-wrapper">
               <div class="globe-pin-tooltip">
+                ${community.banner ? `
+                  <div class="globe-pin-tooltip-banner">
+                    <img src="${community.banner}" alt="${community.name} banner" />
+                  </div>
+                ` : ''}
                 <div class="globe-pin-tooltip-header">
                 <div class="globe-pin-tooltip-logo">
                   <img src="${community.logo}" alt="${community.name}" />
@@ -243,15 +328,14 @@ export default function CommunitiesGlobe({
                       <circle cx="12" cy="12" r="10"></circle>
                       <polyline points="12 6 12 12 16 14"></polyline>
                     </svg>
-                    <span>${community.eventFrequency}</span>
+                    <span>${nextEventDate ? `Next event: ${nextEventDate}` : 'No upcoming events'}</span>
                   </div>
                 </div>
-                <div class="globe-pin-tooltip-activity" style="--activity-color: ${coreColor};">
-                  <div class="globe-pin-tooltip-activity-dot"></div>
-                  <span>${activityStatus}</span>
-                </div>
-                ${topFocusAreas.length > 0 ? `
+                ${(isBeginner || topFocusAreas.length > 0) ? `
                   <div class="globe-pin-tooltip-tags">
+                    ${isBeginner ? `
+                      <span class="globe-pin-tooltip-tag globe-pin-tooltip-tag-beginner">Beginner-friendly</span>
+                    ` : ''}
                     ${topFocusAreas.map(focus => `
                       <span class="globe-pin-tooltip-tag">${focus}</span>
                     `).join('')}
@@ -303,3 +387,4 @@ export default function CommunitiesGlobe({
     </div>
   )
 }
+

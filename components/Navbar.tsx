@@ -46,15 +46,15 @@ export default function Navbar() {
 
           {/* Desktop CTA */}
           <div className="hidden md:flex items-center">
-            <button className="flex items-center gap-1.5 px-3 py-1.5 bg-red-500 hover:bg-red-600 rounded-full text-sm font-semibold text-white uppercase transition-colors">
-              Add Opportunity
+            <button className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-[rgba(245,245,245,0.06)] text-xs font-medium text-zinc-300 hover:bg-red-500 hover:text-white transition-colors uppercase">
+              Login
             </button>
           </div>
 
           {/* Mobile CTA and menu button */}
           <div className="md:hidden flex items-center gap-2">
-            <button className="flex items-center gap-1.5 px-3 py-1.5 bg-red-500 hover:bg-red-600 rounded-full text-sm font-semibold text-white uppercase transition-colors">
-              Add Opportunity
+            <button className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-[rgba(245,245,245,0.06)] text-xs font-medium text-zinc-300 hover:bg-red-500 hover:text-white transition-colors uppercase">
+              Login
             </button>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -81,9 +81,8 @@ export default function Navbar() {
                 {link.name}
               </a>
             ))}
-            <button className="flex items-center gap-1.5 px-3 py-1.5 bg-red-500 rounded-full text-sm font-medium text-white mt-4">
-              <img src="/add-opportunity.svg" alt="" className="w-4 h-4" />
-              Add Opportunity
+            <button className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-[rgba(245,245,245,0.06)] text-xs font-medium text-zinc-300 hover:bg-red-500 hover:text-white mt-4 transition-colors uppercase">
+              Login
             </button>
           </div>
         </div>

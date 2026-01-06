@@ -1,10 +1,11 @@
 'use client'
 
 import React, { useState, useMemo } from 'react'
-import { Calendar, Globe, MapPin, ArrowUpRight, Search, X as XIcon, Table2, CalendarDays } from 'lucide-react'
+import { Calendar, Globe, MapPin, ArrowUpRight, Search, X as XIcon, Table2, CalendarDays, ChevronUp, ChevronDown, ArrowUpDown } from 'lucide-react'
 import { getCommunityEvents, type Community } from '@/data/communities'
 import type { Event } from '@/data/events'
 import EventsCalendarView from './EventsCalendarView'
+import EventCard from './EventCard'
 
 function formatDate(dateString: string): string {
   const date = new Date(dateString)
@@ -42,12 +43,16 @@ function formatMonth(dateString: string): string {
 type EventFilter = 'all' | 'upcoming' | 'past'
 type LocationTypeFilter = 'all' | 'online' | 'in-person' | 'hybrid'
 type ViewMode = 'table' | 'calendar'
+type SortField = 'date' | 'title' | 'location' | 'type'
+type SortDirection = 'asc' | 'desc'
 
 export default function CommunityEventsSection({ community }: { community: Community }) {
-  const [eventFilter, setEventFilter] = useState<EventFilter>('all')
+  const [eventFilter, setEventFilter] = useState<EventFilter>('upcoming')
   const [searchQuery, setSearchQuery] = useState('')
   const [locationTypeFilter, setLocationTypeFilter] = useState<LocationTypeFilter>('all')
   const [viewMode, setViewMode] = useState<ViewMode>('table')
+  const [sortField, setSortField] = useState<SortField>('date')
+  const [sortDirection, setSortDirection] = useState<SortDirection>('asc')
   
   const allEvents = getCommunityEvents(community)
   const now = new Date()
@@ -72,6 +77,18 @@ export default function CommunityEventsSection({ community }: { community: Commu
     return allEvents
   }, [eventFilter, upcomingEvents, pastEvents, allEvents])
 
+  // Handle column sorting
+  const handleSort = (field: SortField) => {
+    if (sortField === field) {
+      // Toggle direction if clicking the same column
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')
+    } else {
+      // Set new column and default to ascending
+      setSortField(field)
+      setSortDirection('asc')
+    }
+  }
+
   // Apply search and location type filters
   const filteredAndSortedEvents = useMemo(() => {
     let result = timeFilteredEvents.filter((event) => {
@@ -85,7 +102,6 @@ export default function CommunityEventsSection({ community }: { community: Commu
         const query = searchQuery.toLowerCase()
         const matchesSearch = (
           event.title.toLowerCase().includes(query) ||
-          event.organizer.toLowerCase().includes(query) ||
           event.description.toLowerCase().includes(query) ||
           event.tags.some(tag => tag.toLowerCase().includes(query)) ||
           event.location.toLowerCase().includes(query)
@@ -96,18 +112,30 @@ export default function CommunityEventsSection({ community }: { community: Commu
       return true
     })
 
-    // Sort by date (ascending for upcoming, descending for past when showing all)
+    // Apply sorting
     result.sort((a, b) => {
-      const dateA = new Date(a.date).getTime()
-      const dateB = new Date(b.date).getTime()
-      if (eventFilter === 'past') {
-        return dateB - dateA // Most recent first for past events
+      let comparison = 0
+      
+      switch (sortField) {
+        case 'date':
+          comparison = new Date(a.date).getTime() - new Date(b.date).getTime()
+          break
+        case 'title':
+          comparison = a.title.localeCompare(b.title)
+          break
+        case 'location':
+          comparison = a.location.localeCompare(b.location)
+          break
+        case 'type':
+          comparison = a.locationType.localeCompare(b.locationType)
+          break
       }
-      return dateA - dateB // Chronological for upcoming/all
+      
+      return sortDirection === 'asc' ? comparison : -comparison
     })
 
     return result
-  }, [timeFilteredEvents, searchQuery, locationTypeFilter, eventFilter])
+  }, [timeFilteredEvents, searchQuery, locationTypeFilter, eventFilter, sortField, sortDirection])
 
   // Group events by month
   const groupEventsByMonth = (events: Event[]) => {
@@ -131,6 +159,24 @@ export default function CommunityEventsSection({ community }: { community: Commu
   }
 
   const eventsByMonth = groupEventsByMonth(filteredAndSortedEvents)
+
+  const SortButton = ({ field, children }: { field: SortField; children: React.ReactNode }) => (
+    <button 
+      onClick={() => handleSort(field)}
+      className="flex items-center gap-1.5 hover:text-white transition-colors group"
+    >
+      {children}
+      {sortField === field ? (
+        sortDirection === 'asc' ? (
+          <ChevronUp className="w-3.5 h-3.5 text-red-500" />
+        ) : (
+          <ChevronDown className="w-3.5 h-3.5 text-red-500" />
+        )
+      ) : (
+        <ArrowUpDown className="w-3.5 h-3.5 opacity-0 group-hover:opacity-50" />
+      )}
+    </button>
+  )
 
   const locationTypeConfig: Record<Exclude<LocationTypeFilter, 'all'>, {
     bg: string
@@ -209,23 +255,6 @@ export default function CommunityEventsSection({ community }: { community: Commu
           </div>
         </td>
         
-        <td className="py-3 px-4 hidden md:table-cell">
-          <div className="flex items-center gap-2">
-            {event.organizerLogo && (
-              <div className="w-6 h-6 rounded bg-[rgba(245,245,245,0.08)] overflow-hidden flex-shrink-0">
-                <img 
-                  src={event.organizerLogo} 
-                  alt={event.organizer}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            )}
-            <span className="text-sm text-zinc-400 truncate max-w-[120px]">
-              {event.organizer}
-            </span>
-          </div>
-        </td>
-        
         <td className="py-3 px-4 hidden lg:table-cell">
           <div className="flex items-center gap-1.5 text-sm text-zinc-400">
             {event.locationType === 'online' ? (
@@ -276,7 +305,12 @@ export default function CommunityEventsSection({ community }: { community: Commu
               return (
                 <button
                   key={filter.type}
-                  onClick={() => setEventFilter(filter.type)}
+                  onClick={() => {
+                    setEventFilter(filter.type)
+                    // Reset to default date sorting when changing time filter
+                    setSortField('date')
+                    setSortDirection('asc')
+                  }}
                   className={`px-3 py-1.5 text-sm font-medium transition-colors rounded-md border ${
                     isSelected
                       ? 'bg-[rgba(245,245,245,0.08)] text-white border-transparent'
@@ -362,26 +396,63 @@ export default function CommunityEventsSection({ community }: { community: Commu
         </div>
       )}
 
-      {/* Table View */}
+      {/* Mobile Cards View */}
       {viewMode === 'table' && (
-        <div className="mt-6 overflow-x-auto -mx-6 md:-mx-12 px-6 md:px-12">
+        <>
+          {filteredAndSortedEvents.length === 0 ? (
+            <div className="md:hidden mt-6 py-12 text-center">
+              <p className="text-zinc-500 text-sm">No events found</p>
+              {(searchQuery || locationTypeFilter !== 'all') && (
+                <button
+                  onClick={() => {
+                    setSearchQuery('')
+                    setLocationTypeFilter('all')
+                  }}
+                  className="text-sm text-red-500 hover:text-red-400 mt-2"
+                >
+                  Clear filters
+                </button>
+              )}
+            </div>
+          ) : (
+            <div className="md:hidden mt-6 space-y-6">
+              {eventsByMonth.map(({ monthKey, monthLabel, events: monthEvents }) => (
+                <div key={monthKey}>
+                  {/* Month Header */}
+                  <div className="flex items-center gap-2 mb-4 px-1">
+                    <Calendar className="w-4 h-4 text-zinc-500" />
+                    <span className="text-sm font-semibold text-white">{monthLabel}</span>
+                  </div>
+                  {/* Event Cards */}
+                  <div className="grid grid-cols-1 gap-4">
+                    {monthEvents.map((event, index) => (
+                      <EventCard key={event.id} event={event} index={index} />
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </>
+      )}
+
+      {/* Desktop Table View */}
+      {viewMode === 'table' && (
+        <div className="hidden md:block mt-6 overflow-x-auto -mx-6 md:-mx-12 px-6 md:px-12">
           <table className="w-full min-w-[800px]">
             <thead>
               <tr className="bg-[rgba(245,245,245,0.04)] border-b border-[rgba(245,245,245,0.08)]">
                 <th className="text-left py-3 px-4 text-xs font-medium text-zinc-500 uppercase tracking-wide min-w-[120px]">
-                  DATE
+                  <SortButton field="date">DATE</SortButton>
                 </th>
                 <th className="text-left py-3 px-4 text-xs font-medium text-zinc-500 uppercase tracking-wide min-w-[250px]">
-                  EVENT
-                </th>
-                <th className="text-left py-3 px-4 text-xs font-medium text-zinc-500 uppercase tracking-wide min-w-[150px] hidden md:table-cell">
-                  ORGANIZER
+                  <SortButton field="title">EVENT</SortButton>
                 </th>
                 <th className="text-left py-3 px-4 text-xs font-medium text-zinc-500 uppercase tracking-wide min-w-[150px] hidden lg:table-cell">
-                  LOCATION
+                  <SortButton field="location">LOCATION</SortButton>
                 </th>
                 <th className="text-left py-3 px-4 text-xs font-medium text-zinc-500 uppercase tracking-wide min-w-[100px] hidden sm:table-cell">
-                  TYPE
+                  <SortButton field="type">TYPE</SortButton>
                 </th>
                 <th className="text-right py-3 px-4 text-xs font-medium text-zinc-500 uppercase tracking-wide w-24 min-w-[100px]">
                 </th>
@@ -390,7 +461,7 @@ export default function CommunityEventsSection({ community }: { community: Commu
             <tbody className="divide-y divide-[rgba(245,245,245,0.04)]">
               {filteredAndSortedEvents.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="py-12 text-center">
+                  <td colSpan={5} className="py-12 text-center">
                     <p className="text-zinc-500 text-sm">No events found</p>
                     {(searchQuery || locationTypeFilter !== 'all') && (
                       <button
@@ -410,7 +481,7 @@ export default function CommunityEventsSection({ community }: { community: Commu
                   <React.Fragment key={monthKey}>
                     {/* Month Header Row */}
                     <tr className="bg-[rgba(245,245,245,0.04)]">
-                      <td colSpan={6} className="py-3 px-4">
+                      <td colSpan={5} className="py-3 px-4">
                         <div className="flex items-center gap-2">
                           <Calendar className="w-4 h-4 text-zinc-500" />
                           <span className="text-sm font-semibold text-white">{monthLabel}</span>

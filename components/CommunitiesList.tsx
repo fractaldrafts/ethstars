@@ -155,7 +155,7 @@ export default function CommunitiesList({
               role="option"
               aria-selected={isSelected}
               tabIndex={isFocused || isSelected ? 0 : -1}
-              className={`relative w-full text-left p-4 rounded-lg border transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:ring-offset-2 focus:ring-offset-[rgba(5,7,26,0.8)] ${
+              className={`relative w-full text-left p-4 rounded-lg border transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:ring-offset-2 focus:ring-offset-[rgba(5,7,26,0.8)] flex flex-col ${
                 isSelected
                   ? 'bg-[rgba(245,245,245,0.08)] border-zinc-700'
                   : 'bg-[rgba(245,245,245,0.04)] border-[rgba(245,245,245,0.08)] hover:bg-[rgba(245,245,245,0.06)] hover:border-zinc-700'
@@ -248,27 +248,32 @@ export default function CommunitiesList({
                 )}
               </div>
 
-              {/* Footer - Quick Actions */}
-              <div className="flex items-center gap-2">
+              {/* Footer - CTA Button & Social Icons */}
+              <div className="mt-auto flex items-center justify-between gap-3">
+                {/* View Community CTA - Left */}
                 <Link
                   href={`/communities/${community.id}`}
                   onClick={(e) => e.stopPropagation()}
                   className="flex items-center gap-1.5 text-sm text-zinc-400 hover:text-red-400 transition-colors"
+                  style={{ touchAction: 'manipulation' }}
                 >
                   View Community
                   <ArrowUpRight className="w-3.5 h-3.5" />
                 </Link>
-                <div className="flex items-center gap-1.5 ml-auto">
+
+                {/* Social Media Icons - Right */}
+                <div className="flex items-center gap-3">
                   {community.discord && (
                     <a
                       href={community.discord}
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={(e) => e.stopPropagation()}
-                      className="p-1.5 rounded bg-[rgba(245,245,245,0.08)] hover:bg-red-500/20 text-zinc-400 hover:text-red-400 transition-colors"
+                      className="flex items-center justify-center w-10 h-10 rounded-full bg-[rgba(245,245,245,0.08)] text-zinc-400 hover:bg-zinc-700 hover:text-white transition-colors"
                       title="Discord"
+                      style={{ touchAction: 'manipulation' }}
                     >
-                      <IconBrandDiscord className="w-3.5 h-3.5" />
+                      <IconBrandDiscord className="w-5 h-5" />
                     </a>
                   )}
                   {community.telegram && (
@@ -277,10 +282,11 @@ export default function CommunitiesList({
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={(e) => e.stopPropagation()}
-                      className="p-1.5 rounded bg-[rgba(245,245,245,0.08)] hover:bg-red-500/20 text-zinc-400 hover:text-red-400 transition-colors"
+                      className="flex items-center justify-center w-10 h-10 rounded-full bg-[rgba(245,245,245,0.08)] text-zinc-400 hover:bg-zinc-700 hover:text-white transition-colors"
                       title="Telegram"
+                      style={{ touchAction: 'manipulation' }}
                     >
-                      <IconBrandTelegram className="w-3.5 h-3.5" />
+                      <IconBrandTelegram className="w-5 h-5" />
                     </a>
                   )}
                 </div>

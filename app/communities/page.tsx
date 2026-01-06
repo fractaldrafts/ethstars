@@ -4,6 +4,7 @@ import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import FeaturedCommunitiesSection from '@/components/FeaturedCommunitiesSection'
 import CommunitiesTable from '@/components/CommunitiesTable'
+import { IconUsersPlus } from '@tabler/icons-react'
 
 export default function CommunitiesPage() {
   return (
@@ -33,7 +34,7 @@ export default function CommunitiesPage() {
 
       {/* Floating CTA Button - Mobile Only */}
       <button className="md:hidden fixed bottom-6 right-6 z-40 flex items-center justify-center w-14 h-14 bg-red-500 hover:bg-red-600 rounded-full shadow-lg shadow-red-500/25 hover:shadow-red-500/40 transition-all">
-        <img src="/add-opportunity.svg" alt="Add Community" className="w-6 h-6" />
+        <IconUsersPlus className="w-6 h-6 text-white" />
       </button>
 
       <Footer />
