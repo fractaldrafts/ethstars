@@ -4,10 +4,10 @@ import { useState, useMemo, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { 
   Search, ChevronDown, ChevronUp, ArrowUpRight, 
-  X as XIcon, ArrowUpDown, SlidersHorizontal, MapPin, Users, Calendar, Table2, Map, LayoutGrid
+  X as XIcon, ArrowUpDown, SlidersHorizontal, MapPin, Users, Calendar, Table2, Map, LayoutGrid, Sparkles, Wifi
 } from 'lucide-react'
 import Link from 'next/link'
-import { communities, type Community, type CommunityFocus, getCommunitySize, isBeginnerFriendly } from '@/data/communities'
+import { communities, type Community, type CommunityFocus, getCommunitySize, isBeginnerFriendly, getNextEventDate } from '@/data/communities'
 import CommunitiesMapSection from './CommunitiesMapSection'
 import CommunitiesMobileMapView from './CommunitiesMobileMapView'
 import CommunitiesList from './CommunitiesList'
@@ -462,11 +462,8 @@ export default function CommunitiesTable() {
                 <th className="text-left py-3 px-4 text-xs font-medium text-zinc-500 uppercase tracking-wide hidden lg:table-cell min-w-[120px]">
                   <SortButton field="memberCount">MEMBERS</SortButton>
                 </th>
-                <th className="text-left py-3 px-4 text-xs font-medium text-zinc-500 uppercase tracking-wide hidden lg:table-cell min-w-[100px]">
-                  <SortButton field="eventFrequency">EVENTS</SortButton>
-                </th>
-                <th className="text-left py-3 px-4 text-xs font-medium text-zinc-500 uppercase tracking-wide min-w-[200px]">
-                  FOCUS AREAS
+                <th className="text-left py-3 px-4 text-xs font-medium text-zinc-500 uppercase tracking-wide hidden lg:table-cell min-w-[100px] whitespace-nowrap">
+                  NEXT EVENT
                 </th>
                 <th className="text-right py-3 px-4 text-xs font-medium text-zinc-500 uppercase tracking-wide w-24 min-w-[100px]">
                   
@@ -476,7 +473,7 @@ export default function CommunitiesTable() {
             <tbody className="divide-y divide-[rgba(245,245,245,0.04)]">
               {filteredAndSortedCommunities.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="py-12 text-center">
+                  <td colSpan={6} className="py-12 text-center">
                     <p className="text-zinc-500 text-sm">No communities found</p>
                     <button
                       onClick={clearAllFilters}
@@ -513,7 +510,7 @@ function TableRow({ community }: { community: Community }) {
     >
       {/* Community */}
       <td className="py-3 px-4">
-        <div className="flex items-center gap-3">
+        <div className="flex items-start gap-3">
           <div className="w-8 h-8 rounded bg-[rgba(245,245,245,0.08)] overflow-hidden flex-shrink-0">
             <img 
               src={community.logo} 
@@ -521,13 +518,31 @@ function TableRow({ community }: { community: Community }) {
               className="w-full h-full object-cover"
             />
           </div>
-          <div>
+          <div className="flex-1 min-w-0">
             <span className="text-sm text-white font-medium block group-hover:text-red-400 transition-colors">
               {community.name}
             </span>
-            <span className="text-xs text-zinc-500 line-clamp-1">
-              {community.shortDescription}
-            </span>
+            <div className="overflow-x-auto scrollbar-hide -mx-1 px-1 mt-1">
+              <div className="flex items-center gap-1.5">
+                {isBeginnerFriendly(community) && (
+                  <span className="inline-flex items-center gap-1 text-[12px] font-medium text-zinc-500 bg-[rgba(245,245,245,0.04)] px-2 py-0.5 rounded flex-shrink-0 whitespace-nowrap border border-transparent group-hover:bg-emerald-500/10 group-hover:text-emerald-400 group-hover:border-emerald-500/30 transition-colors">
+                    <Sparkles className="w-3 h-3 text-zinc-500 group-hover:text-emerald-400 transition-colors" />
+                    Beginner-friendly
+                  </span>
+                )}
+                {community.meetingFormat === 'online' && (
+                  <span className="inline-flex items-center gap-1 text-[12px] font-medium text-zinc-500 bg-[rgba(245,245,245,0.04)] px-2 py-0.5 rounded flex-shrink-0 whitespace-nowrap">
+                    <Wifi className="w-3 h-3" />
+                    Remote
+                  </span>
+                )}
+                {community.focusAreas.map(focus => (
+                  <span key={focus} className="text-[12px] font-medium text-zinc-500 bg-[rgba(245,245,245,0.04)] px-2 py-0.5 rounded flex-shrink-0 whitespace-nowrap">
+                    {focus}
+                  </span>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </td>
@@ -535,8 +550,8 @@ function TableRow({ community }: { community: Community }) {
       {/* Location */}
       <td className="py-3 px-4">
         <div className="flex items-center gap-1.5 text-sm text-zinc-400">
-          <MapPin className="w-3.5 h-3.5 text-zinc-500" />
-          <span>{community.location.city}, {community.location.country}</span>
+          <MapPin className="w-3.5 h-3.5 text-zinc-500 flex-shrink-0" />
+          <span className="whitespace-nowrap">{community.location.city}, {community.location.country}</span>
         </div>
       </td>
       
@@ -548,25 +563,11 @@ function TableRow({ community }: { community: Community }) {
         </div>
       </td>
       
-      {/* Event Frequency */}
+      {/* Next Event */}
       <td className="py-3 px-4 hidden lg:table-cell">
         <div className="flex items-center gap-1.5 text-sm text-zinc-400">
           <Calendar className="w-3.5 h-3.5 text-zinc-500" />
-          <span>{community.eventFrequency}</span>
-        </div>
-      </td>
-      
-      {/* Focus Areas */}
-      <td className="py-3 px-4">
-        <div className="flex flex-wrap gap-1.5">
-          {community.focusAreas.slice(0, 3).map(focus => (
-            <span key={focus} className="text-[11px] text-zinc-500 bg-[rgba(245,245,245,0.04)] px-2 py-0.5 rounded">
-              {focus}
-            </span>
-          ))}
-          {community.focusAreas.length > 3 && (
-            <span className="text-[11px] text-zinc-600">+{community.focusAreas.length - 3}</span>
-          )}
+          <span>{getNextEventDate(community) || 'No upcoming events'}</span>
         </div>
       </td>
       

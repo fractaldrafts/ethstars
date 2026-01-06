@@ -2,7 +2,6 @@
 
 import { useMemo, useState, useEffect, useRef, useCallback } from 'react'
 import { MapPin, Users, ArrowUpRight, Calendar, Sparkles, Globe, Users2, Video, ChevronLeft, ChevronRight } from 'lucide-react'
-import { IconBrandDiscord, IconBrandTelegram } from '@tabler/icons-react'
 import Link from 'next/link'
 import { 
   type Community, 
@@ -175,7 +174,7 @@ export default function RelatedCommunitiesSection({ community }: RelatedCommunit
             <button
               onClick={prev}
               disabled={currentIndex === 0}
-              className="p-1.5 rounded bg-[rgba(245,245,245,0.08)] hover:bg-zinc-700 text-zinc-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              className="flex items-center justify-center w-7 h-7 rounded-full bg-[rgba(245,245,245,0.08)] hover:bg-zinc-700 text-zinc-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
               aria-label="Previous related communities"
             >
               <ChevronLeft className="w-4 h-4" />
@@ -183,7 +182,7 @@ export default function RelatedCommunitiesSection({ community }: RelatedCommunit
             <button
               onClick={next}
               disabled={currentIndex >= maxIndex}
-              className="p-1.5 rounded bg-[rgba(245,245,245,0.08)] hover:bg-zinc-700 text-zinc-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              className="flex items-center justify-center w-7 h-7 rounded-full bg-[rgba(245,245,245,0.08)] hover:bg-zinc-700 text-zinc-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
               aria-label="Next related communities"
             >
               <ChevronRight className="w-4 h-4" />
@@ -233,7 +232,7 @@ export default function RelatedCommunitiesSection({ community }: RelatedCommunit
               key={relatedCommunity.id}
               className="w-[320px] sm:w-[360px] flex-shrink-0"
             >
-              <div className={`relative w-full text-left p-4 rounded-lg border bg-[rgba(245,245,245,0.04)] border-[rgba(245,245,245,0.08)] hover:bg-[rgba(245,245,245,0.06)] hover:border-zinc-700 transition-colors cursor-pointer group ${hasDragged ? 'pointer-events-none' : ''}`}>
+              <div className={`relative w-full text-left p-4 rounded-lg border bg-[rgba(245,245,245,0.04)] border-[rgba(245,245,245,0.08)] hover:bg-[rgba(245,245,245,0.06)] hover:border-zinc-700 transition-colors cursor-pointer group flex flex-col ${hasDragged ? 'pointer-events-none' : ''}`}>
                 {/* Header */}
                 <div className="flex items-start gap-3 mb-3">
                   <div className="flex-shrink-0">
@@ -316,41 +315,15 @@ export default function RelatedCommunitiesSection({ community }: RelatedCommunit
                   )}
                 </div>
 
-                {/* Footer - Quick Actions */}
-                <div className="flex items-center gap-2">
+                {/* Footer - Main CTA */}
+                <div className="mt-auto">
                   <Link
                     href={`/communities/${relatedCommunity.id}`}
-                    className="flex items-center gap-1.5 text-sm text-zinc-400 hover:text-red-400 transition-colors"
+                    className="flex items-center justify-center gap-1.5 px-3 py-2 text-sm font-medium text-zinc-400 bg-[rgba(245,245,245,0.08)] hover:text-white hover:bg-red-500 rounded-full transition-colors w-full"
                   >
                     View Community
                     <ArrowUpRight className="w-3.5 h-3.5" />
                   </Link>
-                  <div className="flex items-center gap-1.5 ml-auto">
-                    {relatedCommunity.discord && (
-                      <a
-                        href={relatedCommunity.discord}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={(e) => e.stopPropagation()}
-                        className="p-1.5 rounded bg-[rgba(245,245,245,0.08)] hover:bg-red-500/20 text-zinc-400 hover:text-red-400 transition-colors"
-                        title="Discord"
-                      >
-                        <IconBrandDiscord className="w-3.5 h-3.5" />
-                      </a>
-                    )}
-                    {relatedCommunity.telegram && (
-                      <a
-                        href={relatedCommunity.telegram}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={(e) => e.stopPropagation()}
-                        className="p-1.5 rounded bg-[rgba(245,245,245,0.08)] hover:bg-red-500/20 text-zinc-400 hover:text-red-400 transition-colors"
-                        title="Telegram"
-                      >
-                        <IconBrandTelegram className="w-3.5 h-3.5" />
-                      </a>
-                    )}
-                  </div>
                 </div>
               </div>
             </div>
