@@ -330,7 +330,7 @@ export default function EventsTable() {
                     <td colSpan={6} className="py-3 px-4">
                       <div className="flex items-center gap-2">
                         <Calendar className="w-4 h-4 text-zinc-500" />
-                        <span className="text-sm font-semibold text-white">{monthLabel}</span>
+                        <span className="text-sm font-semibold text-zinc-400">{monthLabel}</span>
                       </div>
                     </td>
                   </tr>
