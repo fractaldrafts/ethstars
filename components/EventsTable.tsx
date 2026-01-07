@@ -357,6 +357,7 @@ function TableRow({ event }: { event: Event }) {
   }
 
   const config = locationTypeConfig[event.locationType]
+  const organizerInitials = event.organizer.slice(0, 2).toUpperCase()
 
   return (
     <tr className="hover:bg-[rgba(245,245,245,0.024)] transition-colors group">
@@ -376,27 +377,41 @@ function TableRow({ event }: { event: Event }) {
       
       {/* Event Title */}
       <td className="py-3 px-4">
-        <div>
-          <a
-            href={event.eventUrl || '#'}
-            className="text-sm text-white font-medium group-hover:text-red-400 transition-colors block"
-            title={event.title}
-          >
-            {event.title}
-          </a>
-          {/* Tags preview */}
-          {event.tags.length > 0 && (
-            <div className="flex items-center gap-1.5 mt-1 flex-wrap">
-              {event.tags.slice(0, 3).map(tag => (
-                <span
-                  key={tag}
-                  className="text-[12px] px-1.5 py-0.5 rounded bg-[rgba(245,245,245,0.04)] text-zinc-500"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          )}
+        <div className="flex items-start gap-2.5">
+          <div className="w-8 h-8 rounded-lg bg-[rgba(245,245,245,0.08)] overflow-hidden flex-shrink-0 flex items-center justify-center text-[11px] font-semibold text-zinc-200">
+            {event.organizerLogo ? (
+              <img
+                src={event.organizerLogo}
+                alt={event.organizer}
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
+            ) : (
+              organizerInitials
+            )}
+          </div>
+          <div className="min-w-0">
+            <a
+              href={event.eventUrl || '#'}
+              className="text-sm text-white font-medium group-hover:text-red-400 transition-colors block"
+              title={event.title}
+            >
+              {event.title}
+            </a>
+            {/* Tags preview */}
+            {event.tags.length > 0 && (
+              <div className="flex items-center gap-1.5 mt-1 flex-wrap">
+                {event.tags.slice(0, 3).map(tag => (
+                  <span
+                    key={tag}
+                    className="text-[12px] px-1.5 py-0.5 rounded bg-[rgba(245,245,245,0.04)] text-zinc-500"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </td>
       
