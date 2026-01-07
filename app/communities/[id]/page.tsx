@@ -9,13 +9,13 @@ import CommunityEventsSection from '@/components/CommunityEventsSection'
 import RelatedCommunitiesSection from '@/components/RelatedCommunitiesSection'
 
 interface CommunityPageProps {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
-export default function CommunityPage({ params }: CommunityPageProps) {
-  const { id } = params
+export default async function CommunityPage({ params }: CommunityPageProps) {
+  const { id } = await params
 
   const community = communities.find((c) => c.id === id)
 

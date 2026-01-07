@@ -5,6 +5,7 @@ export interface Event {
   organizerLogo?: string
   description: string
   date: string // ISO date string
+  endDate?: string // ISO date string for multi-day events
   time?: string // e.g., "10:00 AM - 5:00 PM"
   location: string
   locationType: 'online' | 'in-person' | 'hybrid'
@@ -13,6 +14,10 @@ export interface Event {
   tags: string[]
   featured?: boolean
   image?: string
+  twitterUrl?: string
+  farcasterUrl?: string
+  telegramUrl?: string
+  discordUrl?: string
 }
 
 export const events: Event[] = [
@@ -23,6 +28,7 @@ export const events: Event[] = [
     organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/ETHSafari.png',
     description: 'ETHSafari in Kenya. Regional Grassroots event.',
     date: '2026-09-01',
+    endDate: '2026-09-05',
     location: 'Kenya',
     locationType: 'in-person',
     eventUrl: 'https://ethsafari.xyz/',
@@ -32,7 +38,9 @@ export const events: Event[] = [
       'Regional Grassroots'
     ],
     featured: true,
-
+    twitterUrl: 'https://x.com/ETHSafari',
+    telegramUrl: 'https://t.me/ethsafari',
+    discordUrl: 'https://discord.com/invite/CkMF5Ff83f',
   },
   {
     id: '2',
@@ -40,6 +48,7 @@ export const events: Event[] = [
     organizer: 'ETH',
     description: 'ETHRome Hackathon in Rome, Italy. Regional Grassroots event.',
     date: '2025-10-17',
+    endDate: '2025-10-19',
     location: 'Rome, Italy',
     locationType: 'in-person',
     eventUrl: 'https://www.ethrome.org/',
@@ -47,6 +56,8 @@ export const events: Event[] = [
       'Hackathon',
       'Regional Grassroots'
     ],
+    twitterUrl: 'https://x.com/ethrome',
+    telegramUrl: 'https://t.me/ethrome',
   },
   {
     id: '3',
@@ -55,6 +66,7 @@ export const events: Event[] = [
     organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/ETHGlobal%20New%20York.png',
     description: 'ETHGlobal New York in NYC, USA. ETHGlobal event.',
     date: '2025-08-15',
+    endDate: '2025-08-17',
     location: 'NYC, USA',
     locationType: 'in-person',
     eventUrl: 'https://ethglobal.com/events/newyork2025',
@@ -62,6 +74,7 @@ export const events: Event[] = [
       'Hackathon',
       'ETHGlobal'
     ],
+    discordUrl: 'https://ethglobal.com/discord',
   },
   {
     id: '4',
@@ -70,6 +83,7 @@ export const events: Event[] = [
     organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/DappCon.png',
     description: 'DappCon Berlin in Berlin, Germany. dApp event.',
     date: '2026-06-16',
+    endDate: '2026-06-18',
     location: 'Berlin, Germany',
     locationType: 'in-person',
     eventUrl: 'https://dappcon.io',
@@ -78,7 +92,9 @@ export const events: Event[] = [
       'dApp'
     ],
     featured: true,
-
+    twitterUrl: 'https://x.com/dappconberlin',
+    farcasterUrl: 'https://farcaster.xyz/~/channel/dappconberlin',
+    telegramUrl: 'https://t.me/+ZYUWnz0kxWo4NTMy',
   },
   {
     id: '5',
@@ -94,6 +110,8 @@ export const events: Event[] = [
       'Hackathon',
       'AI'
     ],
+    twitterUrl: 'https://x.com/codeafrica',
+    discordUrl: 'https://discord.gg/codeafrica',
   },
   {
     id: '6',
@@ -109,6 +127,9 @@ export const events: Event[] = [
       'Hackathon',
       'Regional Grassroots'
     ],
+    twitterUrl: 'https://x.com/ethhuangshan',
+    telegramUrl: 'https://t.me/ethhuangshan',
+    discordUrl: 'https://discord.gg/ethhuangshan',
   },
   {
     id: '7',
@@ -123,6 +144,7 @@ export const events: Event[] = [
       'Hackathon',
       'Conference'
     ],
+    farcasterUrl: 'https://farcaster.xyz/~/channel/farcon',
   },
   {
     id: '8',
@@ -130,12 +152,16 @@ export const events: Event[] = [
     organizer: 'Consensus',
     description: 'Consensus2025 in Toronto, Canada.  event.',
     date: '2025-05-14',
+    endDate: '2025-05-16',
     location: 'Toronto, Canada',
     locationType: 'in-person',
     eventUrl: 'https://consensus2025.coindesk.com/',
     tags: [
       'Conference'
     ],
+    twitterUrl: 'https://x.com/consensus2025',
+    telegramUrl: 'https://t.me/consensus2025',
+    discordUrl: 'https://discord.gg/consensus',
   },
   {
     id: '9',
@@ -143,6 +169,7 @@ export const events: Event[] = [
     organizer: 'CHES',
     description: 'CHES 2025 in Kuala Lumpur, Malaysia. Privacy and Cryptography, Academia event.',
     date: '2025-09-14',
+    endDate: '2025-09-17',
     location: 'Kuala Lumpur, Malaysia',
     locationType: 'in-person',
     eventUrl: 'https://ches.iacr.org/2025/',
@@ -151,6 +178,7 @@ export const events: Event[] = [
       'Privacy and Cryptography',
       'Academia'
     ],
+    twitterUrl: 'https://x.com/ches2025',
   },
   {
     id: '10',
@@ -165,6 +193,10 @@ export const events: Event[] = [
       'Hackathon',
       'Regional Grassroots'
     ],
+    twitterUrl: 'https://x.com/ethargentina',
+    telegramUrl: 'https://t.me/ethargentina',
+    discordUrl: 'https://discord.gg/ethargentina',
+    farcasterUrl: 'https://farcaster.xyz/~/channel/ethargentina',
   },
   {
     id: '11',
@@ -180,6 +212,7 @@ export const events: Event[] = [
       'Conference',
       'Regional Grassroots'
     ],
+    telegramUrl: 'https://t.me/ethcluj',
   },
   {
     id: '12',
@@ -188,6 +221,7 @@ export const events: Event[] = [
     organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/ETHConf.png',
     description: 'ETHConf in New York City, USA. ETHGlobal event.',
     date: '2026-06-08',
+    endDate: '2026-06-10',
     location: 'New York City, USA',
     locationType: 'in-person',
     eventUrl: 'https://ethconf.com',
@@ -196,7 +230,9 @@ export const events: Event[] = [
       'ETHGlobal'
     ],
     featured: true,
-
+    twitterUrl: 'https://x.com/ethereumconf',
+    farcasterUrl: 'https://farcaster.xyz/ethglobal',
+    discordUrl: 'https://ethglobal.com/discord',
   },
   {
     id: '13',
@@ -212,21 +248,26 @@ export const events: Event[] = [
       'Conference',
       'Institutional'
     ],
+    twitterUrl: 'https://x.com/digitalassetsforum',
+    telegramUrl: 'https://t.me/digitalassetsforum',
   },
   {
     id: '14',
     title: 'Pragma Mumbai',
     organizer: 'Pragma',
     organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/Pragma%20Mumbai.png',
-    description: 'Pragma Mumbai in Mumbai, India. ETHGlobal event.',
+    description: 'Pragma Mumbai in Mumbai, India. ETHGlobal event.',
     date: '2026-11-05',
-    location: 'Mumbai, India',
+    location: 'Mumbai, India',
     locationType: 'in-person',
     eventUrl: 'https://ethglobal.com/events/pragma-mumbai',
     tags: [
       'Conference',
       'ETHGlobal'
     ],
+    twitterUrl: 'https://x.com/pragmamumbai',
+    farcasterUrl: 'https://farcaster.xyz/ethglobal',
+    discordUrl: 'https://ethglobal.com/discord',
   },
   {
     id: '15',
@@ -242,6 +283,8 @@ export const events: Event[] = [
       'Privacy and Cryptography',
       'Academia'
     ],
+    twitterUrl: 'https://x.com/pkc2025',
+    discordUrl: 'https://discord.gg/pkc2025',
   },
   {
     id: '16',
@@ -257,6 +300,10 @@ export const events: Event[] = [
       'Conference',
       'General Blockchain Week'
     ],
+    twitterUrl: 'https://x.com/parisblockchain',
+    telegramUrl: 'https://t.me/parisblockchain',
+    discordUrl: 'https://discord.gg/parisblockchain',
+    farcasterUrl: 'https://farcaster.xyz/~/channel/parisblockchain',
   },
   {
     id: '17',
@@ -265,6 +312,7 @@ export const events: Event[] = [
     organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/ETHCC.png',
     description: 'ETHCC in Cannes, France. Regional Grassroots event.',
     date: '2026-03-30',
+    endDate: '2026-04-02',
     location: 'Cannes, France',
     locationType: 'in-person',
     eventUrl: 'https://ethcc.io',
@@ -273,7 +321,8 @@ export const events: Event[] = [
       'Regional Grassroots'
     ],
     featured: true,
-
+    twitterUrl: 'http://x.com/EthCC',
+    telegramUrl: 'https://t.me/ethccweek',
   },
   {
     id: '18',
@@ -289,6 +338,8 @@ export const events: Event[] = [
       'Hackathon',
       'Regional Grassroots'
     ],
+    twitterUrl: 'https://x.com/ethdam',
+    telegramUrl: 'https://t.me/ethdam',
   },
   {
     id: '19',
@@ -312,6 +363,7 @@ export const events: Event[] = [
     organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/ETHGlobal%20New%20York.png',
     description: 'ETHGlobal New York in New York City, USA. ETHGlobal event.',
     date: '2026-06-12',
+    endDate: '2026-06-14',
     location: 'New York City, USA',
     locationType: 'in-person',
     eventUrl: 'https://ethglobal.com/events/newyork2026',
@@ -319,6 +371,9 @@ export const events: Event[] = [
       'Hackathon',
       'ETHGlobal'
     ],
+    twitterUrl: 'https://x.com/ethglobal',
+    farcasterUrl: 'https://farcaster.xyz/ethglobal',
+    discordUrl: 'https://ethglobal.com/discord',
   },
   {
     id: '21',
@@ -334,15 +389,19 @@ export const events: Event[] = [
       'Hackathon',
       'AI'
     ],
+    twitterUrl: 'https://x.com/encodelondon',
+    discordUrl: 'https://discord.gg/encodelondon',
+    farcasterUrl: 'https://farcaster.xyz/~/channel/encodelondon',
   },
   {
     id: '22',
     title: 'ETHGlobal Mumbai',
     organizer: 'ETHGlobal',
     organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/ETHGlobal%20Mumbai.png',
-    description: 'ETHGlobal Mumbai in Mumbai, India. ETHGlobal event.',
+    description: 'ETHGlobal Mumbai in Mumbai, India. ETHGlobal event.',
     date: '2026-11-06',
-    location: 'Mumbai, India',
+    endDate: '2026-11-08',
+    location: 'Mumbai, India',
     locationType: 'in-person',
     eventUrl: 'https://ethglobal.com/events/mumbai',
     tags: [
@@ -350,7 +409,9 @@ export const events: Event[] = [
       'ETHGlobal'
     ],
     featured: true,
-
+    twitterUrl: 'https://x.com/ethglobal',
+    farcasterUrl: 'https://farcaster.xyz/ethglobal',
+    discordUrl: 'https://ethglobal.com/discord',
   },
   {
     id: '23',
@@ -365,6 +426,7 @@ export const events: Event[] = [
       'Conference',
       'ETHGlobal'
     ],
+    discordUrl: 'https://ethglobal.com/discord',
   },
   {
     id: '24',
@@ -379,6 +441,8 @@ export const events: Event[] = [
       'Conference',
       'ETHGlobal'
     ],
+    twitterUrl: 'https://x.com/pragmanewyork',
+    discordUrl: 'https://ethglobal.com/discord',
   },
   {
     id: '25',
@@ -392,6 +456,10 @@ export const events: Event[] = [
     tags: [
       'Popup Village/City'
     ],
+    twitterUrl: 'https://x.com/invisiblegarden',
+    telegramUrl: 'https://t.me/invisiblegarden',
+    discordUrl: 'https://discord.gg/invisiblegarden',
+    farcasterUrl: 'https://farcaster.xyz/~/channel/invisiblegarden',
   },
   {
     id: '26',
@@ -407,6 +475,9 @@ export const events: Event[] = [
       'Conference',
       'ETHGlobal'
     ],
+    twitterUrl: 'https://x.com/pragmacannes',
+    farcasterUrl: 'https://farcaster.xyz/ethglobal',
+    discordUrl: 'https://ethglobal.com/discord',
   },
   {
     id: '27',
@@ -422,6 +493,7 @@ export const events: Event[] = [
       'Hackathon',
       'Regional Grassroots'
     ],
+    telegramUrl: 'https://t.me/ethvietnam',
   },
   {
     id: '28',
@@ -436,6 +508,8 @@ export const events: Event[] = [
       'Conference',
       'Regional Grassroots'
     ],
+    twitterUrl: 'https://x.com/protocolberg',
+    discordUrl: 'https://discord.gg/protocolberg',
   },
   {
     id: '29',
@@ -450,6 +524,10 @@ export const events: Event[] = [
       'Conference',
       'Open Source'
     ],
+    twitterUrl: 'https://x.com/coscup',
+    telegramUrl: 'https://t.me/coscup',
+    discordUrl: 'https://discord.gg/coscup',
+    farcasterUrl: 'https://farcaster.xyz/~/channel/coscup',
   },
   {
     id: '30',
@@ -465,6 +543,8 @@ export const events: Event[] = [
       'Hackathon',
       'Regional Grassroots'
     ],
+    twitterUrl: 'https://x.com/ethsofia',
+    telegramUrl: 'https://t.me/ethsofia',
   },
   {
     id: '31',
@@ -479,6 +559,8 @@ export const events: Event[] = [
       'Workshop',
       'Hackathon'
     ],
+    twitterUrl: 'https://x.com/web3ssh',
+    discordUrl: 'https://discord.gg/web3ssh',
   },
   {
     id: '32',
@@ -486,6 +568,7 @@ export const events: Event[] = [
     organizer: 'Black',
     description: 'Black Hat USA 2025 in Las Vegas, USA. Security event.',
     date: '2025-08-02',
+    endDate: '2025-08-07',
     location: 'Las Vegas, USA',
     locationType: 'in-person',
     eventUrl: 'https://www.blackhat.com/us-25/',
@@ -493,6 +576,8 @@ export const events: Event[] = [
       'Conference',
       'Security'
     ],
+    twitterUrl: 'https://x.com/blackhat',
+    discordUrl: 'https://discord.gg/blackhat',
   },
   {
     id: '33',
@@ -521,6 +606,7 @@ export const events: Event[] = [
       'Conference',
       'ETHGlobal'
     ],
+    discordUrl: 'https://ethglobal.com/discord',
   },
   {
     id: '35',
@@ -535,6 +621,8 @@ export const events: Event[] = [
       'Conference',
       'Open Source'
     ],
+    twitterUrl: 'https://x.com/fosdem',
+    telegramUrl: 'https://t.me/fosdem',
   },
   {
     id: '36',
@@ -549,6 +637,9 @@ export const events: Event[] = [
       'Conference',
       'Open Source'
     ],
+    twitterUrl: 'https://x.com/confconf',
+    discordUrl: 'https://discord.gg/confconf',
+    farcasterUrl: 'https://farcaster.xyz/~/channel/confconf',
   },
   {
     id: '37',
@@ -562,6 +653,10 @@ export const events: Event[] = [
     tags: [
       'Popup Village/City'
     ],
+    twitterUrl: 'https://x.com/edgeesmeralda',
+    telegramUrl: 'https://t.me/edgeesmeralda',
+    discordUrl: 'https://discord.gg/edgeesmeralda',
+    farcasterUrl: 'https://farcaster.xyz/edgecity',
   },
   {
     id: '38',
@@ -576,6 +671,8 @@ export const events: Event[] = [
       'Conference',
       'Hackathon'
     ],
+    twitterUrl: 'https://x.com/web3lagos',
+    telegramUrl: 'https://t.me/web3lagos',
   },
   {
     id: '39',
@@ -592,7 +689,8 @@ export const events: Event[] = [
       'Regional Grassroots'
     ],
     featured: true,
-
+    twitterUrl: 'https://x.com/ethindia',
+    telegramUrl: 'https://t.me/ethindia',
   },
   {
     id: '40',
@@ -607,6 +705,7 @@ export const events: Event[] = [
       'Conference',
       'Security'
     ],
+    twitterUrl: 'https://x.com/cansecwest',
   },
   {
     id: '41',
@@ -621,6 +720,9 @@ export const events: Event[] = [
       'Conference',
       'Academia'
     ],
+    twitterUrl: 'https://x.com/sbcconference',
+    telegramUrl: 'https://t.me/sbcconference',
+    discordUrl: 'https://discord.gg/sbcconference',
   },
   {
     id: '42',
@@ -634,6 +736,8 @@ export const events: Event[] = [
     tags: [
       'Conference'
     ],
+    twitterUrl: 'https://x.com/protolayers',
+    telegramUrl: 'https://t.me/protolayers',
   },
   {
     id: '43',
@@ -647,6 +751,10 @@ export const events: Event[] = [
     tags: [
       'Popup Village/City'
     ],
+    twitterUrl: 'https://x.com/zuberlin',
+    telegramUrl: 'https://t.me/zuberlin',
+    discordUrl: 'https://discord.gg/zuberlin',
+    farcasterUrl: 'https://farcaster.xyz/~/channel/zuberlin',
   },
   {
     id: '44',
@@ -662,6 +770,7 @@ export const events: Event[] = [
       'Hackathon',
       'Regional Grassroots'
     ],
+    telegramUrl: 'https://t.me/ethwarsaw',
   },
   {
     id: '45',
@@ -676,6 +785,9 @@ export const events: Event[] = [
       'Conference',
       'Regional Grassroots'
     ],
+    twitterUrl: 'https://x.com/ethconar',
+    telegramUrl: 'https://t.me/ethconar',
+    discordUrl: 'https://discord.gg/ethconar',
   },
   {
     id: '46',
@@ -691,6 +803,10 @@ export const events: Event[] = [
       'Conference',
       'Institutional'
     ],
+    twitterUrl: 'https://x.com/token2049',
+    telegramUrl: 'https://t.me/token2049',
+    discordUrl: 'https://discord.gg/token2049',
+    farcasterUrl: 'https://farcaster.xyz/~/channel/token2049',
   },
   {
     id: '47',
@@ -708,7 +824,9 @@ export const events: Event[] = [
       'General Blockchain Week'
     ],
     featured: true,
-
+    twitterUrl: 'https://x.com/devcon',
+    telegramUrl: 'https://t.me/devcon',
+    discordUrl: 'https://discord.gg/devcon',
   },
   {
     id: '48',
@@ -723,6 +841,7 @@ export const events: Event[] = [
       'Conference',
       'Open Source'
     ],
+    discordUrl: 'https://discord.gg/oscafrica',
   },
   {
     id: '49',
@@ -737,6 +856,8 @@ export const events: Event[] = [
       'Hackathon',
       'Privacy and Cryptography'
     ],
+    twitterUrl: 'https://x.com/zkhackberlin',
+    discordUrl: 'https://discord.gg/zkhackberlin',
   },
   {
     id: '50',
@@ -753,6 +874,7 @@ export const events: Event[] = [
       'Privacy and Cryptography',
       'Academia'
     ],
+    twitterUrl: 'https://x.com/eurocrypt',
   },
   {
     id: '51',
@@ -767,6 +889,7 @@ export const events: Event[] = [
       'Hackathon',
       'Regional Grassroots'
     ],
+    telegramUrl: 'https://t.me/ethkyiv',
   },
   {
     id: '53',
@@ -782,6 +905,7 @@ export const events: Event[] = [
       'Conference',
       'Regional Grassroots'
     ],
+    telegramUrl: 'https://t.me/ethmilan',
   },
   {
     id: '54',
@@ -795,6 +919,8 @@ export const events: Event[] = [
     tags: [
       'Popup Village/City'
     ],
+    twitterUrl: 'https://x.com/edgepatagonia',
+    telegramUrl: 'https://t.me/edgepatagonia',
   },
   {
     id: '55',
@@ -809,6 +935,9 @@ export const events: Event[] = [
       'Workshop',
       'Privacy and Cryptography'
     ],
+    twitterUrl: 'https://x.com/progcrypto',
+    telegramUrl: 'https://t.me/progcrypto',
+    discordUrl: 'https://discord.gg/progcrypto',
   },
   {
     id: '56',
@@ -823,6 +952,9 @@ export const events: Event[] = [
       'Conference',
       'Hackathon'
     ],
+    twitterUrl: 'https://x.com/frontiers',
+    discordUrl: 'https://discord.gg/frontiers',
+    farcasterUrl: 'https://farcaster.xyz/~/channel/frontiers',
   },
   {
     id: '57',
@@ -838,6 +970,7 @@ export const events: Event[] = [
       'Hackathon',
       'Regional Grassroots'
     ],
+    discordUrl: 'https://discord.gg/ethtokyo',
   },
   {
     id: '58',
@@ -852,6 +985,10 @@ export const events: Event[] = [
       'Conference',
       'Security'
     ],
+    twitterUrl: 'https://x.com/defisecurity',
+    telegramUrl: 'https://t.me/defisecurity',
+    discordUrl: 'https://discord.gg/defisecurity',
+    farcasterUrl: 'https://farcaster.xyz/~/channel/defisecurity',
   },
   {
     id: '59',
@@ -867,6 +1004,7 @@ export const events: Event[] = [
       'Conference',
       'ETHGlobal'
     ],
+    discordUrl: 'https://ethglobal.com/discord',
   },
   {
     id: '60',
@@ -882,6 +1020,9 @@ export const events: Event[] = [
       'Meetup',
       'ETHGlobal'
     ],
+    twitterUrl: 'https://x.com/ethglobal',
+    farcasterUrl: 'https://farcaster.xyz/ethglobal',
+    discordUrl: 'https://ethglobal.com/discord',
   },
   {
     id: '61',
@@ -897,6 +1038,7 @@ export const events: Event[] = [
       'Hackathon',
       'Regional Grassroots'
     ],
+    discordUrl: 'https://discord.gg/ethlisbon',
   },
   {
     id: '62',
@@ -912,6 +1054,7 @@ export const events: Event[] = [
       'Conference',
       'Regional Grassroots'
     ],
+    telegramUrl: 'https://t.me/ethprague',
   },
   {
     id: '63',
@@ -925,6 +1068,8 @@ export const events: Event[] = [
     tags: [
       'Conference'
     ],
+    twitterUrl: 'https://x.com/auscryptocon',
+    telegramUrl: 'https://t.me/auscryptocon',
   },
   {
     id: '64',
@@ -940,6 +1085,7 @@ export const events: Event[] = [
       'Hackathon',
       'Regional Grassroots'
     ],
+    telegramUrl: 'https://t.me/ethlatam',
   },
   {
     id: '65',
@@ -954,6 +1100,9 @@ export const events: Event[] = [
       'Conference',
       'NFT'
     ],
+    twitterUrl: 'https://x.com/nfcsummit',
+    telegramUrl: 'https://t.me/nfcsummit',
+    discordUrl: 'https://discord.gg/nfcsummit',
   },
   {
     id: '66',
@@ -967,6 +1116,7 @@ export const events: Event[] = [
     tags: [
       'Conference'
     ],
+    telegramUrl: 'https://t.me/token2049',
   },
   {
     id: '67',
@@ -982,6 +1132,9 @@ export const events: Event[] = [
       'Conference',
       'Regional Grassroots'
     ],
+    twitterUrl: 'https://x.com/buidleurope',
+    discordUrl: 'https://discord.gg/buidleurope',
+    farcasterUrl: 'https://farcaster.xyz/~/channel/buidleurope',
   },
   {
     id: '68',
@@ -997,6 +1150,10 @@ export const events: Event[] = [
       'Conference',
       'Regional Grassroots'
     ],
+    twitterUrl: 'https://x.com/ethseoul',
+    telegramUrl: 'https://t.me/ethseoul',
+    discordUrl: 'https://discord.gg/ethseoul',
+    farcasterUrl: 'https://farcaster.xyz/~/channel/ethseoul',
   },
   {
     id: '69',
@@ -1027,6 +1184,8 @@ export const events: Event[] = [
       'Conference',
       'RWA'
     ],
+    twitterUrl: 'https://x.com/stablecon',
+    telegramUrl: 'https://t.me/stablecon',
   },
   {
     id: '71',
@@ -1040,6 +1199,7 @@ export const events: Event[] = [
     tags: [
       'Blockchain Week'
     ],
+    telegramUrl: 'https://t.me/devconnect',
   },
   {
     id: '72',
@@ -1055,21 +1215,27 @@ export const events: Event[] = [
       'Conference',
       'Regional Grassroots'
     ],
+    twitterUrl: 'https://x.com/ethereumbrasil',
+    telegramUrl: 'https://t.me/ethereumbrasil',
+    discordUrl: 'https://discord.gg/ethereumbrasil',
   },
   {
     id: '73',
     title: 'Pragma Lisbon',
     organizer: 'Pragma',
     organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/Pragma%20Lisbon.png',
-    description: 'Pragma Lisbon in Lisbon, Portugal. ETHGlobal event.',
+    description: 'Pragma Lisbon in Lisbon, Portugal. ETHGlobal event.',
     date: '2026-07-23',
-    location: 'Lisbon, Portugal',
+    location: 'Lisbon, Portugal',
     locationType: 'in-person',
     eventUrl: 'https://ethglobal.com/events/pragma-lisbon2026',
     tags: [
       'Conference',
       'ETHGlobal'
     ],
+    twitterUrl: 'https://x.com/ethglobal',
+    farcasterUrl: 'https://farcaster.xyz/ethglobal',
+    discordUrl: 'https://ethglobal.com/discord',
   },
   {
     id: '74',
@@ -1084,6 +1250,7 @@ export const events: Event[] = [
       'Conference',
       'AI'
     ],
+    twitterUrl: 'https://x.com/superai',
   },
   {
     id: '75',
@@ -1099,6 +1266,7 @@ export const events: Event[] = [
       'Hackathon',
       'Regional Grassroots'
     ],
+    telegramUrl: 'https://t.me/ethcdm',
   },
   {
     id: '76',
@@ -1129,6 +1297,9 @@ export const events: Event[] = [
       'Meetup',
       'Privacy and Cryptography'
     ],
+    twitterUrl: 'https://x.com/encryptionday',
+    telegramUrl: 'https://t.me/encryptionday',
+    discordUrl: 'https://discord.gg/encryptionday',
   },
   {
     id: '78',
@@ -1142,6 +1313,7 @@ export const events: Event[] = [
     tags: [
       'Research & Hacker House'
     ],
+    telegramUrl: 'https://t.me/uzumaki',
   },
   {
     id: '79',
@@ -1157,6 +1329,7 @@ export const events: Event[] = [
       'Conference',
       'RWA'
     ],
+    twitterUrl: 'https://x.com/digitaleuro',
   },
   {
     id: '80',
@@ -1173,6 +1346,10 @@ export const events: Event[] = [
       'Hackathon',
       'Regional Grassroots'
     ],
+    twitterUrl: 'https://x.com/ctrlshift',
+    telegramUrl: 'https://t.me/ctrlshift',
+    discordUrl: 'https://discord.gg/ctrlshift',
+    farcasterUrl: 'https://farcaster.xyz/~/channel/ctrlshift',
   },
   {
     id: '81',
@@ -1187,21 +1364,25 @@ export const events: Event[] = [
       'Hackathon',
       'Regional Grassroots'
     ],
+    telegramUrl: 'https://t.me/ethaccra',
   },
   {
     id: '82',
     title: 'ETHGlobal Lisbon',
     organizer: 'ETHGlobal',
     organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/ETHGlobal%20Lisbon.png',
-    description: 'ETHGlobal Lisbon in Lisbon, Portugal. ETHGlobal event.',
+    description: 'ETHGlobal Lisbon in Lisbon, Portugal. ETHGlobal event.',
     date: '2026-07-24',
-    location: 'Lisbon, Portugal',
+    location: 'Lisbon, Portugal',
     locationType: 'in-person',
     eventUrl: 'https://ethglobal.com/events/lisbon2026',
     tags: [
       'Hackathon',
       'ETHGlobal'
     ],
+    twitterUrl: 'https://x.com/ethglobal',
+    farcasterUrl: 'https://farcaster.xyz/ethglobal',
+    discordUrl: 'https://ethglobal.com/discord',
   },
   {
     id: '83',
@@ -1215,21 +1396,25 @@ export const events: Event[] = [
     tags: [
       'Popup Village/City'
     ],
+    telegramUrl: 'https://t.me/zuitzerland',
   },
   {
     id: '84',
     title: 'ETHGlobal Tokyo',
     organizer: 'ETHGlobal',
     organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/ETHGlobal%20Tokyo.png',
-    description: 'ETHGlobal Tokyo in Tokyo, Japan. ETHGlobal event.',
+    description: 'ETHGlobal Tokyo in Tokyo, Japan. ETHGlobal event.',
     date: '2026-09-25',
-    location: 'Tokyo, Japan',
+    location: 'Tokyo, Japan',
     locationType: 'in-person',
     eventUrl: 'https://ethglobal.com/events/tokyo2026',
     tags: [
       'Hackathon',
       'ETHGlobal'
     ],
+    twitterUrl: 'https://x.com/ethglobal',
+    farcasterUrl: 'https://farcaster.xyz/ethglobal',
+    discordUrl: 'https://ethglobal.com/discord',
   },
   {
     id: '85',
@@ -1244,6 +1429,7 @@ export const events: Event[] = [
       'Conference',
       'Hackathon'
     ],
+    telegramUrl: 'https://t.me/prodfest',
   },
   {
     id: '86',
@@ -1259,6 +1445,7 @@ export const events: Event[] = [
       'Academia',
       'Privacy and Cryptography'
     ],
+    twitterUrl: 'https://x.com/crypto2025',
   },
   {
     id: '87',
@@ -1274,6 +1461,9 @@ export const events: Event[] = [
       'Conference',
       'Institutional'
     ],
+    twitterUrl: 'https://x.com/consensushk',
+    telegramUrl: 'https://t.me/consensushk',
+    discordUrl: 'https://discord.gg/consensushk',
   },
   {
     id: '88',
@@ -1289,6 +1479,7 @@ export const events: Event[] = [
       'Conference',
       'Regional Grassroots'
     ],
+    discordUrl: 'https://discord.gg/ethbeijing',
   },
   {
     id: '89',
@@ -1304,6 +1495,8 @@ export const events: Event[] = [
       'Conference',
       'Regional Grassroots'
     ],
+    twitterUrl: 'https://x.com/ethmilan',
+    telegramUrl: 'https://t.me/ethmilan',
   },
   {
     id: '90',
@@ -1312,6 +1505,7 @@ export const events: Event[] = [
     organizerLogo: 'https://pvvrtckedmrkyzfxubkk.supabase.co/storage/v1/object/public/events/ETHDenver.png',
     description: 'ETHDenver in Denver, USA. Regional Grassroots event.',
     date: '2026-02-17',
+    endDate: '2026-02-23',
     location: 'Denver, USA',
     locationType: 'in-person',
     eventUrl: 'https://ethdenver.com',
@@ -1320,7 +1514,8 @@ export const events: Event[] = [
       'Regional Grassroots'
     ],
     featured: true,
-
+    twitterUrl: 'https://x.com/ethereumdenver',
+    telegramUrl: 'https://t.me/Ethdenver',
   },
   {
     id: '91',
@@ -1335,6 +1530,7 @@ export const events: Event[] = [
       'Hackathon',
       'ETHGlobal'
     ],
+    discordUrl: 'https://ethglobal.com/discord',
   },
   {
     id: '92',
@@ -1350,6 +1546,10 @@ export const events: Event[] = [
       'Popup Village/City',
       'Regional Grassroots'
     ],
+    twitterUrl: 'https://x.com/zuafrique',
+    telegramUrl: 'https://t.me/zuafrique',
+    discordUrl: 'https://discord.gg/zuafrique',
+    farcasterUrl: 'https://farcaster.xyz/~/channel/zuafrique',
   },
   {
     id: '93',
@@ -1364,6 +1564,7 @@ export const events: Event[] = [
       'Meetup',
       'Privacy and Cryptography'
     ],
+    telegramUrl: 'https://t.me/progcryptosg',
   },
   {
     id: '94',
@@ -1379,6 +1580,7 @@ export const events: Event[] = [
       'Academia',
       'Privacy and Cryptography'
     ],
+    twitterUrl: 'https://x.com/latincrypt',
   },
   {
     id: '95',
@@ -1393,6 +1595,8 @@ export const events: Event[] = [
       'Workshop',
       'Privacy and Cryptography'
     ],
+    twitterUrl: 'https://x.com/privacyworkshop',
+    telegramUrl: 'https://t.me/privacyworkshop',
   },
   {
     id: '96',
@@ -1409,6 +1613,8 @@ export const events: Event[] = [
       'Hackathon',
       'Regional Grassroots'
     ],
+    telegramUrl: 'https://t.me/ethbratislava',
+    discordUrl: 'https://discord.gg/ethbratislava',
   },
   {
     id: '97',
@@ -1451,6 +1657,9 @@ export const events: Event[] = [
       'Hackathon',
       'ETHGlobal'
     ],
+    twitterUrl: 'https://x.com/ethglobal',
+    farcasterUrl: 'https://farcaster.xyz/ethglobal',
+    discordUrl: 'https://ethglobal.com/discord',
   },
   {
     id: '100',
@@ -1480,6 +1689,9 @@ export const events: Event[] = [
       'Hackathon',
       'Regional Grassroots'
     ],
+    twitterUrl: 'https://x.com/ethsafari',
+    telegramUrl: 'https://t.me/ethsafari',
+    discordUrl: 'https://discord.gg/ethsafari',
   },
   {
     id: '102',
@@ -1496,6 +1708,7 @@ export const events: Event[] = [
       'Hackathon',
       'Regional Grassroots'
     ],
+    telegramUrl: 'https://t.me/ethmumbai',
   },
   {
     id: '103',
@@ -1719,7 +1932,9 @@ export const events: Event[] = [
       'Regional Grassroots'
     ],
     featured: true,
-
+    twitterUrl: 'https://x.com/EthPrague',
+    farcasterUrl: 'https://farcaster.xyz/ethprague',
+    telegramUrl: 'https://t.me/ethprague',
   },
   {
     id: '118',

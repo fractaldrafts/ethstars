@@ -6,13 +6,13 @@ import { opportunities } from '@/data/opportunities'
 import { ArrowLeft } from 'lucide-react'
 
 interface OpportunityPageProps {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
-export default function OpportunityPage({ params }: OpportunityPageProps) {
-  const { id } = params
+export default async function OpportunityPage({ params }: OpportunityPageProps) {
+  const { id } = await params
 
   const opportunity = opportunities.find((opp) => opp.id === id)
 

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo, useRef, useCallback } from 'react'
 import Link from 'next/link'
-import { ArrowUpRight, MapPin, Calendar, ChevronLeft, ChevronRight, Globe } from 'lucide-react'
+import { ArrowUpRight, MapPin, Calendar, ChevronLeft, ChevronRight, Globe, Star } from 'lucide-react'
 import { featuredEvents, type Event } from '@/data/events'
 
 function formatDate(dateString: string): string {
@@ -16,13 +16,7 @@ function formatTime(time?: string): string {
 }
 
 function FeaturedCard({ event, isDragging }: { event: Event; isDragging: boolean }) {
-  const locationTypeConfig = {
-    'online': { bg: 'bg-blue-500/10', border: 'border-blue-500/30', text: 'text-blue-400' },
-    'in-person': { bg: 'bg-emerald-500/10', border: 'border-emerald-500/30', text: 'text-emerald-400' },
-    'hybrid': { bg: 'bg-purple-500/10', border: 'border-purple-500/30', text: 'text-purple-400' },
-  }
-
-  const config = locationTypeConfig[event.locationType]
+  const bannerImage = event.image || `https://picsum.photos/seed/${encodeURIComponent(event.title)}/600/200`
   
   return (
     <Link
@@ -32,89 +26,58 @@ function FeaturedCard({ event, isDragging }: { event: Event; isDragging: boolean
     >
       {/* Banner Header with Image */}
       <div 
-        className={`relative rounded-t-lg overflow-hidden ${event.image ? 'aspect-[3/1]' : 'bg-gradient-to-br from-red-600/20 to-blue-600/20 h-24'}`}
-        style={event.image ? {
-          backgroundImage: `url(${event.image})`,
+        className="relative rounded-t-lg overflow-hidden aspect-[3/1]"
+        style={{
+          backgroundImage: `url(${bannerImage})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
-        } : {}}
+        }}
       >
-        {/* Optional overlay gradient for better text readability */}
-        {event.image && (
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-        )}
+        {/* FEATURED Badge */}
+        <div className="absolute top-3 right-4 z-10 flex items-center gap-1 px-2.5 py-1 rounded-md bg-red-600 opacity-100 group-hover:opacity-0 transition-opacity duration-300 ease-out">
+          <Star className="w-3 h-3 text-white fill-white" />
+          <span className="text-[10px] font-bold text-white uppercase tracking-wide">FEATURED</span>
+        </div>
       </div>
 
       {/* Card Body */}
       <div className="p-5">
-        {/* Header */}
-        <div className="flex items-start justify-between gap-4 mb-4">
-        <div className="flex items-center gap-3">
-          {event.organizerLogo ? (
-            <div className="w-10 h-10 rounded bg-[rgba(245,245,245,0.08)] overflow-hidden flex-shrink-0">
-              <img 
-                src={event.organizerLogo} 
-                alt=""
-                className="w-full h-full object-cover"
-                draggable={false}
-              />
-            </div>
-          ) : (
-            <div className="w-10 h-10 rounded bg-[rgba(245,245,245,0.08)] flex items-center justify-center flex-shrink-0">
-              <Calendar className="w-5 h-5 text-zinc-500" />
-            </div>
-          )}
-          <div>
-            <span className="text-sm text-white font-medium block">
-              {event.organizer}
-            </span>
-            <div className="flex items-center gap-2 text-xs text-zinc-500">
-              <span className="flex items-center gap-1">
-                {event.locationType === 'online' ? (
-                  <Globe className="w-3 h-3" />
-                ) : (
-                  <MapPin className="w-3 h-3" />
-                )}
-                <span>{event.location}</span>
-              </span>
+        {/* Logo Icon and Title */}
+        <div className="flex items-start gap-3 mb-3">
+          <div className="w-12 h-12 rounded-lg bg-[rgba(245,245,245,0.08)] overflow-hidden flex-shrink-0">
+            <img 
+              src={event.organizerLogo || event.image || `https://picsum.photos/seed/${encodeURIComponent(event.title)}/64/64`} 
+              alt={event.title}
+              className="w-full h-full object-cover"
+              draggable={false}
+            />
+          </div>
+          <div className="flex-1 min-w-0">
+            <h3 className="text-base font-medium text-white group-hover:text-red-400 transition-colors">
+              {event.title}
+            </h3>
+            <div className="flex items-center gap-2 text-xs text-zinc-500 mt-1">
+              <span>{event.locationType === 'online' ? 'Online' : event.locationType === 'hybrid' ? 'Hybrid' : 'In-person'}</span>
+              <span className="text-zinc-600">•</span>
+              <span>{event.location}</span>
             </div>
           </div>
         </div>
-        <span className={`text-xs font-medium border px-2 py-1 rounded flex-shrink-0 transition-all duration-300 ${config.bg} ${config.border} ${config.text}`}>
-          {event.locationType === 'online' ? 'Online' : event.locationType === 'in-person' ? 'In-Person' : 'Hybrid'}
-        </span>
-      </div>
 
-      {/* Title */}
-      <h3 className="text-white font-medium mb-2 group-hover:text-red-400 transition-colors">
-        {event.title}
-      </h3>
-
-      {/* Date & Time */}
-      <div className="flex items-center gap-2 text-xs text-zinc-500 mb-3">
-        <Calendar className="w-3 h-3" />
-        <span>{formatDate(event.date)}</span>
-        {event.time && (
-          <>
-            <span className="text-zinc-600">•</span>
-            <span>{formatTime(event.time)}</span>
-          </>
-        )}
-      </div>
-
-      {/* Tags */}
-      {event.tags.length > 0 && (
-        <div className="flex flex-wrap gap-1.5 mb-4">
-          {event.tags.slice(0, 3).map(tag => (
-            <span key={tag} className="text-[11px] md:text-[12px] font-medium text-zinc-500 bg-[rgba(245,245,245,0.04)] px-2 py-0.5 rounded">
+        {/* Focus Areas Tags */}
+        <div className="flex gap-1.5 mb-4 overflow-x-auto scrollbar-hide">
+          {event.tags.map(tag => (
+            <span key={tag} className="text-[11px] md:text-[12px] font-medium text-zinc-500 bg-[rgba(245,245,245,0.04)] px-2 py-0.5 rounded whitespace-nowrap flex-shrink-0">
               {tag}
             </span>
           ))}
         </div>
-      )}
 
         {/* Footer */}
-        <div className="flex items-center justify-end pt-4 border-t border-[rgba(245,245,245,0.08)]">
+        <div className="flex items-center justify-between pt-4 border-t border-[rgba(245,245,245,0.08)]">
+          <span className="text-white font-semibold">
+            {formatDate(event.date)}
+          </span>
           <div className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-[rgba(245,245,245,0.06)] text-xs font-medium text-zinc-300 group-hover:bg-red-500 group-hover:text-white transition-colors">
             View Event
             <ArrowUpRight className="w-3 h-3" />
@@ -240,7 +203,7 @@ export default function FeaturedEventsSection() {
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
-          <h2 className="text-lg font-semibold text-white">Featured Events</h2>
+          <h2 className="text-lg font-semibold text-white">Featured</h2>
           <span className="text-sm text-zinc-500">{featuredEvents.length} event{featuredEvents.length !== 1 ? 's' : ''}</span>
         </div>
         
@@ -250,14 +213,14 @@ export default function FeaturedEventsSection() {
             <button
               onClick={prev}
               disabled={currentIndex === 0}
-              className="p-1.5 rounded bg-[rgba(245,245,245,0.08)] hover:bg-zinc-700 text-zinc-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              className="flex items-center justify-center w-7 h-7 rounded-full bg-[rgba(245,245,245,0.08)] hover:bg-zinc-700 text-zinc-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
             <button
               onClick={next}
               disabled={currentIndex >= maxIndex}
-              className="p-1.5 rounded bg-[rgba(245,245,245,0.08)] hover:bg-zinc-700 text-zinc-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              className="flex items-center justify-center w-7 h-7 rounded-full bg-[rgba(245,245,245,0.08)] hover:bg-zinc-700 text-zinc-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
             >
               <ChevronRight className="w-4 h-4" />
             </button>

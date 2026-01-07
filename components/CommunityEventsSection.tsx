@@ -12,6 +12,31 @@ function formatDate(dateString: string): string {
   return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
 }
 
+function formatDateRange(startDate: string, endDate?: string): string {
+  const start = new Date(startDate)
+  const end = endDate ? new Date(endDate) : null
+  
+  if (!end || start.getTime() === end.getTime()) {
+    // Single day event
+    return formatDate(startDate)
+  }
+  
+  // Check if same month
+  if (start.getMonth() === end!.getMonth() && start.getFullYear() === end!.getFullYear()) {
+    // Same month: "Sep 1-5, 2026"
+    const startDay = start.getDate()
+    const endDay = end!.getDate()
+    const month = start.toLocaleDateString('en-US', { month: 'short' })
+    const year = start.getFullYear()
+    return `${month} ${startDay}-${endDay}, ${year}`
+  } else {
+    // Different months: "Sep 1 - Oct 5, 2026"
+    const startFormatted = start.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+    const endFormatted = end!.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+    return `${startFormatted} - ${endFormatted}`
+  }
+}
+
 function formatTime(time?: string): string {
   if (!time) return '—'
   return time
@@ -219,19 +244,6 @@ export default function CommunityEventsSection({ community }: { community: Commu
     return (
       <tr className="hover:bg-[rgba(245,245,245,0.024)] transition-colors group">
         <td className="py-3 px-4">
-          <div className="flex flex-col">
-            <span className="text-sm text-white font-medium">
-              {formatDate(event.date)}
-            </span>
-            {event.time && (
-              <span className="text-xs text-zinc-500 mt-0.5">
-                {formatTime(event.time)}
-              </span>
-            )}
-          </div>
-        </td>
-        
-        <td className="py-3 px-4">
           <div>
             <a
               href={event.eventUrl || '#'}
@@ -240,18 +252,14 @@ export default function CommunityEventsSection({ community }: { community: Commu
             >
               {event.title}
             </a>
-            {event.tags.length > 0 && (
-              <div className="flex items-center gap-1.5 mt-1 flex-wrap">
-                {event.tags.slice(0, 3).map(tag => (
-                  <span
-                    key={tag}
-                    className="text-[12px] px-1.5 py-0.5 rounded bg-[rgba(245,245,245,0.04)] text-zinc-500"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            )}
+            {/* Date */}
+            <div className="flex items-center gap-1.5 mt-1">
+              <Calendar className="w-3.5 h-3.5 text-zinc-500 flex-shrink-0" />
+              <span className="text-xs text-zinc-500">
+                {formatDateRange(event.date, event.endDate)}
+                {event.time && ` • ${formatTime(event.time)}`}
+              </span>
+            </div>
           </div>
         </td>
         
@@ -269,7 +277,7 @@ export default function CommunityEventsSection({ community }: { community: Commu
         </td>
         
         <td className="py-3 px-4 hidden sm:table-cell">
-          <span className={`inline-block text-xs font-medium border px-2 py-1 rounded ${config.bg} ${config.border} ${config.text}`}>
+          <span className={`inline-block text-xs font-medium border px-2 py-1 rounded whitespace-nowrap ${config.bg} ${config.border} ${config.text}`}>
             {formatLocationType(event.locationType)}
           </span>
         </td>
@@ -442,9 +450,6 @@ export default function CommunityEventsSection({ community }: { community: Commu
           <table className="w-full min-w-[800px]">
             <thead>
               <tr className="bg-[rgba(245,245,245,0.04)] border-b border-[rgba(245,245,245,0.08)]">
-                <th className="text-left py-3 px-4 text-xs font-medium text-zinc-500 uppercase tracking-wide min-w-[120px]">
-                  <SortButton field="date">DATE</SortButton>
-                </th>
                 <th className="text-left py-3 px-4 text-xs font-medium text-zinc-500 uppercase tracking-wide min-w-[250px]">
                   <SortButton field="title">EVENT</SortButton>
                 </th>
@@ -461,7 +466,7 @@ export default function CommunityEventsSection({ community }: { community: Commu
             <tbody className="divide-y divide-[rgba(245,245,245,0.04)]">
               {filteredAndSortedEvents.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="py-12 text-center">
+                  <td colSpan={4} className="py-12 text-center">
                     <p className="text-zinc-500 text-sm">No events found</p>
                     {(searchQuery || locationTypeFilter !== 'all') && (
                       <button
@@ -481,11 +486,8 @@ export default function CommunityEventsSection({ community }: { community: Commu
                   <React.Fragment key={monthKey}>
                     {/* Month Header Row */}
                     <tr className="bg-[rgba(245,245,245,0.04)]">
-                      <td colSpan={5} className="py-3 px-4">
-                        <div className="flex items-center gap-2">
-                          <Calendar className="w-4 h-4 text-zinc-500" />
-                          <span className="text-sm font-semibold text-white">{monthLabel}</span>
-                        </div>
+                      <td colSpan={4} className="py-3 px-4">
+                        <span className="text-xs font-medium text-zinc-500 uppercase tracking-wide">{monthLabel}</span>
                       </td>
                     </tr>
                     {/* Events for this month */}

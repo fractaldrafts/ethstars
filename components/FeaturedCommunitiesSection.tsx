@@ -50,7 +50,7 @@ function FeaturedCard({ community, isDragging }: { community: Community; isDragg
         } : {}}
       >
         {/* FEATURED Badge */}
-        <div className="absolute top-3 right-4 z-10 flex items-center gap-1 px-2.5 py-1 rounded-md bg-red-600">
+        <div className="absolute top-3 right-4 z-10 flex items-center gap-1 px-2.5 py-1 rounded-md bg-red-600 opacity-100 group-hover:opacity-0 transition-opacity duration-300 ease-out">
           <Star className="w-3 h-3 text-white fill-white" />
           <span className="text-[10px] font-bold text-white uppercase tracking-wide">FEATURED</span>
         </div>

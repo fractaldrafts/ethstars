@@ -242,16 +242,20 @@ export default function CommunitiesTable() {
             })}
           </div>
 
-          {/* Search & View Toggle */}
+          {/* Search, Filter & View Toggle */}
           <div className="flex items-center gap-2 w-full sm:w-auto">
             <div className="relative flex-1 sm:w-64">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+              <Search className={`absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors ${searchQuery ? 'text-zinc-400' : 'text-zinc-500'}`} />
               <input
                 type="text"
-                placeholder="Search community or country..."
+                placeholder="Search communities..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-[rgba(245,245,245,0.08)] border border-[rgba(245,245,245,0.08)] rounded-full pl-9 pr-8 py-2 text-sm text-white placeholder-zinc-600 focus:border-zinc-700 transition-colors"
+                className={`w-full border rounded-full pl-9 pr-8 py-2 text-sm font-medium transition-colors ${
+                  searchQuery
+                    ? 'bg-[rgba(245,245,245,0.08)] border-zinc-700 text-white'
+                    : 'bg-transparent border-[rgba(245,245,245,0.08)] text-zinc-500 placeholder-zinc-600 hover:text-white hover:border-zinc-700 focus:text-white focus:bg-[rgba(245,245,245,0.08)] focus:border-zinc-700'
+                }`}
               />
               {searchQuery && (
                 <button
@@ -262,45 +266,46 @@ export default function CommunitiesTable() {
                 </button>
               )}
             </div>
-              <div className="flex items-center gap-2">
-              {/* Desktop View Mode Toggle */}
-              <div className="hidden md:flex items-center gap-1 p-1 bg-[rgba(245,245,245,0.08)] rounded-full border border-[rgba(245,245,245,0.08)]">
-                <button
-                  onClick={() => setViewMode('table')}
-                  className={`flex items-center justify-center gap-1.5 px-2.5 py-1.5 text-sm font-medium rounded-full transition-colors ${
-                    viewMode === 'table'
-                      ? 'bg-[rgba(245,245,245,0.08)] text-white'
-                      : 'text-zinc-500 hover:text-white'
-                  }`}
-                  title="Table View"
-                >
-                  <Table2 className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => setViewMode('map')}
-                  className={`flex items-center justify-center gap-1.5 px-2.5 py-1.5 text-sm font-medium rounded-full transition-colors ${
-                    viewMode === 'map'
-                      ? 'bg-[rgba(245,245,245,0.08)] text-white'
-                      : 'text-zinc-500 hover:text-white'
-                  }`}
-                  title="Map View"
-                >
-                  <Map className="w-4 h-4" />
-                </button>
-              </div>
+            
+            {/* Filter Button */}
+            <button
+              onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
+              className={`flex items-center gap-1.5 px-3 py-2 text-sm font-medium rounded-full border transition-colors ${
+                showAdvancedFilters || hasActiveFilters
+                  ? 'bg-[rgba(245,245,245,0.08)] border-zinc-700 text-white'
+                  : 'border-[rgba(245,245,245,0.08)] text-zinc-500 hover:text-white hover:border-zinc-700'
+              }`}
+            >
+              <SlidersHorizontal className="w-4 h-4" />
+              <span className="hidden sm:inline">Filters</span>
+              {hasActiveFilters && (
+                <span className="w-1.5 h-1.5 bg-red-500 rounded-full" />
+              )}
+            </button>
+            
+            {/* Desktop View Mode Toggle */}
+            <div className="hidden md:flex items-center gap-1 p-1 bg-[rgba(245,245,245,0.08)] rounded-full border border-[rgba(245,245,245,0.08)]">
               <button
-                onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
-                className={`flex items-center gap-1.5 px-3 py-2 text-sm font-medium rounded-full border transition-colors ${
-                  showAdvancedFilters || hasActiveFilters
-                    ? 'bg-[rgba(245,245,245,0.08)] border-zinc-700 text-white'
-                    : 'border-[rgba(245,245,245,0.08)] text-zinc-500 hover:text-white hover:border-zinc-700'
+                onClick={() => setViewMode('table')}
+                className={`flex items-center justify-center gap-1.5 px-2.5 py-1.5 text-sm font-medium rounded-full transition-colors ${
+                  viewMode === 'table'
+                    ? 'bg-[rgba(245,245,245,0.08)] text-white'
+                    : 'text-zinc-500 hover:text-white'
                 }`}
+                title="Table View"
               >
-                <SlidersHorizontal className="w-4 h-4" />
-                <span className="hidden sm:inline">Filters</span>
-                {hasActiveFilters && (
-                  <span className="w-1.5 h-1.5 bg-red-500 rounded-full" />
-                )}
+                <Table2 className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => setViewMode('map')}
+                className={`flex items-center justify-center gap-1.5 px-2.5 py-1.5 text-sm font-medium rounded-full transition-colors ${
+                  viewMode === 'map'
+                    ? 'bg-[rgba(245,245,245,0.08)] text-white'
+                    : 'text-zinc-500 hover:text-white'
+                }`}
+                title="Map View"
+              >
+                <Map className="w-4 h-4" />
               </button>
             </div>
           </div>

@@ -7,13 +7,13 @@ import { ArrowLeft } from 'lucide-react'
 import { IconBrandX, IconBrandDiscord, IconBrandTelegram } from '@tabler/icons-react'
 
 interface CompanyPageProps {
-  params: {
+  params: Promise<{
     slug: string
-  }
+  }>
 }
 
-export default function CompanyPage({ params }: CompanyPageProps) {
-  const { slug } = params
+export default async function CompanyPage({ params }: CompanyPageProps) {
+  const { slug } = await params
 
   const companyOpportunities = opportunities.filter(
     (opportunity) => getCompanySlug(opportunity.company) === slug

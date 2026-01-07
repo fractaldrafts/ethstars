@@ -210,7 +210,7 @@ export default function CommunityDetail({ community, onClose }: CommunityDetailP
                               {event.title}
                             </h5>
                             <span
-                              className={`text-[10px] font-medium border px-1.5 py-0.5 rounded transition-colors
+                              className={`text-[10px] font-medium border px-1.5 py-0.5 rounded whitespace-nowrap transition-colors
                                 ${
                                   event.locationType === 'online'
                                     ? 'border-zinc-700 text-zinc-400 group-hover:bg-blue-500/10 group-hover:border-blue-500/30 group-hover:text-blue-400'
