@@ -47,6 +47,8 @@ function formatLocationType(locationType: 'online' | 'in-person' | 'hybrid'): st
   }
 }
 
+const placeholderLogo = 'https://placehold.co/64x64/111827/9CA3AF/png'
+
 export default function EventsTable() {
   const [searchQuery, setSearchQuery] = useState('')
   const [sortField, setSortField] = useState<SortField>('date')
@@ -357,7 +359,7 @@ function TableRow({ event }: { event: Event }) {
   }
 
   const config = locationTypeConfig[event.locationType]
-  const organizerInitials = event.organizer.slice(0, 2).toUpperCase()
+  const logoSrc = event.organizerLogo || placeholderLogo
 
   return (
     <tr className="hover:bg-[rgba(245,245,245,0.024)] transition-colors group">
@@ -378,17 +380,19 @@ function TableRow({ event }: { event: Event }) {
       {/* Event Title */}
       <td className="py-3 px-4">
         <div className="flex items-start gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-[rgba(245,245,245,0.08)] overflow-hidden flex-shrink-0 flex items-center justify-center text-[11px] font-semibold text-zinc-200">
-            {event.organizerLogo ? (
-              <img
-                src={event.organizerLogo}
-                alt={event.organizer}
-                className="w-full h-full object-cover"
-                loading="lazy"
-              />
-            ) : (
-              organizerInitials
-            )}
+          <div className="w-8 h-8 rounded-lg bg-[rgba(245,245,245,0.08)] overflow-hidden flex-shrink-0">
+            <img
+              src={logoSrc}
+              alt={event.organizer}
+              className="w-full h-full object-cover"
+              loading="lazy"
+              onError={(e) => {
+                const target = e.currentTarget
+                if (target.src !== placeholderLogo) {
+                  target.src = placeholderLogo
+                }
+              }}
+            />
           </div>
           <div className="min-w-0">
             <a
