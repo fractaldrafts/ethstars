@@ -14,7 +14,8 @@ type SortField = 'date' | 'title' | 'organizer' | 'location'
 type SortDirection = 'asc' | 'desc'
 type ViewMode = 'table' | 'calendar'
 type LocationTypeFilter = 'all' | 'online' | 'in-person' | 'hybrid'
-type DateFilter = 'all' | 'this-month' | 'next-month'
+type DateFilter = 'all' | 'this-month' | 'next-month' | 'next-3-months' | 'next-6-months' | 'this-year'
+type DurationFilter = 'all' | 'single-day' | '2-3-days' | '4-7-days' | '1-2-weeks' | '2+weeks'
 
 function formatDate(dateString: string): string {
   const date = new Date(dateString)
@@ -72,6 +73,68 @@ function getNextMonth(): { year: number; month: number } {
   return { year: nextMonth.getFullYear(), month: nextMonth.getMonth() }
 }
 
+function isEventInDateRange(eventDate: string, filter: DateFilter): boolean {
+  if (filter === 'all') return true
+  
+  const event = new Date(eventDate)
+  const now = new Date()
+  // Normalize dates to start of day for comparison
+  const eventDateOnly = new Date(event.getFullYear(), event.getMonth(), event.getDate())
+  const nowDateOnly = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+  
+  const thisMonth = getThisMonth()
+  const nextMonth = getNextMonth()
+  
+  switch (filter) {
+    case 'this-month':
+      return isEventInMonth(eventDate, thisMonth.year, thisMonth.month)
+    case 'next-month':
+      return isEventInMonth(eventDate, nextMonth.year, nextMonth.month)
+    case 'next-3-months': {
+      const threeMonthsFromNow = new Date(now.getFullYear(), now.getMonth() + 3, now.getDate())
+      return eventDateOnly >= nowDateOnly && eventDateOnly <= threeMonthsFromNow
+    }
+    case 'next-6-months': {
+      const sixMonthsFromNow = new Date(now.getFullYear(), now.getMonth() + 6, now.getDate())
+      return eventDateOnly >= nowDateOnly && eventDateOnly <= sixMonthsFromNow
+    }
+    case 'this-year':
+      return event.getFullYear() === now.getFullYear() && eventDateOnly >= nowDateOnly
+    default:
+      return true
+  }
+}
+
+function getEventDuration(event: Event): number {
+  if (!event.endDate) return 1 // Single day event
+  const start = new Date(event.date)
+  const end = new Date(event.endDate)
+  const diffTime = end.getTime() - start.getTime()
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1 // +1 to include both start and end days
+  return diffDays
+}
+
+function isEventInDurationRange(event: Event, filter: DurationFilter): boolean {
+  if (filter === 'all') return true
+  
+  const duration = getEventDuration(event)
+  
+  switch (filter) {
+    case 'single-day':
+      return duration === 1
+    case '2-3-days':
+      return duration >= 2 && duration <= 3
+    case '4-7-days':
+      return duration >= 4 && duration <= 7
+    case '1-2-weeks':
+      return duration >= 8 && duration <= 14
+    case '2+weeks':
+      return duration > 14
+    default:
+      return true
+  }
+}
+
 function formatTime(time?: string): string {
   if (!time) return '—'
   return time
@@ -99,7 +162,14 @@ export default function EventsTable() {
   const [dateFilter, setDateFilter] = useState<DateFilter>('all')
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false)
   
-  const hasActiveFilters = searchQuery || locationTypeFilter !== 'all' || dateFilter !== 'all'
+  // Advanced filters
+  const [selectedTags, setSelectedTags] = useState<string[]>([])
+  const [selectedOrganizer, setSelectedOrganizer] = useState<string>('all')
+  const [selectedLocation, setSelectedLocation] = useState<string>('all')
+  const [durationFilter, setDurationFilter] = useState<DurationFilter>('all')
+  
+  const hasActiveFilters = searchQuery || locationTypeFilter !== 'all' || dateFilter !== 'all' || 
+    selectedTags.length > 0 || selectedOrganizer !== 'all' || selectedLocation !== 'all' || durationFilter !== 'all'
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
@@ -110,6 +180,29 @@ export default function EventsTable() {
     }
   }
 
+  // Get unique values for filters
+  const allTags = useMemo(
+    () => Array.from(new Set(events.flatMap(e => e.tags))).sort(),
+    []
+  )
+
+  const allOrganizers = useMemo(
+    () => Array.from(new Set(events.map(e => e.organizer))).sort(),
+    []
+  )
+
+  const allLocations = useMemo(
+    () => {
+      const locations = events.map(e => {
+        // Extract city/country from location string
+        const parts = e.location.split(',').map(p => p.trim())
+        return parts[parts.length - 1] || e.location
+      })
+      return Array.from(new Set(locations)).sort()
+    },
+    []
+  )
+
   const filteredAndSortedEvents = useMemo(() => {
     let result = events.filter((event) => {
       // Location type filter
@@ -118,18 +211,8 @@ export default function EventsTable() {
       }
       
       // Date filter
-      if (dateFilter !== 'all') {
-        if (dateFilter === 'this-month') {
-          const thisMonth = getThisMonth()
-          if (!isEventInMonth(event.date, thisMonth.year, thisMonth.month)) {
-            return false
-          }
-        } else if (dateFilter === 'next-month') {
-          const nextMonth = getNextMonth()
-          if (!isEventInMonth(event.date, nextMonth.year, nextMonth.month)) {
-            return false
-          }
-        }
+      if (!isEventInDateRange(event.date, dateFilter)) {
+        return false
       }
       
       // Search filter
@@ -143,6 +226,31 @@ export default function EventsTable() {
           event.location.toLowerCase().includes(query)
         )
         if (!matchesSearch) return false
+      }
+      
+      // Tags filter
+      if (selectedTags.length > 0) {
+        const hasTag = selectedTags.some(tag => event.tags.includes(tag))
+        if (!hasTag) return false
+      }
+      
+      // Organizer filter
+      if (selectedOrganizer !== 'all' && event.organizer !== selectedOrganizer) {
+        return false
+      }
+      
+      // Location filter
+      if (selectedLocation !== 'all') {
+        const eventLocationParts = event.location.split(',').map(p => p.trim())
+        const eventLocation = eventLocationParts[eventLocationParts.length - 1] || event.location
+        if (eventLocation !== selectedLocation) {
+          return false
+        }
+      }
+      
+      // Duration filter
+      if (!isEventInDurationRange(event, durationFilter)) {
+        return false
       }
       
       return true
@@ -168,7 +276,7 @@ export default function EventsTable() {
     })
 
     return result
-  }, [searchQuery, sortField, sortDirection, locationTypeFilter, dateFilter])
+  }, [searchQuery, sortField, sortDirection, locationTypeFilter, dateFilter, selectedTags, selectedOrganizer, selectedLocation, durationFilter])
 
   // Group events by month
   const eventsByMonth = useMemo(() => {
@@ -372,8 +480,130 @@ export default function EventsTable() {
         
         {/* Advanced Filters Panel */}
         {showAdvancedFilters && (
-          <div className="p-4 bg-[rgba(245,245,245,0.04)] border border-[rgba(245,245,245,0.08)] rounded-lg">
-            <p className="text-sm text-zinc-500">Advanced filters coming soon...</p>
+          <div className="p-4 bg-[rgba(245,245,245,0.04)] border border-[rgba(245,245,245,0.08)] rounded-lg space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {/* Date Range */}
+              <div>
+                <label className="block text-xs font-medium text-zinc-500 mb-1.5">Date Range</label>
+                <div className="relative">
+                  <select
+                    value={dateFilter}
+                    onChange={(e) => setDateFilter(e.target.value as DateFilter)}
+                    className="w-full bg-[rgba(245,245,245,0.08)] border border-[rgba(245,245,245,0.08)] rounded-full pl-3 pr-10 py-2 text-sm text-white focus:border-zinc-700 appearance-none"
+                  >
+                    <option value="all">Any time</option>
+                    <option value="this-month">This Month</option>
+                    <option value="next-month">Next Month</option>
+                    <option value="next-3-months">Next 3 Months</option>
+                    <option value="next-6-months">Next 6 Months</option>
+                    <option value="this-year">This Year</option>
+                  </select>
+                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 pointer-events-none" />
+                </div>
+              </div>
+
+              {/* Duration */}
+              <div>
+                <label className="block text-xs font-medium text-zinc-500 mb-1.5">Duration</label>
+                <div className="relative">
+                  <select
+                    value={durationFilter}
+                    onChange={(e) => setDurationFilter(e.target.value as DurationFilter)}
+                    className="w-full bg-[rgba(245,245,245,0.08)] border border-[rgba(245,245,245,0.08)] rounded-full pl-3 pr-10 py-2 text-sm text-white focus:border-zinc-700 appearance-none"
+                  >
+                    <option value="all">Any duration</option>
+                    <option value="single-day">Single Day</option>
+                    <option value="2-3-days">2-3 Days</option>
+                    <option value="4-7-days">4-7 Days</option>
+                    <option value="1-2-weeks">1-2 Weeks</option>
+                    <option value="2+weeks">2+ Weeks</option>
+                  </select>
+                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 pointer-events-none" />
+                </div>
+              </div>
+
+              {/* Organizer */}
+              <div>
+                <label className="block text-xs font-medium text-zinc-500 mb-1.5">Organizer</label>
+                <div className="relative">
+                  <select
+                    value={selectedOrganizer}
+                    onChange={(e) => setSelectedOrganizer(e.target.value)}
+                    className="w-full bg-[rgba(245,245,245,0.08)] border border-[rgba(245,245,245,0.08)] rounded-full pl-3 pr-10 py-2 text-sm text-white focus:border-zinc-700 appearance-none"
+                  >
+                    <option value="all">Any organizer</option>
+                    {allOrganizers.map(organizer => (
+                      <option key={organizer} value={organizer}>{organizer}</option>
+                    ))}
+                  </select>
+                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 pointer-events-none" />
+                </div>
+              </div>
+
+              {/* Location */}
+              <div>
+                <label className="block text-xs font-medium text-zinc-500 mb-1.5">Location</label>
+                <div className="relative">
+                  <select
+                    value={selectedLocation}
+                    onChange={(e) => setSelectedLocation(e.target.value)}
+                    className="w-full bg-[rgba(245,245,245,0.08)] border border-[rgba(245,245,245,0.08)] rounded-full pl-3 pr-10 py-2 text-sm text-white focus:border-zinc-700 appearance-none"
+                  >
+                    <option value="all">Any location</option>
+                    {allLocations.map(location => (
+                      <option key={location} value={location}>{location}</option>
+                    ))}
+                  </select>
+                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 pointer-events-none" />
+                </div>
+              </div>
+            </div>
+
+            {/* Event Tags */}
+            <div>
+              <label className="block text-xs font-medium text-zinc-500 mb-1.5">Event Types & Tags</label>
+              <div className="flex flex-wrap gap-1.5">
+                {allTags.map(tag => (
+                  <button
+                    key={tag}
+                    onClick={() => {
+                      setSelectedTags(prev => 
+                        prev.includes(tag) 
+                          ? prev.filter(t => t !== tag)
+                          : [...prev, tag]
+                      )
+                    }}
+                    className={`px-2 py-1 text-xs rounded transition-colors ${
+                      selectedTags.includes(tag)
+                        ? 'bg-red-500/20 text-red-400 border border-red-500/30'
+                        : 'bg-[rgba(245,245,245,0.08)] text-zinc-400 border border-zinc-700 hover:border-zinc-600'
+                    }`}
+                  >
+                    {tag}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Clear Filters */}
+            {hasActiveFilters && (
+              <div className="flex justify-end pt-2 border-t border-[rgba(245,245,245,0.08)]">
+                <button
+                  onClick={() => {
+                    setSearchQuery('')
+                    setLocationTypeFilter('all')
+                    setDateFilter('all')
+                    setSelectedTags([])
+                    setSelectedOrganizer('all')
+                    setSelectedLocation('all')
+                    setDurationFilter('all')
+                  }}
+                  className="text-sm text-zinc-500 hover:text-white transition-colors"
+                >
+                  Clear all filters
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -387,6 +617,9 @@ export default function EventsTable() {
               setSearchQuery('')
               setLocationTypeFilter('all')
               setDateFilter('all')
+              setSelectedTags([])
+              setSelectedOrganizer('all')
+              setSelectedLocation('all')
             }}
             className="ml-2 text-red-500 hover:text-red-400"
           >
@@ -437,6 +670,9 @@ export default function EventsTable() {
                         setSearchQuery('')
                         setLocationTypeFilter('all')
                         setDateFilter('all')
+                        setSelectedTags([])
+                        setSelectedOrganizer('all')
+                        setSelectedLocation('all')
                       }}
                       className="text-sm text-red-500 hover:text-red-400 mt-2"
                     >

@@ -67,6 +67,7 @@ export default function CommunitiesTable() {
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false)
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number; country: string } | null>(null)
   const [isLoadingLocation, setIsLoadingLocation] = useState(false)
+  const [selectedFocusAreas, setSelectedFocusAreas] = useState<CommunityFocus[]>([])
 
   // Get user location when "Near me" filter is selected
   useEffect(() => {
@@ -94,6 +95,11 @@ export default function CommunitiesTable() {
     []
   )
 
+  const allFocusAreas = useMemo(
+    () => Array.from(new Set(communities.flatMap(c => c.focusAreas))).sort(),
+    []
+  )
+
   const handleSort = (field: SortField) => {
     if (sortField === field) {
       setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')
@@ -108,10 +114,11 @@ export default function CommunitiesTable() {
     setSelectedFocus('all')
     setSelectedSize('all')
     setSelectedCountry('all')
+    setSelectedFocusAreas([])
   }
 
   const hasActiveFilters = searchQuery || selectedFocus !== 'all' || 
-    selectedSize !== 'all' || selectedCountry !== 'all'
+    selectedSize !== 'all' || selectedCountry !== 'all' || selectedFocusAreas.length > 0
 
   const filteredAndSortedCommunities = useMemo(() => {
     let result = communities.filter((community) => {
@@ -165,6 +172,12 @@ export default function CommunitiesTable() {
         return false
       }
       
+      // Focus Areas filter
+      if (selectedFocusAreas.length > 0) {
+        const hasFocusArea = selectedFocusAreas.some(focusArea => community.focusAreas.includes(focusArea))
+        if (!hasFocusArea) return false
+      }
+      
       return true
     })
 
@@ -192,7 +205,7 @@ export default function CommunitiesTable() {
     })
 
     return result
-  }, [searchQuery, selectedFocus, selectedSize, selectedCountry, sortField, sortDirection, userLocation])
+  }, [searchQuery, selectedFocus, selectedSize, selectedCountry, selectedFocusAreas, sortField, sortDirection, userLocation])
 
   const SortButton = ({ field, children }: { field: SortField; children: React.ReactNode }) => (
     <button 
@@ -365,6 +378,32 @@ export default function CommunitiesTable() {
                   </select>
                   <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 pointer-events-none" />
                 </div>
+              </div>
+            </div>
+
+            {/* Focus Areas Tags */}
+            <div>
+              <label className="block text-xs font-medium text-zinc-500 mb-1.5">Focus Areas</label>
+              <div className="flex flex-wrap gap-1.5">
+                {allFocusAreas.map(focusArea => (
+                  <button
+                    key={focusArea}
+                    onClick={() => {
+                      setSelectedFocusAreas(prev => 
+                        prev.includes(focusArea) 
+                          ? prev.filter(f => f !== focusArea)
+                          : [...prev, focusArea]
+                      )
+                    }}
+                    className={`px-2 py-1 text-xs rounded transition-colors ${
+                      selectedFocusAreas.includes(focusArea)
+                        ? 'bg-red-500/20 text-red-400 border border-red-500/30'
+                        : 'bg-[rgba(245,245,245,0.08)] text-zinc-400 border border-zinc-700 hover:border-zinc-600'
+                    }`}
+                  >
+                    {focusArea}
+                  </button>
+                ))}
               </div>
             </div>
 
