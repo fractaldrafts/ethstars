@@ -176,8 +176,6 @@ export default function EventsTable() {
       text: 'text-purple-400',
     },
   }
- 
-  const placeholderLogo = 'https://placehold.co/64x64/111827/9CA3AF/png'
 
   return (
     <div className="space-y-4">
@@ -359,7 +357,9 @@ function TableRow({ event }: { event: Event }) {
   }
 
   const config = locationTypeConfig[event.locationType]
-  const logoSrc = event.organizerLogo || placeholderLogo
+  const placeholderLogo = 'https://placehold.co/64x64/111827/9CA3AF/png'
+  const organizerInitials = event.organizer.slice(0, 2).toUpperCase()
+  const logoSrc = event.organizerLogo || `${placeholderLogo}?text=${encodeURIComponent(organizerInitials)}`
 
   return (
     <tr className="hover:bg-[rgba(245,245,245,0.024)] transition-colors group">
