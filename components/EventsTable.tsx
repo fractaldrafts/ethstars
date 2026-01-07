@@ -47,8 +47,6 @@ function formatLocationType(locationType: 'online' | 'in-person' | 'hybrid'): st
   }
 }
 
-const placeholderLogo = 'https://placehold.co/64x64/111827/9CA3AF/png'
-
 export default function EventsTable() {
   const [searchQuery, setSearchQuery] = useState('')
   const [sortField, setSortField] = useState<SortField>('date')
@@ -178,6 +176,8 @@ export default function EventsTable() {
       text: 'text-purple-400',
     },
   }
+ 
+  const placeholderLogo = 'https://placehold.co/64x64/111827/9CA3AF/png'
 
   return (
     <div className="space-y-4">
