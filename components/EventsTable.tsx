@@ -182,6 +182,31 @@ export default function EventsTable() {
       {/* Controls */}
       <div className="flex flex-col gap-3">
         <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
+          {/* Location Type Filters */}
+          <div className="flex items-center gap-1 flex-nowrap sm:flex-wrap overflow-x-auto sm:overflow-x-visible -mx-6 px-6 sm:mx-0 sm:px-0 scrollbar-hide">
+            {locationTypeFilters.map((filter) => {
+              const isSelected = locationTypeFilter === filter.type
+              const isAll = filter.type === 'all'
+              const config = !isAll ? locationTypeConfig[filter.type as Exclude<LocationTypeFilter, 'all'>] : null
+
+              return (
+                <button
+                  key={filter.type}
+                  onClick={() => setLocationTypeFilter(filter.type)}
+                  className={`px-3 py-1.5 text-sm font-medium transition-colors rounded-full border flex-shrink-0 ${
+                    isSelected
+                      ? isAll
+                        ? 'bg-[rgba(245,245,245,0.08)] text-white border-transparent'
+                        : `${config!.bg} ${config!.border} ${config!.text}`
+                      : 'text-zinc-500 hover:text-white hover:bg-[rgba(245,245,245,0.04)] border-transparent'
+                  }`}
+                >
+                  {filter.label}
+                </button>
+              )
+            })}
+          </div>
+
           {/* Search & View Toggle */}
           <div className="flex items-center gap-2 w-full sm:w-auto">
             <div className="relative flex-1 sm:w-64">
@@ -191,7 +216,7 @@ export default function EventsTable() {
                 placeholder="Search events..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-[rgba(245,245,245,0.08)] border border-[rgba(245,245,245,0.08)] rounded-md pl-9 pr-8 py-2 text-sm text-white placeholder-zinc-600 focus:border-zinc-700 transition-colors"
+                className="w-full bg-[rgba(245,245,245,0.08)] border border-[rgba(245,245,245,0.08)] rounded-full pl-9 pr-8 py-2 text-sm text-white placeholder-zinc-600 focus:border-zinc-700 transition-colors"
               />
               {searchQuery && (
                 <button
@@ -204,10 +229,10 @@ export default function EventsTable() {
             </div>
             
             {/* View Mode Toggle */}
-            <div className="flex items-center gap-1 p-1 bg-[rgba(245,245,245,0.08)] rounded-md border border-[rgba(245,245,245,0.08)]">
+            <div className="flex items-center gap-1 p-1 bg-[rgba(245,245,245,0.08)] rounded-full border border-[rgba(245,245,245,0.08)]">
               <button
                 onClick={() => setViewMode('table')}
-                className={`flex items-center justify-center gap-1.5 px-2.5 py-1.5 text-sm font-medium rounded transition-colors ${
+                className={`flex items-center justify-center gap-1.5 px-2.5 py-1.5 text-sm font-medium rounded-full transition-colors ${
                   viewMode === 'table'
                     ? 'bg-[rgba(245,245,245,0.08)] text-white'
                     : 'text-zinc-500 hover:text-white'
@@ -218,7 +243,7 @@ export default function EventsTable() {
               </button>
               <button
                 onClick={() => setViewMode('calendar')}
-                className={`flex items-center justify-center gap-1.5 px-2.5 py-1.5 text-sm font-medium rounded transition-colors ${
+                className={`flex items-center justify-center gap-1.5 px-2.5 py-1.5 text-sm font-medium rounded-full transition-colors ${
                   viewMode === 'calendar'
                     ? 'bg-[rgba(245,245,245,0.08)] text-white'
                     : 'text-zinc-500 hover:text-white'
