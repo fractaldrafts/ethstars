@@ -357,9 +357,8 @@ function TableRow({ event }: { event: Event }) {
   }
 
   const config = locationTypeConfig[event.locationType]
-  const placeholderLogo = 'https://placehold.co/64x64/111827/9CA3AF/png'
-  const organizerInitials = event.organizer.slice(0, 2).toUpperCase()
-  const logoSrc = event.organizerLogo || `${placeholderLogo}?text=${encodeURIComponent(organizerInitials)}`
+  const placeholderLogo = `https://picsum.photos/seed/${encodeURIComponent(event.organizer)}/64/64`
+  const logoSrc = event.organizerLogo || placeholderLogo
 
   return (
     <tr className="hover:bg-[rgba(245,245,245,0.024)] transition-colors group">
@@ -390,6 +389,8 @@ function TableRow({ event }: { event: Event }) {
                 const target = e.currentTarget
                 if (target.src !== placeholderLogo) {
                   target.src = placeholderLogo
+                } else {
+                  target.onerror = null
                 }
               }}
             />
@@ -422,15 +423,22 @@ function TableRow({ event }: { event: Event }) {
       {/* Organizer */}
       <td className="py-3 px-4 hidden md:table-cell">
         <div className="flex items-center gap-2">
-          {event.organizerLogo && (
-            <div className="w-6 h-6 rounded bg-[rgba(245,245,245,0.08)] overflow-hidden flex-shrink-0">
-              <img 
-                src={event.organizerLogo} 
-                alt={event.organizer}
-                className="w-full h-full object-cover"
-              />
-            </div>
-          )}
+          <div className="w-6 h-6 rounded bg-[rgba(245,245,245,0.08)] overflow-hidden flex-shrink-0">
+            <img 
+              src={logoSrc} 
+              alt={event.organizer}
+              className="w-full h-full object-cover"
+              loading="lazy"
+              onError={(e) => {
+                const target = e.currentTarget
+                if (target.src !== placeholderLogo) {
+                  target.src = placeholderLogo
+                } else {
+                  target.onerror = null
+                }
+              }}
+            />
+          </div>
           <span className="text-sm text-zinc-400 truncate max-w-[120px]">
             {event.organizer}
           </span>
