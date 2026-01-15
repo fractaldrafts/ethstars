@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { Calendar, Globe, MapPin, ArrowUpRight } from 'lucide-react'
-import { IconBrandX, IconGlobe, IconSend } from '@tabler/icons-react'
+import { IconBrandX, IconGlobe, IconSend, IconBrandDiscord, IconBrandTelegram } from '@tabler/icons-react'
 import type { Event } from '@/data/events'
 
 function formatDate(dateString: string): string {
@@ -57,6 +57,8 @@ interface EventCardProps {
 
 export default function EventCard({ event, index }: EventCardProps) {
   const config = locationTypeConfig[event.locationType]
+  const placeholderOrganizerLogo = `https://picsum.photos/seed/${encodeURIComponent(event.organizer)}/64/64`
+  const organizerLogoSrc = event.organizerLogo || event.image || placeholderOrganizerLogo
   
   return (
     <motion.div
@@ -65,59 +67,47 @@ export default function EventCard({ event, index }: EventCardProps) {
       transition={{ duration: 0.4, delay: index * 0.05 }}
       className="relative"
     >
-      <div className="relative bg-[rgba(245,245,245,0.04)] border border-[rgba(245,245,245,0.08)] rounded-lg p-5 h-full flex flex-col">
-        {/* Header - Clickable */}
-        <a
-          href={event.registrationUrl || event.eventUrl || '#'}
-          className="flex items-center gap-4 mb-4 group/header"
-          style={{ touchAction: 'manipulation' }}
-        >
-          {event.organizerLogo && (
-            <div className="flex-shrink-0">
-              <div className="w-14 h-14 rounded bg-[rgba(245,245,245,0.08)] border border-zinc-700 overflow-hidden">
-                <img 
-                  src={event.organizerLogo} 
-                  alt={event.organizer}
-                  className="w-full h-full object-cover"
-                />
-              </div>
+      <div className="relative bg-[rgba(245,245,245,0.04)] border border-[rgba(245,245,245,0.08)] rounded-lg p-4 h-full flex flex-col">
+        {/* 1. Logo & Name */}
+        <div className="flex items-start gap-3 mb-3">
+          <div className="flex-shrink-0">
+            <div className="w-12 h-12 rounded-lg bg-[rgba(245,245,245,0.08)] overflow-hidden border border-zinc-700">
+              <img 
+                src={organizerLogoSrc} 
+                alt={event.organizer}
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  const target = e.currentTarget
+                  if (target.src !== placeholderOrganizerLogo) {
+                    target.src = placeholderOrganizerLogo
+                  } else {
+                    target.onerror = null
+                  }
+                }}
+              />
             </div>
-          )}
+          </div>
           
           <div className="flex-1 min-w-0">
-            <h3 className="text-base font-medium text-white group-hover/header:text-red-400 transition-colors">
-              {event.title}
-            </h3>
+            <a
+              href={event.registrationUrl || event.eventUrl || '#'}
+              className="group/header block"
+              style={{ touchAction: 'manipulation' }}
+            >
+              <h3 className="text-base font-semibold text-white truncate mb-1 leading-tight group-hover/header:text-red-400 transition-colors">
+                {event.title}
+              </h3>
+            </a>
+            
+            {/* 2. Company Name (Organizer) */}
+            <div className="text-sm text-gray-400">
+              {event.organizer}
+            </div>
           </div>
-        </a>
-        
-        {/* Meta info - location & date */}
-        <div className="flex items-center gap-3 text-sm text-zinc-500 mb-3">
-          <span className="flex items-center gap-1 min-w-0">
-            {event.locationType === 'online' ? (
-              <Globe className="w-4 h-4 flex-shrink-0" />
-            ) : (
-              <MapPin className="w-4 h-4 flex-shrink-0" />
-            )}
-            <span className="truncate">{event.location}</span>
-          </span>
-          <span className="flex items-center gap-1">
-            <Calendar className="w-4 h-4" />
-            <span>{formatDate(event.date)}</span>
-          </span>
         </div>
-        
-        {/* Description */}
-        {event.description && (
-          <div className="mb-4">
-            <p className="text-gray-400 text-sm line-clamp-2">
-              {event.description}
-            </p>
-          </div>
-        )}
-        
-        {/* Tags with Location Type Badge - Horizontal Scrollable */}
-        <div className="flex flex-nowrap gap-1.5 mb-4 pb-4 border-b border-[rgba(245,245,245,0.08)] overflow-x-auto -mx-5 px-5 scrollbar-hide">
+
+        {/* 3. Tags with Location Type Badge */}
+        <div className="flex flex-nowrap gap-1.5 mb-3 overflow-x-auto -mx-4 px-4 scrollbar-hide">
           {/* Location Type Badge */}
           <span className={`px-2 py-1 rounded text-[12px] font-medium flex-shrink-0 whitespace-nowrap ${config.bg} ${config.border} ${config.text} border`}>
             {formatLocationType(event.locationType)}
@@ -127,64 +117,85 @@ export default function EventCard({ event, index }: EventCardProps) {
           {event.tags.map(tag => (
             <span
               key={tag}
-              className="px-2 py-1 rounded text-[12px] font-medium flex-shrink-0 whitespace-nowrap bg-[rgba(245,245,245,0.04)] text-zinc-400 border border-[rgba(245,245,245,0.08)]"
+              className="px-2 py-1 rounded text-[12px] font-medium flex-shrink-0 whitespace-nowrap bg-[rgba(245,245,245,0.04)] text-zinc-500"
             >
               {tag}
             </span>
           ))}
         </div>
-        
-        {/* Footer - Social Icons & CTA in one row */}
-        <div className="mt-auto flex items-center justify-between gap-3">
-          {/* Social Media Icons */}
-          <div className="flex items-center gap-3">
-            {/* Twitter/X - placeholder for future social field */}
-            <a
-              href="#"
-              className="flex items-center justify-center w-10 h-10 rounded-lg bg-[rgba(245,245,245,0.08)] text-zinc-400 hover:bg-zinc-700 hover:text-white transition-colors"
-              onClick={(e) => {
-                e.preventDefault()
-                // TODO: Add twitter field to Event type
-              }}
-              style={{ touchAction: 'manipulation' }}
-            >
-              <IconBrandX className="w-5 h-5" />
-            </a>
-            
-            {/* Event Website */}
+
+        {/* 4. Location & Date */}
+        <div className="flex items-center gap-2 text-sm text-zinc-500 mb-3 pb-3 border-b border-[rgba(245,245,245,0.08)] flex-nowrap overflow-hidden">
+          <span className="flex items-center gap-1.5 whitespace-nowrap">
+            {event.locationType === 'online' ? (
+              <Globe className="w-4 h-4 flex-shrink-0" />
+            ) : (
+              <MapPin className="w-4 h-4 flex-shrink-0" />
+            )}
+            <span className="truncate">{event.location}</span>
+          </span>
+          <span className="text-zinc-600 flex-shrink-0">•</span>
+          <span className="flex items-center gap-1.5 whitespace-nowrap">
+            <Calendar className="w-4 h-4 flex-shrink-0" />
+            <span>{formatDate(event.date)}</span>
+          </span>
+        </div>
+
+        {/* 6. Footer - Social Icons & View Event Button */}
+        <div className="flex items-center justify-between mt-auto">
+          {/* Social Media Icons - Left */}
+          <div className="flex items-center gap-2">
+            {event.twitterUrl && (
+              <a
+                href={event.twitterUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center w-10 h-10 rounded-full bg-[rgba(245,245,245,0.08)] text-zinc-400 hover:bg-zinc-700 hover:text-white transition-colors"
+                title="X (Twitter)"
+                style={{ touchAction: 'manipulation' }}
+              >
+                <IconBrandX className="w-5 h-5" />
+              </a>
+            )}
             {event.eventUrl && (
               <a
                 href={event.eventUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center w-10 h-10 rounded-lg bg-[rgba(245,245,245,0.08)] text-zinc-400 hover:bg-zinc-700 hover:text-white transition-colors"
+                className="flex items-center justify-center w-10 h-10 rounded-full bg-[rgba(245,245,245,0.08)] text-zinc-400 hover:bg-zinc-700 hover:text-white transition-colors"
+                title="Event Website"
                 style={{ touchAction: 'manipulation' }}
               >
                 <IconGlobe className="w-5 h-5" />
               </a>
             )}
-            
-            {/* Share/Send */}
-            <a
-              href="#"
-              className="flex items-center justify-center w-10 h-10 rounded-lg bg-[rgba(245,245,245,0.08)] text-zinc-400 hover:bg-zinc-700 hover:text-white transition-colors"
-              onClick={(e) => {
-                e.preventDefault()
-                if (navigator.share && event.eventUrl) {
-                  navigator.share({
-                    title: event.title,
-                    text: event.description,
-                    url: event.eventUrl,
-                  }).catch(() => {})
-                }
-              }}
-              style={{ touchAction: 'manipulation' }}
-            >
-              <IconSend className="w-5 h-5" />
-            </a>
+            {event.discordUrl && (
+              <a
+                href={event.discordUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center w-10 h-10 rounded-full bg-[rgba(245,245,245,0.08)] text-zinc-400 hover:bg-zinc-700 hover:text-white transition-colors"
+                title="Discord"
+                style={{ touchAction: 'manipulation' }}
+              >
+                <IconBrandDiscord className="w-5 h-5" />
+              </a>
+            )}
+            {event.telegramUrl && (
+              <a
+                href={event.telegramUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center w-10 h-10 rounded-full bg-[rgba(245,245,245,0.08)] text-zinc-400 hover:bg-zinc-700 hover:text-white transition-colors"
+                title="Telegram"
+                style={{ touchAction: 'manipulation' }}
+              >
+                <IconSend className="w-5 h-5" />
+              </a>
+            )}
           </div>
 
-          {/* View CTA */}
+          {/* View Event Button - Right */}
           <a
             href={event.registrationUrl || event.eventUrl || '#'}
             className="group"

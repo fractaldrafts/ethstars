@@ -248,21 +248,10 @@ export default function CommunitiesList({
                 )}
               </div>
 
-              {/* Footer - CTA Button & Social Icons */}
+              {/* Footer - Social Icons & View Community Button */}
               <div className="mt-auto flex items-center justify-between gap-3">
-                {/* View Community CTA - Left */}
-                <Link
-                  href={`/communities/${community.id}`}
-                  onClick={(e) => e.stopPropagation()}
-                  className="flex items-center gap-1.5 text-sm text-zinc-400 hover:text-red-400 transition-colors"
-                  style={{ touchAction: 'manipulation' }}
-                >
-                  View Community
-                  <ArrowUpRight className="w-3.5 h-3.5" />
-                </Link>
-
-                {/* Social Media Icons - Right */}
-                <div className="flex items-center gap-3">
+                {/* Social Media Icons - Left */}
+                <div className="flex items-center gap-2">
                   {community.discord && (
                     <a
                       href={community.discord}
@@ -290,6 +279,19 @@ export default function CommunitiesList({
                     </a>
                   )}
                 </div>
+
+                {/* View Community Button - Right */}
+                <Link
+                  href={`/communities/${community.id}`}
+                  onClick={(e) => e.stopPropagation()}
+                  className="group"
+                  style={{ touchAction: 'manipulation' }}
+                >
+                  <div className="flex items-center gap-1 px-4 py-3 rounded-full bg-[rgba(245,245,245,0.08)] text-zinc-400 group-hover:bg-red-500 group-hover:text-white text-sm font-medium transition-colors min-h-[44px]">
+                    View Community
+                    <ArrowUpRight className="w-3.5 h-3.5" />
+                  </div>
+                </Link>
               </div>
             </div>
           )

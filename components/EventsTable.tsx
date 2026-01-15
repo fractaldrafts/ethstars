@@ -9,6 +9,7 @@ import { IconBrandX, IconBrandDiscord, IconBrandTelegram } from '@tabler/icons-r
 import Link from 'next/link'
 import { events, type Event } from '@/data/events'
 import EventsCalendarView from './EventsCalendarView'
+import EventCard from './EventCard'
 
 type SortField = 'date' | 'title' | 'organizer' | 'location'
 type SortDirection = 'asc' | 'desc'
@@ -450,8 +451,8 @@ export default function EventsTable() {
               )}
             </button>
             
-            {/* View Mode Toggle */}
-            <div className="flex items-center gap-1 p-1 bg-[rgba(245,245,245,0.08)] rounded-full border border-[rgba(245,245,245,0.08)]">
+            {/* View Mode Toggle - Desktop Only */}
+            <div className="hidden md:flex items-center gap-1 p-1 bg-[rgba(245,245,245,0.08)] rounded-full border border-[rgba(245,245,245,0.08)]">
               <button
                 onClick={() => setViewMode('table')}
                 className={`flex items-center justify-center gap-1.5 px-2.5 py-1.5 text-sm font-medium rounded-full transition-colors ${
@@ -628,14 +629,48 @@ export default function EventsTable() {
         )}
       </div>
 
-      {/* Calendar View */}
-      {viewMode === 'calendar' && (
-        <EventsCalendarView events={filteredAndSortedEvents} />
+      {/* Mobile Cards View */}
+      {filteredAndSortedEvents.length === 0 ? (
+        <div className="md:hidden py-12 text-center">
+          <p className="text-zinc-500 text-sm">No events found</p>
+          {hasActiveFilters && (
+            <button
+              onClick={() => {
+                setSearchQuery('')
+                setLocationTypeFilter('all')
+                setDateFilter('all')
+                setSelectedTags([])
+                setSelectedOrganizer('all')
+                setSelectedLocation('all')
+              }}
+              className="text-sm text-red-500 hover:text-red-400 mt-2"
+            >
+              Clear filters
+            </button>
+          )}
+        </div>
+      ) : (
+        <div className="md:hidden grid grid-cols-1 gap-4">
+          {filteredAndSortedEvents.map((event, index) => (
+            <EventCard
+              key={event.id}
+              event={event}
+              index={index}
+            />
+          ))}
+        </div>
       )}
 
-      {/* Events Table */}
+      {/* Calendar View - Desktop Only */}
+      {viewMode === 'calendar' && (
+        <div className="hidden md:block">
+          <EventsCalendarView events={filteredAndSortedEvents} />
+        </div>
+      )}
+
+      {/* Events Table - Desktop Only */}
       {viewMode === 'table' && (
-        <div className="overflow-x-auto -mx-6 md:-mx-12 px-6 md:px-12">
+        <div className="hidden md:block overflow-x-auto -mx-6 md:-mx-12 px-6 md:px-12">
         <table className="w-full min-w-[800px]">
           <thead>
             <tr className="bg-[rgba(245,245,245,0.04)] border-b border-[rgba(245,245,245,0.08)]">

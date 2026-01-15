@@ -250,18 +250,10 @@ export default function TwoColumnOpportunityDetail({
 
       {/* Content */}
       <div className="flex-1 p-6 pb-16 min-h-0">
-        {/* Description */}
-        <div className="mb-8">
-          <div 
-            className="text-base text-zinc-400 leading-relaxed [&_p]:mb-4 [&_p:last-child]:mb-0 [&_h3]:text-white [&_h3]:font-semibold [&_h3]:text-base [&_h3]:mt-6 [&_h3]:mb-3 [&_h3]:first:mt-0 [&_strong]:text-white [&_strong]:font-semibold [&_ul]:list-disc [&_ul]:list-inside [&_ul]:my-3 [&_ul]:space-y-2 [&_ul]:ml-4 [&_li]:text-zinc-400"
-            dangerouslySetInnerHTML={{ __html: opportunity.description }}
-          />
-        </div>
-
         {/* Tags/Skills */}
         {opportunity.tags.length > 0 && (
-          <div className="mb-8 pb-8">
-            <h2 className="text-sm font-semibold text-white mb-3">Skills & Requirements</h2>
+          <div className="mb-8 pb-0">
+            <h2 className="text-sm font-semibold text-white mb-3">Skills and Domains</h2>
             <div className="flex flex-wrap gap-2">
               {opportunity.tags.map((tag) => {
                 const isSelected = selectedTags?.includes(tag)
@@ -289,6 +281,15 @@ export default function TwoColumnOpportunityDetail({
             </div>
           </div>
         )}
+
+        {/* Description */}
+        <div className="mb-8">
+          <h2 className="text-sm font-semibold text-white mb-3">Description</h2>
+          <div 
+            className="text-base text-zinc-400 leading-relaxed [&_p]:mb-4 [&_p:last-child]:mb-0 [&_h3]:text-white [&_h3]:font-semibold [&_h3]:text-base [&_h3]:mt-6 [&_h3]:mb-3 [&_h3]:first:mt-0 [&_strong]:text-white [&_strong]:font-semibold [&_ul]:list-disc [&_ul]:list-inside [&_ul]:my-3 [&_ul]:space-y-2 [&_ul]:ml-4 [&_li]:text-zinc-400"
+            dangerouslySetInnerHTML={{ __html: opportunity.description }}
+          />
+        </div>
 
         {/* About the Company */}
         <div className="bg-[rgba(245,245,245,0.04)] border border-[rgba(245,245,245,0.08)] rounded-lg p-6">
