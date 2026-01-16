@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { ThemeProvider } from 'next-themes'
+import { TimezoneProvider } from '@/lib/timezone'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -32,7 +33,9 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className="noise">
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
-          {children}
+          <TimezoneProvider>
+            {children}
+          </TimezoneProvider>
         </ThemeProvider>
       </body>
     </html>

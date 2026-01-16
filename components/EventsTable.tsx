@@ -154,6 +154,47 @@ function formatLocationType(locationType: 'online' | 'in-person' | 'hybrid'): st
   }
 }
 
+function getOrganizerFromTitle(title: string): string {
+  // Remove common event type suffixes
+  const suffixes = [
+    ' Hackathon', ' Conference', ' Summit', ' Week', ' Festival',
+    ' Meetup', ' Workshop', ' Event', ' 2025', ' 2026', ' 2027',
+    ' @Expo', ' Future Summit'
+  ]
+  
+  let organizer = title
+  for (const suffix of suffixes) {
+    if (organizer.endsWith(suffix)) {
+      organizer = organizer.slice(0, -suffix.length)
+    }
+  }
+  
+  // Remove location suffixes (e.g., " in Berlin", " 2026")
+  organizer = organizer.replace(/\s+(in|at)\s+[A-Z][a-z]+(\s+[A-Z][a-z]+)?$/i, '')
+  organizer = organizer.replace(/\s+\d{4}$/, '')
+  
+  // If title starts with common prefixes, extract the main part
+  if (organizer.startsWith('ETH')) {
+    // For ETH events, use the main part (e.g., "ETHSafari" -> "ETHSafari", "ETHGlobal New York" -> "ETHGlobal")
+    const parts = organizer.split(' ')
+    if (parts.length > 1 && (parts[1].match(/^(New York|Mumbai|Lisbon|Tokyo|Cannes|Prague|Buenos Aires|New Delhi|Denver)$/i))) {
+      return parts[0]
+    }
+  }
+  
+  // Take first meaningful part (before first space if it's a location)
+  const parts = organizer.split(' ')
+  if (parts.length > 1) {
+    // Check if second part looks like a location (starts with capital, common city names)
+    const commonLocations = ['New', 'San', 'Los', 'Las', 'Hong', 'São', 'Buenos', 'Mexico']
+    if (commonLocations.some(loc => parts[1].startsWith(loc))) {
+      return parts[0]
+    }
+  }
+  
+  return organizer || title
+}
+
 export default function EventsTable() {
   const [searchQuery, setSearchQuery] = useState('')
   const [sortField, setSortField] = useState<SortField>('date')
@@ -188,7 +229,10 @@ export default function EventsTable() {
   )
 
   const allOrganizers = useMemo(
-    () => Array.from(new Set(events.map(e => e.organizer))).sort(),
+    () => {
+      const organizers = events.map(e => e.organizer || getOrganizerFromTitle(e.title))
+      return Array.from(new Set(organizers)).sort()
+    },
     []
   )
 
@@ -205,7 +249,17 @@ export default function EventsTable() {
   )
 
   const filteredAndSortedEvents = useMemo(() => {
+    const now = new Date()
+    now.setHours(0, 0, 0, 0)
+    
     let result = events.filter((event) => {
+      // Only show upcoming events (date >= today)
+      const eventDate = new Date(event.date)
+      eventDate.setHours(0, 0, 0, 0)
+      if (eventDate < now) {
+        return false
+      }
+      
       // Location type filter
       if (locationTypeFilter !== 'all' && event.locationType !== locationTypeFilter) {
         return false
@@ -219,9 +273,10 @@ export default function EventsTable() {
       // Search filter
       if (searchQuery) {
         const query = searchQuery.toLowerCase()
+        const organizerName = event.organizer || getOrganizerFromTitle(event.title)
         const matchesSearch = (
           event.title.toLowerCase().includes(query) ||
-          event.organizer.toLowerCase().includes(query) ||
+          organizerName.toLowerCase().includes(query) ||
           event.description.toLowerCase().includes(query) ||
           event.tags.some(tag => tag.toLowerCase().includes(query)) ||
           event.location.toLowerCase().includes(query)
@@ -236,8 +291,11 @@ export default function EventsTable() {
       }
       
       // Organizer filter
-      if (selectedOrganizer !== 'all' && event.organizer !== selectedOrganizer) {
-        return false
+      if (selectedOrganizer !== 'all') {
+        const organizerName = event.organizer || getOrganizerFromTitle(event.title)
+        if (organizerName !== selectedOrganizer) {
+          return false
+        }
       }
       
       // Location filter
@@ -264,7 +322,9 @@ export default function EventsTable() {
           comparison = a.title.localeCompare(b.title)
           break
         case 'organizer':
-          comparison = a.organizer.localeCompare(b.organizer)
+          const organizerA = a.organizer || getOrganizerFromTitle(a.title)
+          const organizerB = b.organizer || getOrganizerFromTitle(b.title)
+          comparison = organizerA.localeCompare(organizerB)
           break
         case 'location':
           comparison = a.location.localeCompare(b.location)
@@ -727,7 +787,18 @@ export default function EventsTable() {
                   </tr>
                   {/* Events for this month */}
                   {monthEvents.map((event) => (
-                    <TableRow key={event.id} event={event} />
+                    <TableRow 
+                      key={event.id} 
+                      event={event} 
+                      selectedTags={selectedTags}
+                      onTagClick={(tag) => {
+                        setSelectedTags(prev => 
+                          prev.includes(tag) 
+                            ? prev.filter(t => t !== tag)
+                            : [...prev, tag]
+                        )
+                      }}
+                    />
                   ))}
                 </>
               ))
@@ -740,9 +811,18 @@ export default function EventsTable() {
   )
 }
 
-function TableRow({ event }: { event: Event }) {
+function TableRow({ 
+  event, 
+  selectedTags, 
+  onTagClick 
+}: { 
+  event: Event
+  selectedTags: string[]
+  onTagClick: (tag: string) => void
+}) {
   const placeholderEventLogo = `https://picsum.photos/seed/${encodeURIComponent(event.title)}/64/64`
-  const placeholderOrganizerLogo = `https://picsum.photos/seed/${encodeURIComponent(event.organizer)}/64/64`
+  const organizerName = event.organizer || getOrganizerFromTitle(event.title)
+  const placeholderOrganizerLogo = `https://picsum.photos/seed/${encodeURIComponent(organizerName)}/64/64`
   const eventLogoSrc = event.image || event.organizerLogo || placeholderEventLogo
   const organizerLogoSrc = event.organizerLogo || placeholderOrganizerLogo
 
@@ -790,24 +870,26 @@ function TableRow({ event }: { event: Event }) {
       {/* Organizer */}
       <td className="py-3 px-4 hidden md:table-cell">
         <div className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded bg-[rgba(245,245,245,0.08)] overflow-hidden flex-shrink-0">
-            <img 
-              src={organizerLogoSrc} 
-              alt={event.organizer}
-              className="w-full h-full object-cover"
-              loading="lazy"
-              onError={(e) => {
-                const target = e.currentTarget
-                if (target.src !== placeholderOrganizerLogo) {
-                  target.src = placeholderOrganizerLogo
-                } else {
-                  target.onerror = null
-                }
-              }}
-            />
-          </div>
-          <span className="text-sm text-zinc-400 truncate max-w-[120px]">
-            {event.organizer}
+          {organizerLogoSrc && (
+            <div className="w-6 h-6 rounded bg-[rgba(245,245,245,0.08)] overflow-hidden flex-shrink-0">
+              <img 
+                src={organizerLogoSrc} 
+                alt={event.organizer || event.title}
+                className="w-full h-full object-cover"
+                loading="lazy"
+                onError={(e) => {
+                  const target = e.currentTarget
+                  if (target.src !== placeholderOrganizerLogo) {
+                    target.src = placeholderOrganizerLogo
+                  } else {
+                    target.onerror = null
+                  }
+                }}
+              />
+            </div>
+          )}
+          <span className="text-sm text-zinc-400 truncate max-w-[120px]" title={event.organizer || getOrganizerFromTitle(event.title)}>
+            {event.organizer || getOrganizerFromTitle(event.title)}
           </span>
         </div>
       </td>
@@ -829,14 +911,27 @@ function TableRow({ event }: { event: Event }) {
       {/* Tags */}
       <td className="py-3 px-4 hidden sm:table-cell">
         <div className="flex flex-wrap gap-1.5">
-          {event.tags.slice(0, 3).map((tag, index) => (
-            <span
-              key={index}
-              className="text-[11px] md:text-[12px] font-medium text-zinc-500 bg-[rgba(245,245,245,0.04)] px-2 py-0.5 rounded whitespace-nowrap"
-            >
-              {tag}
-            </span>
-          ))}
+          {event.tags.slice(0, 3).map((tag, index) => {
+            const isSelected = selectedTags.includes(tag)
+            return (
+              <button
+                key={index}
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  onTagClick(tag)
+                }}
+                className={`text-[11px] md:text-[12px] font-medium px-2 py-0.5 rounded whitespace-nowrap transition-colors cursor-pointer ${
+                  isSelected
+                    ? 'bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30'
+                    : 'text-zinc-500 bg-[rgba(245,245,245,0.04)] hover:text-zinc-400 hover:bg-[rgba(245,245,245,0.08)]'
+                }`}
+                title={isSelected ? `Remove ${tag} filter` : `Filter by ${tag}`}
+              >
+                {tag}
+              </button>
+            )
+          })}
           {event.tags.length > 3 && (
             <span className="text-[11px] md:text-[12px] font-medium text-zinc-500">
               +{event.tags.length - 3}

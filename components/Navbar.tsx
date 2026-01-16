@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { usePathname } from 'next/navigation'
 import { Menu, X } from 'lucide-react'
+import TimezoneSelector from './TimezoneSelector'
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -45,7 +46,8 @@ export default function Navbar() {
           </div>
 
           {/* Desktop CTA */}
-          <div className="hidden md:flex items-center">
+          <div className="hidden md:flex items-center gap-3">
+            <TimezoneSelector />
             <button className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-[rgba(245,245,245,0.06)] text-xs font-medium text-zinc-300 hover:bg-red-500 hover:text-white transition-colors uppercase">
               Login
             </button>
@@ -53,6 +55,7 @@ export default function Navbar() {
 
           {/* Mobile CTA and menu button */}
           <div className="md:hidden flex items-center gap-2">
+            <TimezoneSelector />
             <button className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-[rgba(245,245,245,0.06)] text-xs font-medium text-zinc-300 hover:bg-red-500 hover:text-white transition-colors uppercase">
               Login
             </button>

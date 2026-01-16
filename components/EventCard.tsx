@@ -57,7 +57,7 @@ interface EventCardProps {
 
 export default function EventCard({ event, index }: EventCardProps) {
   const config = locationTypeConfig[event.locationType]
-  const placeholderOrganizerLogo = `https://picsum.photos/seed/${encodeURIComponent(event.organizer)}/64/64`
+  const placeholderOrganizerLogo = `https://picsum.photos/seed/${encodeURIComponent(event.organizer || event.title)}/64/64`
   const organizerLogoSrc = event.organizerLogo || event.image || placeholderOrganizerLogo
   
   return (
