@@ -67,6 +67,46 @@ export default function CommunitiesMapSection({ communities }: CommunitiesMapSec
     setSelectedCommunity(selectedCommunity?.id === community.id ? null : community)
   }
 
+  // Map TopoJSON country names to community country names
+  const mapTopoJSONCountryToCommunityCountry = (topoJSONCountry: string): string | null => {
+    // First try exact match
+    if (allCountries.includes(topoJSONCountry)) {
+      return topoJSONCountry
+    }
+    
+    // Try case-insensitive match
+    const exactMatch = allCountries.find(
+      country => country.toLowerCase() === topoJSONCountry.toLowerCase()
+    )
+    if (exactMatch) {
+      return exactMatch
+    }
+    
+    // Common mappings from TopoJSON to community data
+    const countryMappings: Record<string, string> = {
+      'United States of America': 'USA',
+      'United States': 'USA',
+      'United Kingdom': 'UK',
+      'United Arab Emirates': 'UAE',
+    }
+    
+    if (countryMappings[topoJSONCountry]) {
+      const mapped = countryMappings[topoJSONCountry]
+      if (allCountries.includes(mapped)) {
+        return mapped
+      }
+    }
+    
+    // Try partial match (e.g., "United States" contains "USA")
+    const partialMatch = allCountries.find(country => {
+      const topoLower = topoJSONCountry.toLowerCase()
+      const commLower = country.toLowerCase()
+      return topoLower.includes(commLower) || commLower.includes(topoLower)
+    })
+    
+    return partialMatch || null
+  }
+
   const handleCountryChange = (value: string) => {
     setSelectedCountry(value)
 
@@ -78,6 +118,18 @@ export default function CommunitiesMapSection({ communities }: CommunitiesMapSec
       // Map zoom (approx. 2–11) -> globe altitude (~0.7–1.9)
       const altitude = Math.max(0.7, 2.2 - zoom * 0.15)
       setFocusPoint({ lat, lng, altitude })
+    }
+  }
+
+  const handleCountrySelectFromGlobe = (topoJSONCountry: string | null) => {
+    if (!topoJSONCountry) {
+      handleCountryChange('all')
+      return
+    }
+    
+    const communityCountry = mapTopoJSONCountryToCommunityCountry(topoJSONCountry)
+    if (communityCountry) {
+      handleCountryChange(communityCountry)
     }
   }
 
@@ -151,7 +203,7 @@ export default function CommunitiesMapSection({ communities }: CommunitiesMapSec
                     } focus:outline-none focus:border-red-500 transition-colors`}
                   >
                     <span className="max-w-[120px] truncate">
-                      {selectedCountry === 'all' ? 'All countries' : selectedCountry}
+                      {selectedCountry === 'all' ? 'All locations' : selectedCountry}
                     </span>
                     <ChevronDown
                       className={`w-3.5 h-3.5 text-zinc-500 transition-transform ${
@@ -184,7 +236,7 @@ export default function CommunitiesMapSection({ communities }: CommunitiesMapSec
                             autoFocus
                             value={countrySearch}
                             onChange={(e) => setCountrySearch(e.target.value)}
-                            placeholder="Search countries..."
+                            placeholder="Search locations..."
                             className="w-full pl-7 pr-2 py-1.5 text-xs rounded-lg bg-[rgba(15,23,42,0.9)] border border-[rgba(148,163,184,0.3)] text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-red-500/70"
                           />
                         </div>
@@ -204,7 +256,7 @@ export default function CommunitiesMapSection({ communities }: CommunitiesMapSec
                               : 'text-zinc-200 hover:bg-[rgba(15,23,42,0.9)]'
                           }`}
                         >
-                          <span>All countries</span>
+                          <span>All locations</span>
                         </button>
 
                         {filteredCountries.length === 0 && (
@@ -243,6 +295,8 @@ export default function CommunitiesMapSection({ communities }: CommunitiesMapSec
               hoveredCommunityId={hoveredCommunityId}
               onCommunityHover={setHoveredCommunityId}
               focusPoint={focusPoint}
+              onCountrySelect={handleCountrySelectFromGlobe}
+              selectedCountryFilter={selectedCountry === 'all' ? null : selectedCountry}
             />
             
             {/* Community Details Overlay - Slides in from right */}
