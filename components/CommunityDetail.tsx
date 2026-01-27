@@ -1,7 +1,7 @@
 'use client'
 
 import { useMemo } from 'react'
-import { X, MapPin, Users, Calendar, Globe, ExternalLink, Sparkles, Video, Users2, Maximize2, ArrowUpRight } from 'lucide-react'
+import { X, MapPin, Users, Calendar, Globe, ExternalLink, Sparkles, Video, Users2, Maximize2, ArrowUpRight, ArrowLeft } from 'lucide-react'
 import { IconBrandX, IconBrandDiscord, IconBrandTelegram, IconGlobe } from '@tabler/icons-react'
 import Link from 'next/link'
 import { type Community, isBeginnerFriendly, getMeetingFormatText, getCommunityEvents } from '@/data/communities'
@@ -10,6 +10,7 @@ import type { Event } from '@/data/events'
 interface CommunityDetailProps {
   community: Community
   onClose: () => void
+  showBackButton?: boolean
 }
 
 function formatDate(dateString: string): string {
@@ -17,7 +18,7 @@ function formatDate(dateString: string): string {
   return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
 }
 
-export default function CommunityDetail({ community, onClose }: CommunityDetailProps) {
+export default function CommunityDetail({ community, onClose, showBackButton = false }: CommunityDetailProps) {
   // Get upcoming events for this community
   const upcomingEvents = useMemo(() => {
     const allEvents = getCommunityEvents(community)
@@ -36,8 +37,19 @@ export default function CommunityDetail({ community, onClose }: CommunityDetailP
   return (
     <div className="h-full flex flex-col bg-[rgba(5,7,26,0.98)] backdrop-blur-xl border border-[rgba(245,245,245,0.12)] rounded-lg shadow-2xl overflow-hidden">
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-[rgba(245,245,245,0.08)] flex-shrink-0">
-        <h2 className="text-xs font-medium uppercase text-zinc-400 tracking-wide">Community Details</h2>
+      <div className="flex items-center justify-between px-4 py-2.5 border-b border-[rgba(245,245,245,0.08)] flex-shrink-0">
+        {showBackButton ? (
+          <button
+            onClick={onClose}
+            className="inline-flex items-center gap-1.5 text-sm text-zinc-400 hover:text-white transition-colors"
+            aria-label="Back to communities list"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span>Back</span>
+          </button>
+        ) : (
+          <h2 className="text-xs font-medium uppercase text-zinc-400 tracking-wide">Community Details</h2>
+        )}
         <div className="flex items-center gap-1.5">
           <Link
             href={`/communities/${community.id}`}
@@ -46,13 +58,15 @@ export default function CommunityDetail({ community, onClose }: CommunityDetailP
           >
             <Maximize2 className="w-4 h-4" />
           </Link>
-          <button
-            onClick={onClose}
-            className="p-1.5 rounded hover:bg-[rgba(245,245,245,0.08)] text-zinc-400 hover:text-white transition-colors"
-            aria-label="Close community details"
-          >
-            <X className="w-4 h-4" />
-          </button>
+          {!showBackButton && (
+            <button
+              onClick={onClose}
+              className="p-1.5 rounded hover:bg-[rgba(245,245,245,0.08)] text-zinc-400 hover:text-white transition-colors"
+              aria-label="Close community details"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          )}
         </div>
       </div>
 
@@ -94,10 +108,6 @@ export default function CommunityDetail({ community, onClose }: CommunityDetailP
                 <div className="flex items-center gap-1.5">
                   <MapPin className="w-3.5 h-3.5" />
                   <span>{community.location.city}, {community.location.country}</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <Users className="w-3.5 h-3.5" />
-                  <span>{community.memberCount.toLocaleString()}</span>
                 </div>
               </div>
             </div>

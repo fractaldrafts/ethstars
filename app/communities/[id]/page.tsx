@@ -91,7 +91,7 @@ export default async function CommunityPage({ params }: CommunityPageProps) {
                     <h1 className="text-2xl font-semibold text-white">
                       {community.name}
                     </h1>
-                    <span className="inline-flex items-center whitespace-nowrap rounded-full bg-[rgba(245,245,245,0.06)] px-3 py-1 text-[11px] font-semibold tracking-wide text-zinc-200 uppercase w-fit">{community.memberCount.toLocaleString()} MEMBERS</span>
+                    <span className="inline-flex items-center whitespace-nowrap rounded-full bg-[rgba(245,245,245,0.06)] px-3 py-1 text-[11px] font-semibold tracking-wide text-zinc-200 uppercase w-fit">{community.location.city}, {community.location.country}</span>
                   </div>
                 </div>
 

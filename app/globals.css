@@ -88,6 +88,34 @@ input:focus {
   display: none;
 }
 
+/* Hide scrollbar by default, show on hover */
+.scrollbar-hide-on-idle {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+.scrollbar-hide-on-idle::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scrollbar-hide-on-idle::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-hide-on-idle::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 4px;
+  transition: background 0.2s ease;
+}
+
+.scrollbar-hide-on-idle:hover::-webkit-scrollbar-thumb {
+  background: rgba(245, 245, 245, 0.08);
+}
+
+.scrollbar-hide-on-idle:hover::-webkit-scrollbar-thumb:hover {
+  background: rgba(245, 245, 245, 0.16);
+}
+
 /* Leaflet Map Styles - Dark Theme */
 .leaflet-container {
   background: rgba(5, 7, 26, 0.8) !important;

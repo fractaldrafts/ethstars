@@ -34,6 +34,9 @@ function getMeetingFormatDisplay(format?: MeetingFormat): string {
 }
 
 function FeaturedCard({ community, isDragging }: { community: Community; isDragging: boolean }) {
+  const [bannerError, setBannerError] = useState(false)
+  const showBanner = community.banner && !bannerError
+
   return (
     <Link
       href={`/communities/${community.id}`}
@@ -41,14 +44,17 @@ function FeaturedCard({ community, isDragging }: { community: Community; isDragg
       draggable={false}
     >
       {/* Banner Header with Image */}
-      <div 
-        className={`relative rounded-t-lg overflow-hidden ${community.banner ? 'aspect-[3/1]' : 'bg-blue-600 h-24'}`}
-        style={community.banner ? {
-          backgroundImage: `url(${community.banner})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        } : {}}
+      <div
+        className={`relative rounded-t-lg overflow-hidden flex-shrink-0 ${showBanner ? 'aspect-[3/1]' : 'bg-gradient-to-br from-red-600/20 to-blue-600/20 h-24'}`}
       >
+        {showBanner && (
+          <img
+            src={community.banner}
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover"
+            onError={() => setBannerError(true)}
+          />
+        )}
         {/* FEATURED Badge */}
         <div className="absolute top-3 right-4 z-10 flex items-center gap-1 px-2.5 py-1 rounded-md bg-red-600 opacity-100 group-hover:opacity-0 transition-opacity duration-300 ease-out">
           <Star className="w-3 h-3 text-white fill-white" />
@@ -75,7 +81,7 @@ function FeaturedCard({ community, isDragging }: { community: Community; isDragg
             <div className="flex items-center gap-2 text-xs text-zinc-500 mt-1">
               <span>{getMeetingFormatDisplay(community.meetingFormat)}</span>
               <span className="text-zinc-600">•</span>
-              <span>{community.location.city}</span>
+              <span>{community.location.country}</span>
             </div>
           </div>
         </div>
@@ -91,9 +97,10 @@ function FeaturedCard({ community, isDragging }: { community: Community; isDragg
 
         {/* Footer */}
         <div className="flex items-center justify-between pt-4 border-t border-[rgba(245,245,245,0.08)]">
-          <span className="text-white font-semibold">
-            {community.memberCount.toLocaleString()} members
-          </span>
+          <div className="flex items-center gap-1.5 text-white font-semibold">
+            <MapPin className="w-4 h-4 text-zinc-400" />
+            <span>{community.location.city}</span>
+          </div>
           <div className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-[rgba(245,245,245,0.06)] text-xs font-medium text-zinc-300 group-hover:bg-red-500 group-hover:text-white transition-colors">
             View Community
             <ArrowUpRight className="w-3 h-3" />

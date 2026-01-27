@@ -298,22 +298,15 @@ export default function RelatedCommunitiesSection({ community }: RelatedCommunit
                   ))}
                 </div>
 
-                {/* Meta info - Members + Next Event Date */}
-                <div className="flex items-center gap-2 text-sm text-zinc-500 mb-3 pb-3 border-b border-[rgba(245,245,245,0.08)] flex-nowrap overflow-hidden">
-                  <span className="flex items-center gap-1.5 whitespace-nowrap">
-                    <Users className="w-4 h-4 flex-shrink-0" />
-                    <span>{relatedCommunity.memberCount.toLocaleString()} members</span>
-                  </span>
-                  {getNextEventDate(relatedCommunity) && (
-                    <>
-                      <span className="text-zinc-600 flex-shrink-0">•</span>
-                      <span className="flex items-center gap-1.5 whitespace-nowrap">
-                        <Calendar className="w-4 h-4 flex-shrink-0" />
-                        <span>Next event: {getNextEventDate(relatedCommunity)}</span>
-                      </span>
-                    </>
-                  )}
-                </div>
+                {/* Meta info - Next Event Date */}
+                {getNextEventDate(relatedCommunity) && (
+                  <div className="flex items-center gap-2 text-sm text-zinc-500 mb-3 pb-3 border-b border-[rgba(245,245,245,0.08)] flex-nowrap overflow-hidden">
+                    <span className="flex items-center gap-1.5 whitespace-nowrap">
+                      <Calendar className="w-4 h-4 flex-shrink-0" />
+                      <span>Next event: {getNextEventDate(relatedCommunity)}</span>
+                    </span>
+                  </div>
+                )}
 
                 {/* Footer - Main CTA */}
                 <div className="mt-auto">

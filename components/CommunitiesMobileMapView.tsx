@@ -200,6 +200,7 @@ export default function CommunitiesMobileMapView({ communities }: CommunitiesMob
             const community = communities.find((c) => c.id === closestId)
             if (community) {
               // Reset globe interaction flag when selecting from card scroll
+              // This ensures the globe rotates when cards are swiped
               isGlobeInteractionRef.current = false
               isProgrammaticSelectRef.current = true
               setSelectedCommunity(community)
@@ -209,7 +210,7 @@ export default function CommunitiesMobileMapView({ communities }: CommunitiesMob
             }
           }
         })
-      }, 150)
+      }, 100) // Reduced debounce for more responsive globe rotation during swipe
     }
 
     container.addEventListener('scroll', handleScroll, { passive: true })
@@ -346,22 +347,15 @@ export default function CommunitiesMobileMapView({ communities }: CommunitiesMob
                       ))}
                     </div>
 
-                    {/* Meta info - Members + Next Event Date */}
-                    <div className="flex items-center gap-2 text-sm text-zinc-300 mb-3 pb-3 border-b border-[rgba(245,245,245,0.08)] flex-nowrap overflow-hidden">
-                      <span className="flex items-center gap-1.5 whitespace-nowrap">
-                        <Users className="w-4 h-4 flex-shrink-0" />
-                        <span>{community.memberCount.toLocaleString()} members</span>
-                      </span>
-                      {getNextEventDate(community) && (
-                        <>
-                          <span className="text-zinc-500 flex-shrink-0">•</span>
-                          <span className="flex items-center gap-1.5 whitespace-nowrap">
-                            <Calendar className="w-4 h-4 flex-shrink-0" />
-                            <span>Next event: {getNextEventDate(community)}</span>
-                          </span>
-                        </>
-                      )}
-                    </div>
+                    {/* Meta info - Next Event Date */}
+                    {getNextEventDate(community) && (
+                      <div className="flex items-center gap-2 text-sm text-zinc-300 mb-3 pb-3 border-b border-[rgba(245,245,245,0.08)] flex-nowrap overflow-hidden">
+                        <span className="flex items-center gap-1.5 whitespace-nowrap">
+                          <Calendar className="w-4 h-4 flex-shrink-0" />
+                          <span>Next event: {getNextEventDate(community)}</span>
+                        </span>
+                      </div>
+                    )}
 
                     {/* Footer - CTA Button & Social Icons */}
                     <div className="mt-auto flex items-center justify-between gap-3">

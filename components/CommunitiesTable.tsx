@@ -6,26 +6,29 @@ import {
   Search, ChevronDown, ChevronUp, ArrowUpRight, 
   X as XIcon, ArrowUpDown, SlidersHorizontal, MapPin, Users, Calendar, Table2, Map, LayoutGrid, Sparkles, Wifi
 } from 'lucide-react'
+import { IconBrandX, IconBrandDiscord, IconBrandTelegram } from '@tabler/icons-react'
 import Link from 'next/link'
-import { communities, type Community, type CommunityFocus, getCommunitySize, isBeginnerFriendly, getNextEventDate } from '@/data/communities'
+import { communities, type Community, type CommunityFocus, isBeginnerFriendly, getNextEventDate, getCommunityEvents } from '@/data/communities'
 import CommunitiesMapSection from './CommunitiesMapSection'
 import CommunitiesMobileMapView from './CommunitiesMobileMapView'
 import CommunitiesList from './CommunitiesList'
+import FilterEmptyState from './FilterEmptyState'
 import { getUserLocationFromIP } from '@/lib/geolocation'
 
-type SortField = 'name' | 'location' | 'memberCount' | 'eventFrequency'
+type SortField = 'name' | 'location' | 'eventFrequency'
 type SortDirection = 'asc' | 'desc'
 type ViewMode = 'table' | 'map'
 type MobileViewMode = 'cards' | 'map'
 
-type FilterType = CommunityFocus | 'all' | 'near-me' | 'remote'
+type FilterType = CommunityFocus | 'all' | 'near-me' | 'remote' | 'Beginner-friendly' | 'Technical'
 
+// Quick filters
 const focusFilters: { value: FilterType; label: string }[] = [
   { value: 'all', label: 'All' },
+  { value: 'near-me', label: 'Near me' },
   { value: 'Beginner-friendly', label: 'Beginner-friendly' },
   { value: 'Technical', label: 'Technical' },
   { value: 'remote', label: 'Remote' },
-  { value: 'near-me', label: 'Near me' },
 ]
 
 /**
@@ -46,6 +49,7 @@ function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: numbe
 
 // Activity level filter removed - activity levels are manually set and not reliable
 
+// Size filter removed - member count no longer available
 const sizeFilters = [
   { value: 'all', label: 'All Sizes' },
   { value: 'large', label: 'Large (1000+)' },
@@ -58,9 +62,12 @@ export default function CommunitiesTable() {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedFocus, setSelectedFocus] = useState<FilterType>('all')
   // Activity level filter removed
-  const [selectedSize, setSelectedSize] = useState<string>('all')
-  const [selectedCountry, setSelectedCountry] = useState<string>('all')
-  const [sortField, setSortField] = useState<SortField>('memberCount')
+  // Size filter removed - member count no longer available
+  const [selectedLocation, setSelectedLocation] = useState<string>('all')
+  const [selectedBeginnerFriendly, setSelectedBeginnerFriendly] = useState<string>('all') // 'all', 'beginner-friendly', 'technical', 'mixed'
+  const [selectedEventCloseness, setSelectedEventCloseness] = useState<string>('all') // 'all', 'this-week', 'this-month', 'next-month', 'later', 'no-events'
+  const [showFeaturedOnly, setShowFeaturedOnly] = useState(false)
+  const [sortField, setSortField] = useState<SortField>('name')
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc')
   const [viewMode, setViewMode] = useState<ViewMode>('map')
   const [mobileViewMode, setMobileViewMode] = useState<MobileViewMode>('cards')
@@ -90,6 +97,13 @@ export default function CommunitiesTable() {
     }
   }, [selectedFocus, userLocation, isLoadingLocation])
 
+  // When Near me is selected and we have user location, select user's country on globe
+  useEffect(() => {
+    if (selectedFocus === 'near-me' && userLocation) {
+      setSelectedLocation(userLocation.country)
+    }
+  }, [selectedFocus, userLocation])
+
   const allCountries = useMemo(
     () => Array.from(new Set(communities.map(c => c.location.country))).sort(),
     []
@@ -109,16 +123,76 @@ export default function CommunitiesTable() {
     }
   }
 
+  // Helper function to get next event date as Date object
+  const getNextEventDateObj = (community: Community): Date | null => {
+    const now = new Date()
+    now.setHours(0, 0, 0, 0)
+    
+    const matchingEvents = getCommunityEvents(community)
+    const upcomingEvents = matchingEvents.filter((event) => {
+      const eventDate = new Date(event.date)
+      eventDate.setHours(0, 0, 0, 0)
+      return eventDate >= now
+    })
+    
+    if (upcomingEvents.length === 0) return null
+    return new Date(upcomingEvents[0].date)
+  }
+
+  // Helper function to get event closeness category
+  const getEventCloseness = (community: Community): string => {
+    const nextEventDate = getNextEventDateObj(community)
+    if (!nextEventDate) return 'no-events'
+    
+    const now = new Date()
+    now.setHours(0, 0, 0, 0)
+    const diffTime = nextEventDate.getTime() - now.getTime()
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+    
+    if (diffDays <= 7) return 'this-week'
+    if (diffDays <= 30) return 'this-month'
+    if (diffDays <= 60) return 'next-month'
+    return 'later'
+  }
+
   const clearAllFilters = () => {
     setSearchQuery('')
     setSelectedFocus('all')
-    setSelectedSize('all')
-    setSelectedCountry('all')
+    setSelectedLocation('all')
+    setSelectedBeginnerFriendly('all')
+    setSelectedEventCloseness('all')
+    setShowFeaturedOnly(false)
     setSelectedFocusAreas([])
   }
 
+  const clearFocusFiltersOnly = () => {
+    setSelectedFocus('all')
+    setSelectedBeginnerFriendly('all')
+    setSelectedFocusAreas([])
+  }
+
+  const clearLocationOnly = () => {
+    setSelectedLocation('all')
+  }
+
+  const handleCountrySelect = (country: string | null) => {
+    const next = country === 'all' || !country ? 'all' : country
+    setSelectedLocation(next)
+    if (next !== 'all' && next !== 'remote' && selectedFocus === 'near-me') {
+      setSelectedFocus('all')
+    }
+  }
+
+  const handleLocationChange = (value: string) => {
+    setSelectedLocation(value)
+    if (value !== 'all' && value !== 'remote' && selectedFocus === 'near-me') {
+      setSelectedFocus('all')
+    }
+  }
+
   const hasActiveFilters = searchQuery || selectedFocus !== 'all' || 
-    selectedSize !== 'all' || selectedCountry !== 'all' || selectedFocusAreas.length > 0
+    selectedLocation !== 'all' || selectedBeginnerFriendly !== 'all' ||
+    selectedEventCloseness !== 'all' || showFeaturedOnly || selectedFocusAreas.length > 0
 
   const filteredAndSortedCommunities = useMemo(() => {
     let result = communities.filter((community) => {
@@ -135,7 +209,7 @@ export default function CommunitiesTable() {
         if (!matchesSearch) return false
       }
       
-      // Focus filter
+      // Quick filter
       if (selectedFocus === 'near-me') {
         if (userLocation) {
           // Show only communities in user's country
@@ -157,18 +231,43 @@ export default function CommunitiesTable() {
         if (community.meetingFormat !== 'online' && community.meetingFormat !== 'hybrid') {
           return false
         }
-      } else if (selectedFocus !== 'all' && !community.focusAreas.includes(selectedFocus as CommunityFocus)) {
-        return false
       }
       
-      // Size filter
-      if (selectedSize !== 'all') {
-        const size = getCommunitySize(community.memberCount)
-        if (size !== selectedSize) return false
+      // Size filter removed - member count no longer available
+      
+      // Location filter (includes Remote option)
+      if (selectedLocation !== 'all') {
+        if (selectedLocation === 'remote') {
+          // Filter for remote/online communities (online or hybrid meeting format)
+          if (community.meetingFormat !== 'online' && community.meetingFormat !== 'hybrid') {
+            return false
+          }
+        } else {
+          // Filter by country
+          if (community.location.country !== selectedLocation) {
+            return false
+          }
+        }
       }
       
-      // Country filter
-      if (selectedCountry !== 'all' && community.location.country !== selectedCountry) {
+      // Beginner-friendly filter
+      if (selectedBeginnerFriendly !== 'all') {
+        const isBeginner = isBeginnerFriendly(community)
+        const isTechnical = community.focusAreas.includes('Technical')
+        
+        if (selectedBeginnerFriendly === 'beginner-friendly' && !isBeginner) return false
+        if (selectedBeginnerFriendly === 'technical' && !isTechnical) return false
+        if (selectedBeginnerFriendly === 'mixed' && (!isBeginner || !isTechnical)) return false
+      }
+      
+      // Event closeness filter
+      if (selectedEventCloseness !== 'all') {
+        const closeness = getEventCloseness(community)
+        if (closeness !== selectedEventCloseness) return false
+      }
+      
+      // Featured filter
+      if (showFeaturedOnly && !community.featured) {
         return false
       }
       
@@ -192,9 +291,6 @@ export default function CommunitiesTable() {
           comparison = a.location.country.localeCompare(b.location.country) || 
                       a.location.city.localeCompare(b.location.city)
           break
-        case 'memberCount':
-          comparison = a.memberCount - b.memberCount
-          break
         case 'eventFrequency':
           const freqOrder = { 'Weekly': 4, 'Bi-weekly': 3, 'Monthly': 2, 'Quarterly': 1 }
           comparison = (freqOrder[a.eventFrequency as keyof typeof freqOrder] || 0) - 
@@ -205,7 +301,68 @@ export default function CommunitiesTable() {
     })
 
     return result
-  }, [searchQuery, selectedFocus, selectedSize, selectedCountry, selectedFocusAreas, sortField, sortDirection, userLocation])
+  }, [searchQuery, selectedFocus, selectedLocation, selectedBeginnerFriendly, selectedEventCloseness, showFeaturedOnly, selectedFocusAreas, sortField, sortDirection, userLocation])
+
+  const hasCountryFilter = selectedLocation !== 'all' && selectedLocation !== 'remote'
+  const focusLabelMap: Record<string, string> = {
+    'Beginner-friendly': 'beginner friendly',
+    'Technical': 'technical',
+    'remote': 'remote',
+    'near-me': 'near me',
+  }
+  const focusLabel = selectedFocus !== 'all' ? focusLabelMap[selectedFocus] ?? selectedFocus.toLowerCase() : null
+
+  const countInCountry = hasCountryFilter
+    ? communities.filter((c) => c.location.country === selectedLocation).length
+    : 0
+  const hasCommunitiesInCountry = countInCountry > 0
+
+  const emptyStateConfig =
+    filteredAndSortedCommunities.length === 0 && hasActiveFilters
+      ? (() => {
+          const country = hasCountryFilter ? selectedLocation : null
+          const addCommunityCta = {
+            label: 'Add a new community',
+            onClick: () => router.push('/communities?add=true'),
+          }
+          if (focusLabel && country && hasCommunitiesInCountry) {
+            return {
+              message: `No ${focusLabel} communities found in ${country}.`,
+              primaryCta: {
+                label: `Explore other communities in ${country}`,
+                onClick: clearFocusFiltersOnly,
+              },
+              secondaryCta: addCommunityCta,
+            }
+          }
+          if (focusLabel && country && !hasCommunitiesInCountry) {
+            return {
+              message: `No ${focusLabel} communities found in ${country}.`,
+              primaryCta: { label: 'Clear location', onClick: clearLocationOnly },
+              secondaryCta: addCommunityCta,
+            }
+          }
+          if (country) {
+            return {
+              message: `No communities found in ${country}.`,
+              primaryCta: { label: 'Clear location', onClick: clearLocationOnly },
+              secondaryCta: addCommunityCta,
+            }
+          }
+          if (focusLabel) {
+            return {
+              message: `No ${focusLabel} communities found.`,
+              primaryCta: { label: 'Clear focus filters', onClick: clearFocusFiltersOnly },
+              secondaryCta: addCommunityCta,
+            }
+          }
+          return {
+            message: 'No communities found.',
+            primaryCta: { label: 'Clear filters', onClick: clearAllFilters },
+            secondaryCta: addCommunityCta,
+          }
+        })()
+      : null
 
   const SortButton = ({ field, children }: { field: SortField; children: React.ReactNode }) => (
     <button 
@@ -239,7 +396,10 @@ export default function CommunitiesTable() {
               return (
                 <button
                   key={filter.value}
-                  onClick={() => setSelectedFocus(filter.value)}
+                  onClick={() => {
+                    setSelectedFocus(filter.value)
+                    if (filter.value === 'near-me') setSelectedLocation('all')
+                  }}
                   disabled={isLoading}
                   className={`px-3 py-1.5 text-sm font-medium transition-colors rounded-full border flex-shrink-0 ${
                     isSelected
@@ -328,33 +488,18 @@ export default function CommunitiesTable() {
         {showAdvancedFilters && (
           <div className="p-4 bg-[rgba(245,245,245,0.04)] border border-[rgba(245,245,245,0.08)] rounded-lg space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {/* Size */}
-              <div>
-                <label className="block text-xs font-medium text-zinc-500 mb-1.5">Size</label>
-                <div className="relative">
-                  <select
-                    value={selectedSize}
-                    onChange={(e) => setSelectedSize(e.target.value)}
-                    className="w-full bg-[rgba(245,245,245,0.08)] border border-[rgba(245,245,245,0.08)] rounded-full pl-3 pr-10 py-2 text-sm text-white focus:border-zinc-700 appearance-none"
-                  >
-                    {sizeFilters.map(filter => (
-                      <option key={filter.value} value={filter.value}>{filter.label}</option>
-                    ))}
-                  </select>
-                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 pointer-events-none" />
-                </div>
-              </div>
 
-              {/* Country */}
+              {/* Location */}
               <div>
-                <label className="block text-xs font-medium text-zinc-500 mb-1.5">Country</label>
+                <label className="block text-xs font-medium text-zinc-500 mb-1.5">Location</label>
                 <div className="relative">
                   <select
-                    value={selectedCountry}
-                    onChange={(e) => setSelectedCountry(e.target.value)}
+                    value={selectedLocation}
+                    onChange={(e) => handleLocationChange(e.target.value)}
                     className="w-full bg-[rgba(245,245,245,0.08)] border border-[rgba(245,245,245,0.08)] rounded-full pl-3 pr-10 py-2 text-sm text-white focus:border-zinc-700 appearance-none"
                   >
-                    <option value="all">All countries</option>
+                    <option value="all">All locations</option>
+                    <option value="remote">Remote</option>
                     {allCountries.map(country => (
                       <option key={country} value={country}>{country}</option>
                     ))}
@@ -363,22 +508,57 @@ export default function CommunitiesTable() {
                 </div>
               </div>
 
-              {/* Focus Area (Extended) */}
+              {/* Beginner-friendly Filter */}
               <div>
-                <label className="block text-xs font-medium text-zinc-500 mb-1.5">Focus Area</label>
+                <label className="block text-xs font-medium text-zinc-500 mb-1.5">Skill Level</label>
                 <div className="relative">
                   <select
-                    value={selectedFocus}
-                    onChange={(e) => setSelectedFocus(e.target.value as FilterType)}
+                    value={selectedBeginnerFriendly}
+                    onChange={(e) => setSelectedBeginnerFriendly(e.target.value)}
                     className="w-full bg-[rgba(245,245,245,0.08)] border border-[rgba(245,245,245,0.08)] rounded-full pl-3 pr-10 py-2 text-sm text-white focus:border-zinc-700 appearance-none"
                   >
-                    {focusFilters.map(filter => (
-                      <option key={filter.value} value={filter.value}>{filter.label}</option>
-                    ))}
+                    <option value="all">All levels</option>
+                    <option value="beginner-friendly">Beginner-friendly</option>
+                    <option value="technical">Technical</option>
+                    <option value="mixed">Mixed</option>
                   </select>
                   <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 pointer-events-none" />
                 </div>
               </div>
+
+              {/* Event Closeness Filter */}
+              <div>
+                <label className="block text-xs font-medium text-zinc-500 mb-1.5">Next Event</label>
+                <div className="relative">
+                  <select
+                    value={selectedEventCloseness}
+                    onChange={(e) => setSelectedEventCloseness(e.target.value)}
+                    className="w-full bg-[rgba(245,245,245,0.08)] border border-[rgba(245,245,245,0.08)] rounded-full pl-3 pr-10 py-2 text-sm text-white focus:border-zinc-700 appearance-none"
+                  >
+                    <option value="all">All events</option>
+                    <option value="this-week">This week</option>
+                    <option value="this-month">This month</option>
+                    <option value="next-month">Next month</option>
+                    <option value="later">Later</option>
+                    <option value="no-events">No upcoming events</option>
+                  </select>
+                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 pointer-events-none" />
+                </div>
+              </div>
+            </div>
+
+            {/* Featured Toggle */}
+            <div className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                id="featured-toggle"
+                checked={showFeaturedOnly}
+                onChange={(e) => setShowFeaturedOnly(e.target.checked)}
+                className="w-4 h-4 rounded bg-[rgba(245,245,245,0.08)] border-[rgba(245,245,245,0.08)] text-red-500 focus:ring-red-500/50 focus:ring-offset-0"
+              />
+              <label htmlFor="featured-toggle" className="text-sm text-zinc-400 cursor-pointer">
+                Show featured communities only
+              </label>
             </div>
 
             {/* Focus Areas Tags */}
@@ -470,9 +650,9 @@ export default function CommunitiesTable() {
             communities={filteredAndSortedCommunities}
             selectedCommunityId={null}
             onCommunitySelect={(community) => {
-              // Navigate to community detail page on mobile
               router.push(`/communities/${community.id}`)
             }}
+            emptyStateConfig={emptyStateConfig}
           />
         )}
         {mobileViewMode === 'map' && (
@@ -487,6 +667,10 @@ export default function CommunitiesTable() {
         <div className="hidden md:block">
           <CommunitiesMapSection 
             communities={filteredAndSortedCommunities}
+            selectedLocation={selectedLocation}
+            onCountrySelect={handleCountrySelect}
+            allCountries={allCountries}
+            emptyStateConfig={emptyStateConfig}
           />
         </div>
       )}
@@ -503,11 +687,11 @@ export default function CommunitiesTable() {
                 <th className="text-left py-3 px-4 text-xs font-medium text-zinc-500 uppercase tracking-wide min-w-[150px]">
                   <SortButton field="location">LOCATION</SortButton>
                 </th>
-                <th className="text-left py-3 px-4 text-xs font-medium text-zinc-500 uppercase tracking-wide hidden lg:table-cell min-w-[120px]">
-                  <SortButton field="memberCount">MEMBERS</SortButton>
-                </th>
                 <th className="text-left py-3 px-4 text-xs font-medium text-zinc-500 uppercase tracking-wide hidden lg:table-cell min-w-[100px] whitespace-nowrap">
                   NEXT EVENT
+                </th>
+                <th className="text-left py-3 px-4 text-xs font-medium text-zinc-500 uppercase tracking-wide min-w-[100px] hidden md:table-cell">
+                  CONNECT
                 </th>
                 <th className="text-right py-3 px-4 text-xs font-medium text-zinc-500 uppercase tracking-wide w-24 min-w-[100px]">
                   
@@ -518,13 +702,19 @@ export default function CommunitiesTable() {
               {filteredAndSortedCommunities.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="py-12 text-center">
-                    <p className="text-zinc-500 text-sm">No communities found</p>
-                    <button
-                      onClick={clearAllFilters}
-                      className="text-sm text-red-500 hover:text-red-400 mt-2"
-                    >
-                      Clear filters
-                    </button>
+                    {emptyStateConfig ? (
+                      <FilterEmptyState config={emptyStateConfig} className="py-4" />
+                    ) : (
+                      <>
+                        <p className="text-zinc-500 text-sm">No communities found</p>
+                        <button
+                          onClick={clearAllFilters}
+                          className="text-sm text-red-500 hover:text-red-400 mt-2"
+                        >
+                          Clear filters
+                        </button>
+                      </>
+                    )}
                   </td>
                 </tr>
               ) : (
@@ -599,19 +789,53 @@ function TableRow({ community }: { community: Community }) {
         </div>
       </td>
       
-      {/* Members */}
-      <td className="py-3 px-4 hidden lg:table-cell">
-        <div className="flex items-center gap-1.5 text-sm text-zinc-400">
-          <Users className="w-3.5 h-3.5 text-zinc-500" />
-          <span>{community.memberCount.toLocaleString()}</span>
-        </div>
-      </td>
-      
       {/* Next Event */}
       <td className="py-3 px-4 hidden lg:table-cell">
         <div className="flex items-center gap-1.5 text-sm text-zinc-400">
           <Calendar className="w-3.5 h-3.5 text-zinc-500" />
           <span>{getNextEventDate(community) || 'No upcoming events'}</span>
+        </div>
+      </td>
+      
+      {/* Connect */}
+      <td className="py-3 px-4 hidden md:table-cell" onClick={(e) => e.stopPropagation()}>
+        <div className="flex items-center gap-1.5">
+          {community.twitter && (
+            <a
+              href={community.twitter}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[rgba(245,245,245,0.06)] text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
+              aria-label="X (Twitter)"
+            >
+              <IconBrandX className="w-4 h-4" />
+            </a>
+          )}
+          {community.telegram && (
+            <a
+              href={community.telegram}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[rgba(245,245,245,0.06)] text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
+              aria-label="Telegram"
+            >
+              <IconBrandTelegram className="w-4 h-4" />
+            </a>
+          )}
+          {community.discord && (
+            <a
+              href={community.discord}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[rgba(245,245,245,0.06)] text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
+              aria-label="Discord"
+            >
+              <IconBrandDiscord className="w-4 h-4" />
+            </a>
+          )}
+          {!community.twitter && !community.telegram && !community.discord && (
+            <span className="text-xs text-zinc-500">—</span>
+          )}
         </div>
       </td>
       

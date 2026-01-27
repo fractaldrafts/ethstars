@@ -85,14 +85,11 @@ const activityColors: Record<string, string> = {
   'new': '#71717a', // zinc
 }
 
-// Calculate marker size based on member count
-function getMarkerSize(memberCount: number, isSelected: boolean, isHovered: boolean): number {
-  let baseSize = isSelected ? 32 : 20
-  if (isHovered && !isSelected) baseSize = 24
-  
-  // Scale: 100 members = base, 1000 members = 1.5x, 5000+ = 2x
-  const scale = Math.min(2, Math.max(1, 1 + (memberCount / 2000)))
-  return baseSize * scale
+// Calculate marker size based on selection and hover state
+function getMarkerSize(isSelected: boolean, isHovered: boolean): number {
+  if (isSelected) return 32
+  if (isHovered) return 24
+  return 20
 }
 
 export default function CommunitiesMap({ 
@@ -416,7 +413,7 @@ export default function CommunitiesMap({
             </div>
             <div className="pt-2 border-t border-[rgba(245,245,245,0.1)]">
               <div className="text-zinc-400 mb-1.5">Marker Size</div>
-              <div className="text-zinc-300">Larger = More members</div>
+              <div className="text-zinc-300">Size indicates selection/hover state</div>
             </div>
             <div className="pt-2 border-t border-[rgba(245,245,245,0.1)]">
               <div className="text-zinc-400 mb-1.5">Special Indicators</div>
@@ -461,7 +458,7 @@ export default function CommunitiesMap({
             const isSelected = selectedCommunity?.id === community.id
             const isHovered = hoveredCommunityId === community.id
             const isBeginner = isBeginnerFriendly(community)
-            const markerSize = getMarkerSize(community.memberCount, isSelected, !!isHovered)
+            const markerSize = getMarkerSize(isSelected, !!isHovered)
             // Selected: red border, keep activity color background
             // Beginner: green border, activity color background
             // Default: white border, activity color background
@@ -588,8 +585,8 @@ export default function CommunitiesMap({
                       {/* Compact Stats */}
                       <div className="flex items-center gap-4 text-xs">
                         <div className="flex items-center gap-1.5">
-                          <Users className="w-3.5 h-3.5 text-blue-400" />
-                          <span className="text-zinc-300 font-medium">{community.memberCount.toLocaleString()}</span>
+                          <MapPin className="w-3.5 h-3.5 text-blue-400" />
+                          <span className="text-zinc-300 font-medium">{community.location.city}, {community.location.country}</span>
                         </div>
                         <div className="flex items-center gap-1.5">
                           <Calendar className="w-3.5 h-3.5 text-orange-400" />

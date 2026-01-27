@@ -470,11 +470,11 @@ export default function CommunitiesGlobe({
           lng,
           altitude: 1.2,
         },
-        1000
+        800 // Slightly faster rotation for better responsiveness
       )
       setTimeout(() => {
         isProgrammaticCameraMoveRef.current = false
-      }, 1100)
+      }, 900)
     }
   }, [selectedCommunity, globeReady])
 
@@ -612,15 +612,10 @@ export default function CommunitiesGlobe({
           polygonSideColor={() => 'rgba(0, 0, 0, 0)'}
           polygonStrokeColor={() => 'rgba(148, 163, 184, 0.3)'} // Subtle borders for dark mode
           polygonsTransitionDuration={300}
-          polygonLabel={(d: any) => {
-            const countryName = d.properties?.NAME || d.properties?.name
-            return `
-              <div style="padding: 8px; background: rgba(15, 23, 42, 0.95); color: #e2e8f0; border-radius: 4px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); border: 1px solid rgba(148, 163, 184, 0.2);">
-                <b>${countryName}</b>
-              </div>
-            `
-          }}
           onPolygonClick={handlePolygonClick}
+          onGlobeClick={() => {
+            if (onCountrySelect) onCountrySelect(null)
+          }}
           onPolygonHover={(polygon: any) => {
             if (polygon) {
               const countryName = polygon.properties?.NAME || polygon.properties?.name
@@ -709,12 +704,10 @@ export default function CommunitiesGlobe({
                   <div class="globe-pin-tooltip-stats">
                     <div class="globe-pin-tooltip-stat">
                       <svg class="globe-pin-tooltip-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="9" cy="7" r="4"></circle>
-                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                        <circle cx="12" cy="10" r="3"></circle>
                       </svg>
-                      <span>${community.memberCount.toLocaleString()} members</span>
+                      <span>${community.location.city}, ${community.location.country}</span>
                     </div>
                     <div class="globe-pin-tooltip-stat">
                       <svg class="globe-pin-tooltip-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -763,21 +756,6 @@ export default function CommunitiesGlobe({
           }}
         />
       </GlobeErrorBoundary>
-      
-      {/* Empty State */}
-      {communities.length === 0 && (
-        <div className="absolute inset-0 flex items-center justify-center bg-[rgba(5,7,26,0.8)] z-50 rounded-lg" role="status" aria-live="polite">
-          <div className="text-center">
-            <div className="w-12 h-12 mx-auto mb-4 flex items-center justify-center rounded-full bg-[rgba(245,245,245,0.08)]">
-              <svg className="w-6 h-6 text-zinc-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-            <p className="text-zinc-500 text-sm">No communities found</p>
-            <p className="text-zinc-600 text-xs mt-1">Try adjusting your filters</p>
-          </div>
-        </div>
-      )}
     </div>
   )
 }

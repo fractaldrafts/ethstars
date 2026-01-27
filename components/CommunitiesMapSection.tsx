@@ -2,10 +2,8 @@
 
 import { useState, useMemo, useEffect } from 'react'
 import dynamic from 'next/dynamic'
-import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronDown, Search } from 'lucide-react'
 import CommunitiesList from './CommunitiesList'
-import CommunityDetail from './CommunityDetail'
 import { type Community } from '@/data/communities'
 import { getUserLocationFromIP, getCountryCenter } from '@/lib/geolocation'
 import { IconCurrentLocation } from '@tabler/icons-react'
@@ -20,23 +18,29 @@ const CommunitiesGlobe = dynamic(() => import('./CommunitiesGlobe'), {
   ),
 })
 
+import type { FilterEmptyStateConfig } from './FilterEmptyState'
+
 interface CommunitiesMapSectionProps {
   communities: Community[]
+  selectedLocation: string
+  onCountrySelect: (country: string | null) => void
+  allCountries: string[]
+  emptyStateConfig?: FilterEmptyStateConfig | null
 }
 
-export default function CommunitiesMapSection({ communities }: CommunitiesMapSectionProps) {
+export default function CommunitiesMapSection({
+  communities,
+  selectedLocation,
+  onCountrySelect,
+  allCountries,
+  emptyStateConfig,
+}: CommunitiesMapSectionProps) {
   const [selectedCommunity, setSelectedCommunity] = useState<Community | null>(null)
   const [hoveredCommunityId, setHoveredCommunityId] = useState<string | null>(null)
-  const [selectedCountry, setSelectedCountry] = useState<string>('all')
   const [focusPoint, setFocusPoint] = useState<{ lat: number; lng: number; altitude?: number } | null>(null)
   const [isLocating, setIsLocating] = useState(false)
   const [isCountryMenuOpen, setIsCountryMenuOpen] = useState(false)
   const [countrySearch, setCountrySearch] = useState('')
-
-  const allCountries = useMemo(
-    () => Array.from(new Set(communities.map((c) => c.location.country))).sort(),
-    [communities]
-  )
 
   const filteredCountries = useMemo(
     () =>
@@ -46,20 +50,26 @@ export default function CommunitiesMapSection({ communities }: CommunitiesMapSec
     [allCountries, countrySearch]
   )
 
-  const visibleCommunities = useMemo(
-    () =>
-      communities.filter((community) =>
-        selectedCountry === 'all' ? true : community.location.country === selectedCountry
-      ),
-    [communities, selectedCountry]
-  )
+  // Communities already filtered by table (including location). Use as-is.
+  const visibleCommunities = communities
 
-  // If the current selection is no longer visible under the country filter, clear it
+  // If the current selection is no longer visible, clear it
   useEffect(() => {
     if (selectedCommunity && !visibleCommunities.some((c) => c.id === selectedCommunity.id)) {
       setSelectedCommunity(null)
     }
   }, [visibleCommunities, selectedCommunity])
+
+  // Sync globe focus when selectedLocation changes (e.g. from table advanced filters)
+  useEffect(() => {
+    if (selectedLocation === 'all' || selectedLocation === 'remote') {
+      setFocusPoint({ lat: 20, lng: 0, altitude: 1.8 })
+    } else {
+      const { lat, lng, zoom } = getCountryCenter(selectedLocation)
+      const altitude = Math.max(0.7, 2.2 - zoom * 0.15)
+      setFocusPoint({ lat, lng, altitude })
+    }
+  }, [selectedLocation])
 
   const handleCommunitySelect = (community: Community) => {
     // When user explicitly picks a community, let that control the camera
@@ -108,14 +118,12 @@ export default function CommunitiesMapSection({ communities }: CommunitiesMapSec
   }
 
   const handleCountryChange = (value: string) => {
-    setSelectedCountry(value)
+    onCountrySelect(value === 'all' ? null : value)
 
     if (value === 'all') {
-      // World view
       setFocusPoint({ lat: 20, lng: 0, altitude: 1.8 })
     } else {
       const { lat, lng, zoom } = getCountryCenter(value)
-      // Map zoom (approx. 2–11) -> globe altitude (~0.7–1.9)
       const altitude = Math.max(0.7, 2.2 - zoom * 0.15)
       setFocusPoint({ lat, lng, altitude })
     }
@@ -126,28 +134,27 @@ export default function CommunitiesMapSection({ communities }: CommunitiesMapSec
       handleCountryChange('all')
       return
     }
-    
     const communityCountry = mapTopoJSONCountryToCommunityCountry(topoJSONCountry)
-    if (communityCountry) {
-      handleCountryChange(communityCountry)
-    }
+    const countryToSelect = communityCountry || topoJSONCountry
+    handleCountryChange(countryToSelect === 'all' ? 'all' : countryToSelect)
   }
 
-  const handleCloseDetail = () => {
-    setSelectedCommunity(null)
-  }
 
   return (
     <div className="flex gap-4 -mx-6 md:-mx-12 px-6 md:px-12">
       {/* Left Column - List */}
       <div className="w-96 flex-shrink-0">
-        <CommunitiesList
-          communities={visibleCommunities}
-          selectedCommunityId={selectedCommunity?.id || null}
-          onCommunitySelect={handleCommunitySelect}
-          hoveredCommunityId={hoveredCommunityId}
-          onCommunityHover={setHoveredCommunityId}
-        />
+        <div className="sticky top-4 h-[calc(100vh-200px)] max-h-[calc(100vh-200px)] min-h-[500px]">
+          <CommunitiesList
+            communities={visibleCommunities}
+            selectedCommunityId={selectedCommunity?.id || null}
+            onCommunitySelect={handleCommunitySelect}
+            hoveredCommunityId={hoveredCommunityId}
+            onCommunityHover={setHoveredCommunityId}
+            selectedCountry={selectedLocation === 'all' || selectedLocation === 'remote' ? null : selectedLocation}
+            emptyStateConfig={emptyStateConfig}
+          />
+        </div>
       </div>
 
       {/* Right Column - Globe with Overlay */}
@@ -169,7 +176,7 @@ export default function CommunitiesMapSection({ communities }: CommunitiesMapSec
                           (c) => c.location.country === location.country
                         )
                         if (hasCommunitiesInCountry) {
-                          setSelectedCountry(location.country)
+                          onCountrySelect(location.country)
                         }
 
                         setFocusPoint({
@@ -197,13 +204,13 @@ export default function CommunitiesMapSection({ communities }: CommunitiesMapSec
                     type="button"
                     onClick={() => setIsCountryMenuOpen((open) => !open)}
                     className={`inline-flex items-center justify-between gap-1.5 pl-3 pr-2 py-1.5 text-xs rounded-full border w-[156px] ${
-                      selectedCountry === 'all'
+                      selectedLocation === 'all'
                         ? 'border-[rgba(245,245,245,0.12)] bg-[rgba(5,7,26,0.9)] text-zinc-200 hover:border-zinc-500'
                         : 'border-red-500/70 bg-red-500/25 text-red-100 hover:border-red-400'
                     } focus:outline-none focus:border-red-500 transition-colors`}
                   >
                     <span className="max-w-[120px] truncate">
-                      {selectedCountry === 'all' ? 'All locations' : selectedCountry}
+                      {selectedLocation === 'all' ? 'All locations' : selectedLocation}
                     </span>
                     <ChevronDown
                       className={`w-3.5 h-3.5 text-zinc-500 transition-transform ${
@@ -212,7 +219,7 @@ export default function CommunitiesMapSection({ communities }: CommunitiesMapSec
                     />
                   </button>
 
-                  {selectedCountry !== 'all' && (
+                  {selectedLocation !== 'all' && (
                     <button
                       type="button"
                       onClick={() => {
@@ -251,12 +258,28 @@ export default function CommunitiesMapSection({ communities }: CommunitiesMapSec
                             setIsCountryMenuOpen(false)
                           }}
                           className={`w-full text-left px-3 py-1.5 text-xs rounded-md flex items-center justify-between ${
-                            selectedCountry === 'all'
+                            selectedLocation === 'all'
                               ? 'bg-red-500/10 text-red-400'
                               : 'text-zinc-200 hover:bg-[rgba(15,23,42,0.9)]'
                           }`}
                         >
                           <span>All locations</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => {
+                            handleCountryChange('remote')
+                            setCountrySearch('')
+                            setIsCountryMenuOpen(false)
+                          }}
+                          className={`w-full text-left px-3 py-1.5 text-xs rounded-md flex items-center justify-between ${
+                            selectedLocation === 'remote'
+                              ? 'bg-red-500/10 text-red-400'
+                              : 'text-zinc-200 hover:bg-[rgba(15,23,42,0.9)]'
+                          }`}
+                        >
+                          <span>Remote</span>
                         </button>
 
                         {filteredCountries.length === 0 && (
@@ -273,7 +296,7 @@ export default function CommunitiesMapSection({ communities }: CommunitiesMapSec
                               setIsCountryMenuOpen(false)
                             }}
                             className={`w-full text-left px-3 py-1.5 text-xs rounded-md flex items-center justify-between ${
-                              selectedCountry === country
+                              selectedLocation === country
                                 ? 'bg-red-500/10 text-red-400'
                                 : 'text-zinc-200 hover:bg-[rgba(15,23,42,0.9)]'
                             }`}
@@ -296,37 +319,8 @@ export default function CommunitiesMapSection({ communities }: CommunitiesMapSec
               onCommunityHover={setHoveredCommunityId}
               focusPoint={focusPoint}
               onCountrySelect={handleCountrySelectFromGlobe}
-              selectedCountryFilter={selectedCountry === 'all' ? null : selectedCountry}
+              selectedCountryFilter={selectedLocation === 'all' || selectedLocation === 'remote' ? null : selectedLocation}
             />
-            
-            {/* Community Details Overlay - Slides in from right */}
-            <AnimatePresence>
-              {selectedCommunity && (
-                <motion.div
-                  initial={{ x: '100%', opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  exit={{ x: '100%', opacity: 0 }}
-                  transition={{
-                    duration: 0.4,
-                    ease: [0.4, 0, 0.2, 1], // Custom cubic-bezier for organic feel
-                  }}
-                  className="absolute top-4 right-4 bottom-4 w-[480px] z-50"
-                >
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.3, delay: 0.1 }}
-                    className="h-full"
-                  >
-                    <CommunityDetail
-                      community={selectedCommunity}
-                      onClose={handleCloseDetail}
-                    />
-                  </motion.div>
-                </motion.div>
-              )}
-            </AnimatePresence>
           </div>
         </div>
       </div>

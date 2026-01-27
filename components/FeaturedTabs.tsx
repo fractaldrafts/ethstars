@@ -95,12 +95,8 @@ export default function FeaturedTabs() {
                 <h3 className="text-white font-medium mb-1 truncate group-hover:text-blue-400 transition-colors">{community.name}</h3>
                 <div className="flex items-center gap-2 text-xs text-zinc-500 mt-2">
                   <div className="flex items-center gap-1">
-                    <Users className="w-3 h-3" />
-                    <span>{community.memberCount.toLocaleString()} members</span>
-                  </div>
-                  <div className="flex items-center gap-1">
                     <MapPin className="w-3 h-3" />
-                    <span>{community.location.city}</span>
+                    <span>{community.location.city}, {community.location.country}</span>
                   </div>
                 </div>
               </Link>

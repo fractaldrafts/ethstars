@@ -20,7 +20,6 @@ export type CommunityFocus =
   | 'Scaling'
 
 export type ActivityLevel = 'very-active' | 'active' | 'moderate' | 'new'
-export type CommunitySize = 'large' | 'medium' | 'small'
 
 export type SkillLevel = 'beginner' | 'intermediate' | 'advanced' | 'all-levels'
 export type MeetingFormat = 'online' | 'in-person' | 'hybrid'
@@ -42,7 +41,6 @@ export interface Community {
   }
   focusAreas: CommunityFocus[]
   activityLevel: ActivityLevel
-  memberCount: number
   eventFrequency: string // e.g., "Weekly", "Monthly", "Bi-weekly"
   lastActivity: string // ISO date string
   foundedDate?: string // ISO date string
@@ -69,12 +67,6 @@ const activityLevelConfig: Record<ActivityLevel, { label: string; color: string 
 
 export function getActivityLevelConfig(level: ActivityLevel) {
   return activityLevelConfig[level]
-}
-
-export function getCommunitySize(memberCount: number): CommunitySize {
-  if (memberCount >= 1000) return 'large'
-  if (memberCount >= 100) return 'medium'
-  return 'small'
 }
 
 /**
@@ -265,7 +257,7 @@ export const communities: Community[] = [
     description: 'The largest Ethereum community in New York City, bringing together developers, entrepreneurs, and enthusiasts. We host weekly meetups, hackathons, and educational workshops.',
     shortDescription: 'New York City\'s premier Ethereum community for developers and enthusiasts',
     logo: 'https://avatars.githubusercontent.com/u/6250754?s=200&v=4',
-    banner: 'https://picsum.photos/1200/400?random=101',
+    banner: 'https://picsum.dev/1200/400?seed=101',
     location: {
       city: 'New York',
       country: 'USA',
@@ -273,7 +265,6 @@ export const communities: Community[] = [
     },
     focusAreas: ['Technical', 'Developer', 'DeFi', 'DAO'],
     activityLevel: 'very-active',
-    memberCount: 3500,
     eventFrequency: 'Weekly',
     lastActivity: '2025-12-20',
     foundedDate: '2017-03-15',
@@ -293,7 +284,7 @@ export const communities: Community[] = [
     description: 'A vibrant community of Ethereum developers and enthusiasts in Berlin. We focus on technical deep-dives, smart contract security, and building the future of Web3.',
     shortDescription: 'Technical Ethereum community in Berlin focused on development and security',
     logo: 'https://avatars.githubusercontent.com/u/36115574?s=200&v=4',
-    banner: 'https://picsum.photos/1200/400?random=102',
+    banner: 'https://picsum.dev/1200/400?seed=102',
     location: {
       city: 'Berlin',
       country: 'Germany',
@@ -301,7 +292,6 @@ export const communities: Community[] = [
     },
     focusAreas: ['Technical', 'Developer', 'Infrastructure', 'Privacy'],
     activityLevel: 'very-active',
-    memberCount: 2100,
     eventFrequency: 'Bi-weekly',
     lastActivity: '2025-12-19',
     website: 'https://berlin-ethereum.org',
@@ -321,7 +311,7 @@ export const communities: Community[] = [
     description: 'Connecting the Ethereum ecosystem across Southeast Asia. We host monthly meetups, hackathons, and provide resources for builders in the region.',
     shortDescription: 'Southeast Asia\'s hub for Ethereum builders and enthusiasts',
     logo: 'https://avatars.githubusercontent.com/u/47617460?s=200&v=4',
-    banner: 'https://picsum.photos/1200/400?random=103',
+    banner: 'https://picsum.dev/1200/400?seed=103',
     location: {
       city: 'Singapore',
       country: 'Singapore',
@@ -329,7 +319,6 @@ export const communities: Community[] = [
     },
     focusAreas: ['Technical', 'Entrepreneur', 'DeFi', 'Education'],
     activityLevel: 'active',
-    memberCount: 1800,
     eventFrequency: 'Monthly',
     lastActivity: '2025-12-18',
     website: 'https://ethereum.sg',
@@ -348,7 +337,7 @@ export const communities: Community[] = [
     description: 'A community for Ethereum developers in London. We focus on Solidity development, smart contract security, and building production-ready dApps.',
     shortDescription: 'London-based community for Ethereum developers and builders',
     logo: 'https://avatars.githubusercontent.com/u/20820676?s=200&v=4',
-    banner: 'https://picsum.photos/1200/400?random=104',
+    banner: 'https://picsum.dev/1200/400?seed=104',
     location: {
       city: 'London',
       country: 'UK',
@@ -356,7 +345,6 @@ export const communities: Community[] = [
     },
     focusAreas: ['Technical', 'Developer', 'Infrastructure'],
     activityLevel: 'active',
-    memberCount: 1200,
     eventFrequency: 'Bi-weekly',
     lastActivity: '2025-12-17',
     discord: 'https://discord.gg/londoneth',
@@ -375,7 +363,7 @@ export const communities: Community[] = [
     description: 'Japan\'s leading Ethereum community, bringing together developers, artists, and entrepreneurs. We host events in both English and Japanese.',
     shortDescription: 'Japan\'s premier Ethereum community for developers and creators',
     logo: 'https://avatars.githubusercontent.com/u/65557647?s=200&v=4',
-    banner: 'https://picsum.photos/1200/400?random=105',
+    banner: 'https://picsum.dev/1200/400?seed=105',
     location: {
       city: 'Tokyo',
       country: 'Japan',
@@ -383,7 +371,6 @@ export const communities: Community[] = [
     },
     focusAreas: ['Technical', 'NFTs', 'Gaming', 'Art'],
     activityLevel: 'active',
-    memberCount: 2400,
     eventFrequency: 'Monthly',
     lastActivity: '2025-12-19',
     website: 'https://ethereum.tokyo',
@@ -402,7 +389,7 @@ export const communities: Community[] = [
     description: 'The heart of Ethereum in the Bay Area. We connect developers, founders, and investors building the future of Web3.',
     shortDescription: 'Bay Area Ethereum community for builders and entrepreneurs',
     logo: 'https://avatars.githubusercontent.com/u/58171697?s=200&v=4',
-    banner: 'https://picsum.photos/1200/400?random=106',
+    banner: 'https://picsum.dev/1200/400?seed=106',
     location: {
       city: 'San Francisco',
       country: 'USA',
@@ -410,7 +397,6 @@ export const communities: Community[] = [
     },
     focusAreas: ['Technical', 'Entrepreneur', 'DeFi', 'Infrastructure'],
     activityLevel: 'very-active',
-    memberCount: 4200,
     eventFrequency: 'Weekly',
     lastActivity: '2025-12-20',
     website: 'https://sfethereum.org',
@@ -436,7 +422,6 @@ export const communities: Community[] = [
     },
     focusAreas: ['Education', 'DeFi', 'Beginner-friendly', 'Technical'],
     activityLevel: 'active',
-    memberCount: 1500,
     eventFrequency: 'Monthly',
     lastActivity: '2025-12-16',
     discord: 'https://discord.gg/ethereumparis',
@@ -460,7 +445,6 @@ export const communities: Community[] = [
     },
     focusAreas: ['Technical', 'Developer', 'Education', 'DAO'],
     activityLevel: 'moderate',
-    memberCount: 800,
     eventFrequency: 'Monthly',
     lastActivity: '2025-12-15',
     website: 'https://ethereum.sydney',
@@ -485,7 +469,6 @@ export const communities: Community[] = [
     },
     focusAreas: ['Technical', 'Research', 'Developer', 'Infrastructure'],
     activityLevel: 'active',
-    memberCount: 1900,
     eventFrequency: 'Bi-weekly',
     lastActivity: '2025-12-18',
     discord: 'https://discord.gg/ethereumtoronto',
@@ -502,7 +485,7 @@ export const communities: Community[] = [
     description: 'India\'s premier Ethereum community. We focus on education, developer onboarding, and building the Web3 ecosystem in India.',
     shortDescription: 'India\'s leading Ethereum community for developers and learners',
     logo: 'https://avatars.githubusercontent.com/u/30044474?s=200&v=4',
-    banner: 'https://picsum.photos/1200/400?random=110',
+    banner: 'https://picsum.dev/1200/400?seed=110',
     location: {
       city: 'Mumbai',
       country: 'India',
@@ -510,7 +493,6 @@ export const communities: Community[] = [
     },
     focusAreas: ['Education', 'Beginner-friendly', 'Developer', 'Technical'],
     activityLevel: 'very-active',
-    memberCount: 3200,
     eventFrequency: 'Weekly',
     lastActivity: '2025-12-20',
     website: 'https://ethereum.mumbai',
@@ -530,7 +512,7 @@ export const communities: Community[] = [
     description: 'The Netherlands\' Ethereum community. We host DevCon, regular meetups, and connect the global Ethereum ecosystem.',
     shortDescription: 'Amsterdam-based Ethereum community, home of DevCon',
     logo: 'https://avatars.githubusercontent.com/u/6250754?s=200&v=4',
-    banner: 'https://picsum.photos/1200/400?random=111',
+    banner: 'https://picsum.dev/1200/400?seed=111',
     location: {
       city: 'Amsterdam',
       country: 'Netherlands',
@@ -538,7 +520,6 @@ export const communities: Community[] = [
     },
     focusAreas: ['Technical', 'Developer', 'Infrastructure', 'Research'],
     activityLevel: 'very-active',
-    memberCount: 2800,
     eventFrequency: 'Bi-weekly',
     lastActivity: '2025-12-19',
     website: 'https://ethereum.amsterdam',
@@ -564,7 +545,6 @@ export const communities: Community[] = [
     },
     focusAreas: ['DeFi', 'NFTs', 'Gaming', 'Technical'],
     activityLevel: 'active',
-    memberCount: 1600,
     eventFrequency: 'Monthly',
     lastActivity: '2025-12-17',
     discord: 'https://discord.gg/ethereumseoul',
@@ -589,7 +569,6 @@ export const communities: Community[] = [
     },
     focusAreas: ['Education', 'DeFi', 'Beginner-friendly', 'Social Impact'],
     activityLevel: 'active',
-    memberCount: 2200,
     eventFrequency: 'Monthly',
     lastActivity: '2025-12-18',
     website: 'https://ethereum.sp',
@@ -614,7 +593,6 @@ export const communities: Community[] = [
     },
     focusAreas: ['Technical', 'Developer', 'Privacy', 'Scaling', 'Research'],
     activityLevel: 'active',
-    memberCount: 1100,
     eventFrequency: 'Bi-weekly',
     lastActivity: '2025-12-16',
     discord: 'https://discord.gg/ethereumtelaviv',
@@ -638,7 +616,6 @@ export const communities: Community[] = [
     },
     focusAreas: ['Research', 'Infrastructure', 'Technical', 'Developer'],
     activityLevel: 'moderate',
-    memberCount: 900,
     eventFrequency: 'Monthly',
     lastActivity: '2025-12-14',
     website: 'https://ethereum.zurich',
@@ -663,7 +640,6 @@ export const communities: Community[] = [
     },
     focusAreas: ['Beginner-friendly', 'Education', 'Technical', 'DAO'],
     activityLevel: 'active',
-    memberCount: 1300,
     eventFrequency: 'Monthly',
     lastActivity: '2025-12-17',
     discord: 'https://discord.gg/ethereumaustin',
@@ -687,7 +663,6 @@ export const communities: Community[] = [
     },
     focusAreas: ['DeFi', 'Infrastructure', 'Entrepreneur', 'Technical'],
     activityLevel: 'active',
-    memberCount: 1700,
     eventFrequency: 'Monthly',
     lastActivity: '2025-12-18',
     website: 'https://ethereum.dubai',
@@ -712,7 +687,6 @@ export const communities: Community[] = [
     },
     focusAreas: ['Education', 'DAO', 'Beginner-friendly', 'Technical'],
     activityLevel: 'moderate',
-    memberCount: 750,
     eventFrequency: 'Monthly',
     lastActivity: '2025-12-15',
     discord: 'https://discord.gg/ethereumlisbon',
@@ -729,7 +703,7 @@ export const communities: Community[] = [
     description: 'India\'s tech hub Ethereum community. We focus on developer education, hackathons, and building the next generation of Web3 builders.',
     shortDescription: 'Bangalore-based Ethereum community for developers and builders',
     logo: 'https://avatars.githubusercontent.com/u/77616608?s=200&v=4',
-    banner: 'https://picsum.photos/1200/400?random=119',
+    banner: 'https://picsum.dev/1200/400?seed=119',
     location: {
       city: 'Bangalore',
       country: 'India',
@@ -737,7 +711,6 @@ export const communities: Community[] = [
     },
     focusAreas: ['Developer', 'Technical', 'Education', 'Infrastructure'],
     activityLevel: 'very-active',
-    memberCount: 2800,
     eventFrequency: 'Bi-weekly',
     lastActivity: '2025-12-19',
     website: 'https://ethereum.bangalore',
@@ -764,7 +737,6 @@ export const communities: Community[] = [
     },
     focusAreas: ['Technical', 'DeFi', 'Developer', 'Infrastructure'],
     activityLevel: 'active',
-    memberCount: 1900,
     eventFrequency: 'Monthly',
     lastActivity: '2025-12-16',
     telegram: 'https://t.me/ethereumshanghai',

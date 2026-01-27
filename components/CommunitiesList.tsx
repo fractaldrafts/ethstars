@@ -1,15 +1,19 @@
 'use client'
 
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { MapPin, Users, ArrowUpRight, Calendar, Sparkles, Globe, Users2, Video } from 'lucide-react'
-import { IconBrandDiscord, IconBrandTelegram } from '@tabler/icons-react'
+import { MapPin, Users, ArrowUpRight, Calendar, Sparkles, Globe, Users2, Video, Plus, ArrowLeft } from 'lucide-react'
+import { IconBrandDiscord, IconBrandTelegram, IconZoomExclamation } from '@tabler/icons-react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { 
   type Community, 
   isBeginnerFriendly,
   getMeetingFormatText,
   getNextEventDate
 } from '@/data/communities'
+import type { FilterEmptyStateConfig } from './FilterEmptyState'
+import FilterEmptyState from './FilterEmptyState'
+import CommunityDetail from './CommunityDetail'
 
 interface CommunitiesListProps {
   communities: Community[]
@@ -17,6 +21,8 @@ interface CommunitiesListProps {
   onCommunitySelect: (community: Community) => void
   hoveredCommunityId?: string | null
   onCommunityHover?: (communityId: string | null) => void
+  selectedCountry?: string | null
+  emptyStateConfig?: FilterEmptyStateConfig | null
 }
 
 export default function CommunitiesList({
@@ -25,7 +31,10 @@ export default function CommunitiesList({
   onCommunitySelect,
   hoveredCommunityId,
   onCommunityHover,
+  selectedCountry,
+  emptyStateConfig,
 }: CommunitiesListProps) {
+  const router = useRouter()
   const selectedRef = useRef<HTMLDivElement | null>(null)
   const listRef = useRef<HTMLDivElement | null>(null)
   const [focusedIndex, setFocusedIndex] = useState<number | null>(null)
@@ -106,10 +115,57 @@ export default function CommunitiesList({
     setFocusedIndex(null)
   }, [communities])
 
+  // Find selected community
+  const selectedCommunity = selectedCommunityId 
+    ? communities.find(c => c.id === selectedCommunityId) 
+    : null
+
+  // Handle back action
+  const handleBack = () => {
+    if (selectedCommunity) {
+      onCommunitySelect(selectedCommunity)
+    }
+  }
+
+  // If a community is selected, show detail view
+  if (selectedCommunity) {
+    return (
+      <div className="h-full flex flex-col overflow-hidden">
+        <CommunityDetail
+          community={selectedCommunity}
+          onClose={handleBack}
+          showBackButton={true}
+        />
+      </div>
+    )
+  }
+
   if (communities.length === 0) {
+    if (emptyStateConfig) {
+      return (
+        <div className="flex flex-col items-center justify-center py-12 px-4">
+          <FilterEmptyState config={emptyStateConfig} />
+        </div>
+      )
+    }
+    if (selectedCountry && selectedCountry !== 'all') {
+      return (
+        <div className="flex flex-col items-center justify-center py-12 px-4">
+          <IconZoomExclamation className="w-12 h-12 text-zinc-600 mb-4" />
+          <p className="text-zinc-500 text-sm text-center mb-2">No communities found in {selectedCountry}</p>
+          <button
+            onClick={() => router.push('/communities?add=true')}
+            className="mt-3 px-4 py-2 text-sm font-medium text-white bg-red-500 hover:bg-red-600 rounded-full transition-colors flex items-center gap-2"
+          >
+            <Plus className="w-4 h-4" />
+            Add Community
+          </button>
+        </div>
+      )
+    }
     return (
       <div className="flex flex-col items-center justify-center py-12 px-4">
-        <MapPin className="w-12 h-12 text-zinc-600 mb-4" />
+        <IconZoomExclamation className="w-12 h-12 text-zinc-600 mb-4" />
         <p className="text-zinc-500 text-sm text-center">No communities found</p>
         <p className="text-zinc-600 text-xs mt-1 text-center">Try adjusting your filters</p>
       </div>
@@ -119,7 +175,7 @@ export default function CommunitiesList({
   return (
     <div 
       ref={listRef}
-      className="space-y-3"
+      className="space-y-3 h-full overflow-y-auto scrollbar-hide-on-idle"
       tabIndex={0}
       role="listbox"
       aria-label="Communities list"
@@ -220,6 +276,13 @@ export default function CommunitiesList({
                     Beginner-friendly
                   </span>
                 )}
+                {/* Next Event Badge */}
+                {getNextEventDate(community) && (
+                  <span className="inline-flex items-center gap-1 px-2 py-1 rounded text-[12px] font-medium flex-shrink-0 whitespace-nowrap bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+                    <Calendar className="w-3 h-3" />
+                    Next event: {getNextEventDate(community)}
+                  </span>
+                )}
                 {/* Focus Area Tags */}
                 {community.focusAreas.map((focus) => (
                   <span
@@ -231,25 +294,8 @@ export default function CommunitiesList({
                 ))}
               </div>
 
-              {/* Meta info - Members + Next Event Date */}
-              <div className="flex items-center gap-2 text-sm text-zinc-500 mb-3 pb-3 border-b border-[rgba(245,245,245,0.08)] flex-nowrap overflow-hidden">
-                <span className="flex items-center gap-1.5 whitespace-nowrap">
-                  <Users className="w-4 h-4 flex-shrink-0" />
-                  <span>{community.memberCount.toLocaleString()} members</span>
-                </span>
-                {getNextEventDate(community) && (
-                  <>
-                    <span className="text-zinc-600 flex-shrink-0">•</span>
-                    <span className="flex items-center gap-1.5 whitespace-nowrap">
-                      <Calendar className="w-4 h-4 flex-shrink-0" />
-                      <span>Next event: {getNextEventDate(community)}</span>
-                    </span>
-                  </>
-                )}
-              </div>
-
               {/* Footer - Social Icons & View Community Button */}
-              <div className="mt-auto flex items-center justify-between gap-3">
+              <div className="mt-auto pt-3 border-t border-[rgba(245,245,245,0.08)] flex items-center justify-between gap-3">
                 {/* Social Media Icons - Left */}
                 <div className="flex items-center gap-2">
                   {community.discord && (
@@ -287,7 +333,7 @@ export default function CommunitiesList({
                   className="group"
                   style={{ touchAction: 'manipulation' }}
                 >
-                  <div className="flex items-center gap-1 px-4 py-3 rounded-full bg-[rgba(245,245,245,0.08)] text-zinc-400 group-hover:bg-red-500 group-hover:text-white text-sm font-medium transition-colors min-h-[44px]">
+                  <div className="flex items-center gap-1 px-4 py-3 rounded-full bg-[rgba(245,245,245,0.08)] text-zinc-400 group-hover:bg-red-500 group-hover:text-white text-sm font-medium transition-colors min-h-[40px]">
                     View Community
                     <ArrowUpRight className="w-3.5 h-3.5" />
                   </div>
