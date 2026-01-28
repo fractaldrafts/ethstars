@@ -2,11 +2,12 @@
 
 import { useState, useMemo, useEffect } from 'react'
 import dynamic from 'next/dynamic'
-import { ChevronDown, Search } from 'lucide-react'
+import { ChevronDown, Search, Share2 } from 'lucide-react'
 import CommunitiesList from './CommunitiesList'
 import { type Community } from '@/data/communities'
 import { getUserLocationFromIP, getCountryCenter } from '@/lib/geolocation'
 import { IconCurrentLocation } from '@tabler/icons-react'
+import CommunitiesShareableImage from './CommunitiesShareableImage'
 
 // Dynamically import Globe component to avoid SSR issues with Three.js
 const CommunitiesGlobe = dynamic(() => import('./CommunitiesGlobe'), {
@@ -41,6 +42,7 @@ export default function CommunitiesMapSection({
   const [isLocating, setIsLocating] = useState(false)
   const [isCountryMenuOpen, setIsCountryMenuOpen] = useState(false)
   const [countrySearch, setCountrySearch] = useState('')
+  const [showShareModal, setShowShareModal] = useState(false)
 
   const filteredCountries = useMemo(
     () =>
@@ -321,9 +323,30 @@ export default function CommunitiesMapSection({
               onCountrySelect={handleCountrySelectFromGlobe}
               selectedCountryFilter={selectedLocation === 'all' || selectedLocation === 'remote' ? null : selectedLocation}
             />
+
+            {/* Bottom-right Share Button */}
+            <div className="absolute bottom-4 right-4 z-40">
+              <button
+                type="button"
+                onClick={() => setShowShareModal(true)}
+                aria-label="Share community map"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-full border border-[rgba(245,245,245,0.16)] bg-[rgba(5,7,26,0.9)] text-zinc-300 hover:text-white hover:border-red-500/50 hover:bg-red-500/10 transition-colors backdrop-blur-sm"
+              >
+                <Share2 className="w-3.5 h-3.5" />
+                <span>Share</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
+
+      {/* Shareable Image Modal */}
+      {showShareModal && (
+        <CommunitiesShareableImage
+          communities={visibleCommunities}
+          onClose={() => setShowShareModal(false)}
+        />
+      )}
     </div>
   )
 }

@@ -86,15 +86,6 @@ function FeaturedCard({ community, isDragging }: { community: Community; isDragg
           </div>
         </div>
 
-        {/* Focus Areas Tags */}
-        <div className="flex flex-wrap gap-1.5 mb-4">
-          {community.focusAreas.slice(0, 3).map(focus => (
-            <span key={focus} className="text-[11px] md:text-[12px] font-medium text-zinc-500 bg-[rgba(245,245,245,0.04)] px-2 py-0.5 rounded">
-              {focus}
-            </span>
-          ))}
-        </div>
-
         {/* Footer */}
         <div className="flex items-center justify-between pt-4 border-t border-[rgba(245,245,245,0.08)]">
           <div className="flex items-center gap-1.5 text-white font-semibold">

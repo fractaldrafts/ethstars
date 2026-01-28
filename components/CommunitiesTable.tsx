@@ -397,6 +397,10 @@ export default function CommunitiesTable() {
                 <button
                   key={filter.value}
                   onClick={() => {
+                    // If we're leaving "Near me", clear its location side-effect
+                    if (selectedFocus === 'near-me' && filter.value !== 'near-me') {
+                      setSelectedLocation('all')
+                    }
                     setSelectedFocus(filter.value)
                     if (filter.value === 'near-me') setSelectedLocation('all')
                   }}
@@ -418,17 +422,13 @@ export default function CommunitiesTable() {
           {/* Search, Filter & View Toggle */}
           <div className="flex items-center gap-2 w-full sm:w-auto">
             <div className="relative flex-1 sm:w-64">
-              <Search className={`absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors ${searchQuery ? 'text-zinc-400' : 'text-zinc-500'}`} />
+              <Search className={`absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors ${searchQuery ? 'text-zinc-300' : 'text-zinc-400'}`} />
               <input
                 type="text"
                 placeholder="Search communities..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className={`w-full border rounded-full pl-9 pr-8 py-2 text-sm font-medium transition-colors ${
-                  searchQuery
-                    ? 'bg-[rgba(245,245,245,0.08)] border-zinc-700 text-white'
-                    : 'bg-transparent border-[rgba(245,245,245,0.08)] text-zinc-500 placeholder-zinc-600 hover:text-white hover:border-zinc-700 focus:text-white focus:bg-[rgba(245,245,245,0.08)] focus:border-zinc-700'
-                }`}
+                className="w-full border rounded-full pl-9 pr-8 py-2 text-sm font-medium transition-colors bg-[rgba(245,245,245,0.08)] border-[rgba(245,245,245,0.12)] text-zinc-200 placeholder-zinc-500 hover:border-zinc-700 hover:bg-[rgba(245,245,245,0.12)] focus:text-white focus:bg-[rgba(245,245,245,0.14)] focus:border-zinc-700"
               />
               {searchQuery && (
                 <button
@@ -445,8 +445,8 @@ export default function CommunitiesTable() {
               onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
               className={`flex items-center gap-1.5 px-3 py-2 text-sm font-medium rounded-full border transition-colors ${
                 showAdvancedFilters || hasActiveFilters
-                  ? 'bg-[rgba(245,245,245,0.08)] border-zinc-700 text-white'
-                  : 'border-[rgba(245,245,245,0.08)] text-zinc-500 hover:text-white hover:border-zinc-700'
+                  ? 'bg-[rgba(245,245,245,0.10)] border-zinc-700 text-white'
+                  : 'bg-[rgba(245,245,245,0.08)] border-[rgba(245,245,245,0.12)] text-zinc-200 hover:text-white hover:border-zinc-700 hover:bg-[rgba(245,245,245,0.12)]'
               }`}
             >
               <SlidersHorizontal className="w-4 h-4" />
