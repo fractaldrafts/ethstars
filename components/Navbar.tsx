@@ -2,12 +2,14 @@
 
 import { useState } from 'react'
 import { usePathname } from 'next/navigation'
+import Link from 'next/link'
 import { Menu, X } from 'lucide-react'
 import TimezoneSelector from './TimezoneSelector'
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const pathname = usePathname()
+  const isEarnPage = pathname === '/'
 
   const navLinks = [
     { name: 'Earn', href: '/', active: pathname === '/' },
@@ -45,9 +47,20 @@ export default function Navbar() {
             ))}
           </div>
 
-          {/* Desktop CTA */}
+          {/* Desktop CTA - Add Opportunity on Earn page, TimezoneSelector elsewhere */}
           <div className="hidden md:flex items-center gap-3">
-            <TimezoneSelector />
+            {isEarnPage ? (
+              <Link
+                href="/earn/add-new"
+                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-red-500/90 text-xs font-medium text-white hover:bg-red-500 transition-colors uppercase"
+                aria-label="Add opportunity"
+              >
+                <img src="/add-opportunity.svg" alt="" className="w-4 h-4 opacity-90" />
+                Add
+              </Link>
+            ) : (
+              <TimezoneSelector />
+            )}
             <button className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-[rgba(245,245,245,0.06)] text-xs font-medium text-zinc-300 hover:bg-red-500 hover:text-white transition-colors uppercase">
               Login
             </button>
@@ -55,7 +68,18 @@ export default function Navbar() {
 
           {/* Mobile CTA and menu button */}
           <div className="md:hidden flex items-center gap-2">
-            <TimezoneSelector />
+            {isEarnPage ? (
+              <Link
+                href="/earn/add-new"
+                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-red-500/90 text-xs font-medium text-white hover:bg-red-500 transition-colors uppercase"
+                aria-label="Add opportunity"
+              >
+                <img src="/add-opportunity.svg" alt="" className="w-4 h-4 opacity-90" />
+                Add
+              </Link>
+            ) : (
+              <TimezoneSelector />
+            )}
             <button className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-[rgba(245,245,245,0.06)] text-xs font-medium text-zinc-300 hover:bg-red-500 hover:text-white transition-colors uppercase">
               Login
             </button>
@@ -84,6 +108,15 @@ export default function Navbar() {
                 {link.name}
               </a>
             ))}
+            {isEarnPage && (
+              <Link
+                href="/earn/add-new"
+                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-red-500/90 text-xs font-medium text-white hover:bg-red-500 transition-colors uppercase"
+              >
+                <img src="/add-opportunity.svg" alt="" className="w-4 h-4 opacity-90" />
+                Add Opportunity
+              </Link>
+            )}
             <button className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-[rgba(245,245,245,0.06)] text-xs font-medium text-zinc-300 hover:bg-red-500 hover:text-white mt-4 transition-colors uppercase">
               Login
             </button>

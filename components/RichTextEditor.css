@@ -1,0 +1,131 @@
+/* Load after quill.snow.css so these overrides win. Dark theme for Quill. */
+
+.rtf-editor-dark .ql-toolbar.ql-snow,
+.rtf-editor-dark .ql-toolbar {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(245, 245, 245, 0.08) !important;
+  border-bottom: none;
+  border-radius: 0.5rem 0.5rem 0 0;
+}
+
+.rtf-editor-dark:not(.rtf-editor-focused) .ql-toolbar {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  padding: 0;
+  border: none !important;
+  margin: 0;
+  transition: max-height 0.15s ease, opacity 0.15s ease;
+}
+
+.rtf-editor-dark.rtf-editor-focused .ql-toolbar {
+  max-height: 3rem;
+  opacity: 1;
+}
+
+/* Unfocused state: icons subtle #4A4D5B */
+.rtf-editor-dark .ql-toolbar .ql-stroke {
+  stroke: #4A4D5B !important;
+}
+
+.rtf-editor-dark .ql-toolbar .ql-fill {
+  fill: #4A4D5B !important;
+}
+
+/* Active state: bold/italic clearly indicated when enabled */
+.rtf-editor-dark .ql-toolbar button.ql-active .ql-stroke {
+  stroke: rgba(245, 245, 245, 0.95) !important;
+}
+
+.rtf-editor-dark .ql-toolbar button.ql-active .ql-fill {
+  fill: rgba(245, 245, 245, 0.95) !important;
+}
+
+.rtf-editor-dark .ql-toolbar button:hover .ql-stroke,
+.rtf-editor-dark .ql-toolbar .ql-picker-label:hover .ql-stroke {
+  stroke: rgba(245, 245, 245, 0.6) !important;
+}
+
+.rtf-editor-dark .ql-toolbar button:hover .ql-fill,
+.rtf-editor-dark .ql-toolbar .ql-picker-label:hover .ql-fill {
+  fill: rgba(245, 245, 245, 0.8) !important;
+}
+
+.rtf-editor-dark .ql-toolbar .ql-picker-label {
+  color: #4A4D5B !important;
+}
+
+.rtf-editor-dark .ql-toolbar .ql-picker-label:hover {
+  color: rgba(245, 245, 245, 0.8) !important;
+}
+
+/* No bright highlight when dropdown is open */
+.rtf-editor-dark .ql-toolbar .ql-picker.ql-expanded .ql-picker-label {
+  color: rgba(245, 245, 245, 0.9) !important;
+  background: transparent !important;
+  border-color: transparent !important;
+}
+
+.rtf-editor-dark .ql-toolbar .ql-picker.ql-expanded .ql-picker-label .ql-stroke {
+  stroke: rgba(245, 245, 245, 0.4) !important;
+}
+
+/* Dropdown: match site theme (#05071A, border, rounded) */
+.rtf-editor-dark .ql-toolbar .ql-picker-options {
+  background: #05071A !important;
+  border: 1px solid rgba(245, 245, 245, 0.08) !important;
+  border-radius: 0.5rem !important;
+  color: rgba(245, 245, 245, 0.9) !important;
+  padding: 0.25rem 0 !important;
+}
+
+.rtf-editor-dark .ql-toolbar .ql-picker-options .ql-picker-item:hover {
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: white !important;
+}
+
+/* Dropdown option text: normal size, not oversized */
+.rtf-editor-dark .ql-toolbar .ql-picker-options .ql-picker-item {
+  font-size: 0.875rem;
+  font-weight: normal;
+}
+
+/* Wrapper: stable min-height so layout doesn't jump */
+.rtf-editor-dark.rtf-editor-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.rtf-editor-dark .rtf-editor-quill,
+.rtf-editor-dark .ql-toolbar + .ql-container {
+  flex: 1;
+  min-height: 0;
+}
+
+.rtf-editor-dark .ql-container.ql-snow,
+.rtf-editor-dark .ql-container {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(245, 245, 245, 0.08) !important;
+  border-radius: 0 0 0.5rem 0.5rem;
+  min-height: 160px !important;
+  max-height: 320px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* When toolbar is hidden, editor looks like one rounded field */
+.rtf-editor-dark:not(.rtf-editor-focused) .ql-container {
+  border-radius: 0.5rem !important;
+}
+
+.rtf-editor-dark .ql-editor {
+  color: white !important;
+  font-size: 0.875rem;
+  min-height: 140px !important;
+}
+
+.rtf-editor-dark .ql-editor.ql-blank::before {
+  color: #71717a !important;
+  font-style: normal;
+}

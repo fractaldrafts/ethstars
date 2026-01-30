@@ -116,6 +116,40 @@ input:focus {
   background: rgba(245, 245, 245, 0.16);
 }
 
+/* Date picker (shadcn Calendar) – form theme */
+.date-picker-theme {
+  background: #17192A !important;
+  border: 1px solid #202233 !important;
+  color: #FFFFFF !important;
+  border-radius: 0.5rem !important;
+}
+.date-picker-theme [data-slot="calendar"] {
+  --background: #17192A;
+  --foreground: #FFFFFF;
+  --muted: #71717a;
+  --muted-foreground: #a1a1aa;
+  --accent: 239 68 68;
+  --accent-foreground: #FFFFFF;
+}
+.date-picker-theme button {
+  color: rgba(245, 245, 245, 0.9) !important;
+}
+.date-picker-theme button:hover {
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: white !important;
+}
+.date-picker-theme button[data-selected-single="true"] {
+  background: rgb(239 68 68) !important;
+  color: white !important;
+}
+.date-picker-theme [data-slot="calendar"] .text-muted-foreground {
+  color: rgba(245, 245, 245, 0.5) !important;
+}
+.date-picker-theme [data-slot="calendar"] [data-today]:not([data-selected-single="true"]) {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: white !important;
+}
+
 /* Leaflet Map Styles - Dark Theme */
 .leaflet-container {
   background: rgba(5, 7, 26, 0.8) !important;

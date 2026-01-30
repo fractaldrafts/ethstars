@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { ThemeProvider } from 'next-themes'
 import { TimezoneProvider } from '@/lib/timezone'
+import { Toaster } from '@/components/ui/sonner'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -36,6 +37,7 @@ export default function RootLayout({
           <TimezoneProvider>
             {children}
           </TimezoneProvider>
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

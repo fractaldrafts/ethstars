@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import FeaturedSection from '@/components/FeaturedSection'
@@ -35,9 +36,13 @@ export default function OpportunitiesPage() {
       </div>
 
       {/* Floating CTA Button - Mobile Only */}
-      <button className="md:hidden fixed bottom-6 right-6 z-40 flex items-center justify-center w-14 h-14 bg-red-500 hover:bg-red-600 rounded-full shadow-lg shadow-red-500/25 hover:shadow-red-500/40 transition-all">
-        <img src="/add-opportunity.svg" alt="Add Opportunity" className="w-6 h-6" />
-      </button>
+      <Link
+        href="/earn/add-new"
+        className="md:hidden fixed bottom-6 right-6 z-40 flex items-center justify-center w-14 h-14 bg-red-500 hover:bg-red-600 rounded-full shadow-lg shadow-red-500/25 hover:shadow-red-500/40 transition-all"
+        aria-label="Add opportunity"
+      >
+        <img src="/add-opportunity.svg" alt="" className="w-6 h-6" />
+      </Link>
 
       <Footer />
     </main>
